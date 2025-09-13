@@ -2,22 +2,57 @@
   "layer": "top",
   "position": "top",
   "modules-left": [
-    "network"
+    "hyprland/workspaces"
   ],
-  "modules-right": [
-    "pulseaudio",
-    "battery",
+  "modules-center": [
     "clock"
   ],
+  "modules-right": [
+    "network",
+    "pulseaudio",
+    "battery"
+  ],
+  "hyprland/workspaces": {
+    "format": "{id}",
+    "on-click": "activate"
+  },
   "network": {
-    "format": "{ifname} {ipaddr}",
-    "format-wifi": "  {essid} ({signalStrength}%)",
-    "format-ethernet": "  {ifname}",
-    "format-disconnected": "󰖪  offline",
+    "format": "{ifname}",
+    "format-wifi": "  {essid} ({signalStrength}%)",
+    "format-ethernet": "  {ifname}",
+    "format-disconnected": "󰖪  Disconnected",
     "tooltip": true,
     "tooltip-format": "{ifname}\nIP: {ipaddr}\nGW: {gwaddr}",
-    "on-click": "networkmanager_dmenu",
-    "on-click-right": "nm-connection-editor",
-    "on-click-middle": "nm-connection-editor --create"
+    "on-click": "nm-connection-editor"
+  },
+  "pulseaudio": {
+    "format": "{volume}% {icon}",
+    "format-bluetooth": "{volume}% {icon}",
+    "format-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["", ""]
+    },
+    "on-click": "pavucontrol"
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{capacity}% {icon}",
+    "format-charging": "{capacity}% ",
+    "format-plugged": "{capacity}% ",
+    "format-icons": ["", "", "", "", ""]
+  },
+  "clock": {
+    "format": "{:%H:%M}",
+    "format-alt": "{:%Y-%m-%d %H:%M}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
   }
 }
