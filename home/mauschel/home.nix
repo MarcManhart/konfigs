@@ -66,12 +66,6 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.mplayer/config";
   };
 
-  # CoolerControl
-  home.file."/etc/coolercontrol" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/etc/coolercontrol";
-    recursive = true;
-  };
-
   # Hyperland + hyprpaper
   home.file.".config/hypr/hyprland.conf" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/hypr/hyprland.conf";
