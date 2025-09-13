@@ -82,6 +82,10 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/waybar/config.jsonc";
     recursive = true;
   };
+  home.file.".config/waybar/style.css" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/waybar/style.css";
+    recursive = true;
+  };
 
   # direnv + nix-direnv (automatische dev-shells in Projekten)
   programs.direnv = {
