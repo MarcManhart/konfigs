@@ -34,6 +34,24 @@
   # Optional: networkmanager_dmenu auf rofi festnageln
   environment.sessionVariables.NMD_MENU = "rofi";
 
+  #bluetooth
+  hardware.bluetooth.enable = true; # BlueZ aktivieren
+  hardware.bluetooth.settings = {
+    # optional, gute Defaults
+    General = {
+      Enable = "Source,Sink,Media,Socket";
+      Experimental = true;
+    };
+  };
+  services.blueman.enable = true; # Blueman (Manager + Applet)
+  # Audio über Bluetooth (A2DP/HFP) mit PipeWire
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+  };
+
   # Portale: ohne die zicken Browser, Flatpaks, File-Picker etc.
   xdg.portal.enable = true;
   xdg.portal.wlr.enable = true;
