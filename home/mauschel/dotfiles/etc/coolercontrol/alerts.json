@@ -1,0 +1,1 @@
+{"alerts":[{"uid":"7666e9b5-b7fa-4f5b-9a4a-505e555ba5b7","name":"New Alert 1","channel_source":{"device_uid":"e7a379142766ef8adca8fc914ac73c9e8cb0e557122bac280848a0303a384735","channel_name":"temp1","channel_metric":"Temp"},"min":0.0,"max":85.0,"state":"Inactive"}],"logs":[]}

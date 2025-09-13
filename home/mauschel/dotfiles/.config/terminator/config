@@ -1,0 +1,33 @@
+[global_config]
+[keybindings]
+  new_tab = <Primary>t
+  split_horiz = <Alt>underscore
+  split_vert = <Alt>asterisk
+  close_term = <Shift><Alt>w
+  close_window = <Primary>w
+  ungroup_win = <Primary><Shift><Alt>w
+[profiles]
+  [[default]]
+    icon_bell = False
+    background_color = "#282828"
+    background_darkness = 0.95
+    background_type = transparent
+    font = SauceCodePro Nerd Font 10
+    foreground_color = "#ebdbb2"
+    show_titlebar = False
+    scrollbar_position = hidden
+    palette = "#181818:#cc241d:#98971a:#d79921:#458588:#b16286:#689d6a:#ebdbb2:#928374:#fb4934:#b8bb26:#fabd2f:#83a598:#d3869b:#8ec07c:#ebdbb2"
+    use_system_font = False
+[layouts]
+  [[default]]
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+      profile = default
+      directory = ""
+    [[[window0]]]
+      type = Window
+      parent = ""
+      profile = None
+      size = 2000, 1000
+[plugins]

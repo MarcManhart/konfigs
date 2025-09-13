@@ -1,0 +1,23 @@
+{
+  "layer": "top",
+  "position": "top",
+  "modules-left": [
+    "network"
+  ],
+  "modules-right": [
+    "pulseaudio",
+    "battery",
+    "clock"
+  ],
+  "network": {
+    "format": "{ifname} {ipaddr}",
+    "format-wifi": "  {essid} ({signalStrength}%)",
+    "format-ethernet": "  {ifname}",
+    "format-disconnected": "󰖪  offline",
+    "tooltip": true,
+    "tooltip-format": "{ifname}\nIP: {ipaddr}\nGW: {gwaddr}",
+    "on-click": "networkmanager_dmenu",
+    "on-click-right": "nm-connection-editor",
+    "on-click-middle": "nm-connection-editor --create"
+  }
+}

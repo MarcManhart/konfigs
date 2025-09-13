@@ -1,0 +1,5 @@
+fs=no        # Start im Vollbild
+volume=50     # Startlautstärke (0–100)
+subfont-text-scale=4  # Untertitelgröße
+loop=0
+

@@ -1,0 +1,7 @@
+/result
+/flakes-*.json
+.direnv/
+.cache/
+*.pem
+*privateKey*
+.env
