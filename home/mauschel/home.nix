@@ -60,9 +60,16 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.zshrc";
     recursive = true;
   };
+
   # MPlayer
   home.file.".mplayer/config" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.mplayer/config";
+  };
+
+  # CoolerControl
+  home.file."/etc/coolercontrol" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/etc/coolercontrol";
+    recursive = true;
   };
 
   # Hyperland + hyprpaper
