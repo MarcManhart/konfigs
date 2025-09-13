@@ -1,0 +1,392 @@
+:root {
+    /* Primary colors */
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-transparent: transparent;
+
+    /* Background colors */
+    --bg-primary: rgba(43, 48, 59, 1.0);
+    --bg-secondary: #64727D;
+    --bg-termite: #3F3F3F;
+    --bg-hover: rgba(0, 0, 0, 0.2);
+    --bg-focus-label: #000000;
+
+    /* Border and shadow colors */
+    --border-bottom: rgba(100, 114, 125, 0.5);
+
+    /* Status colors */
+    --color-success: #26A65B;
+    --color-danger: #f53c3c;
+    --color-warning: #f1c40f;
+    --color-urgent: #eb4d4b;
+
+    /* Module specific colors */
+    --color-cpu: #2ecc71;
+    --color-memory: #9b59b6;
+    --color-disk: #964B00;
+    --color-backlight: #90b1b1;
+    --color-network: #2980b9;
+    --color-temperature: #f0932b;
+    --color-pulseaudio-hover: #a37800;
+    --color-pulseaudio-muted-text: #2a5c45;
+
+    /* Power profiles colors */
+    --color-power-balanced: #2980b9;
+    --color-power-saver: #2ecc71;
+
+    /* Wireplumber colors */
+    --color-wireplumber: #fff0f5;
+
+    /* Custom media colors */
+    --color-media: #66cc99;
+    --color-media-text: #2a5c45;
+    --color-media-vlc: #ffa000;
+
+    /* MPD colors */
+    --color-mpd: #66cc99;
+    --color-mpd-paused: #51a37a;
+
+    /* Language colors */
+    --color-language: #00b093;
+    --color-language-text: #740864;
+
+    /* Keyboard state colors */
+    --color-keyboard: #97e1ad;
+
+    /* Idle inhibitor colors */
+    --color-idle: #2d3436;
+    --color-idle-active: #ecf0f1;
+
+    /* Privacy colors */
+    --color-privacy-screenshare: #cf5700;
+    --color-privacy-audio-in: #1ca000;
+    --color-privacy-audio-out: #0069d4;
+}
+
+* {
+    /* `otf-font-awesome` is required to be installed for icons */
+    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+
+window#waybar {
+    background-color: var(--bg-primary);
+    border-bottom: 3px solid var(--border-bottom);
+    color: var(--color-white);
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/*
+window#waybar.empty {
+    background-color: transparent;
+}
+window#waybar.solo {
+    background-color: #FFFFFF;
+}
+*/
+
+window#waybar.termite {
+    background-color: var(--bg-termite);
+}
+
+window#waybar.chromium {
+    background-color: var(--color-black);
+    border: none;
+}
+
+button {
+    /* Use box-shadow instead of border so the text isn't offset */
+    box-shadow: inset 0 -3px transparent;
+    /* Avoid rounded borders under each button name */
+    border: none;
+    border-radius: 0;
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+button:hover {
+    background: inherit;
+    box-shadow: inset 0 -3px var(--color-white);
+}
+
+/* you can set a style on hover for any module like this */
+#pulseaudio:hover {
+    background-color: var(--color-pulseaudio-hover);
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: var(--color-transparent);
+    color: var(--color-white);
+}
+
+#workspaces button:hover {
+    background: var(--bg-hover);
+}
+
+#workspaces button.focused {
+    background-color: var(--bg-secondary);
+    box-shadow: inset 0 -3px var(--color-white);
+}
+
+#workspaces button.urgent {
+    background-color: var(--color-urgent);
+}
+
+#mode {
+    background-color: var(--bg-secondary);
+    box-shadow: inset 0 -3px var(--color-white);
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#power-profiles-daemon,
+#mpd {
+    padding: 0 10px;
+    color: var(--color-white);
+}
+
+#window,
+#workspaces {
+    margin: 0 4px;
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
+}
+
+#clock {
+    background-color: var(--bg-secondary);
+}
+
+#battery {
+    background-color: var(--color-white);
+    color: var(--color-black);
+}
+
+#battery.charging, #battery.plugged {
+    color: var(--color-white);
+    background-color: var(--color-success);
+}
+
+@keyframes blink {
+    to {
+        background-color: var(--color-white);
+        color: var(--color-black);
+    }
+}
+
+/* Using steps() instead of linear as a timing function to limit cpu usage */
+#battery.critical:not(.charging) {
+    background-color: var(--color-danger);
+    color: var(--color-white);
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#power-profiles-daemon {
+    padding-right: 15px;
+}
+
+#power-profiles-daemon.performance {
+    background-color: var(--color-danger);
+    color: var(--color-white);
+}
+
+#power-profiles-daemon.balanced {
+    background-color: var(--color-power-balanced);
+    color: var(--color-white);
+}
+
+#power-profiles-daemon.power-saver {
+    background-color: var(--color-power-saver);
+    color: var(--color-black);
+}
+
+label:focus {
+    background-color: var(--bg-focus-label);
+}
+
+#cpu {
+    background-color: var(--color-cpu);
+    color: var(--color-black);
+}
+
+#memory {
+    background-color: var(--color-memory);
+}
+
+#disk {
+    background-color: var(--color-disk);
+}
+
+#backlight {
+    background-color: var(--color-backlight);
+}
+
+#network {
+    background-color: var(--color-network);
+}
+
+#network.disconnected {
+    background-color: var(--color-danger);
+}
+
+#pulseaudio {
+    background-color: var(--color-warning);
+    color: var(--color-black);
+}
+
+#pulseaudio.muted {
+    background-color: var(--color-backlight);
+    color: var(--color-pulseaudio-muted-text);
+}
+
+#wireplumber {
+    background-color: var(--color-wireplumber);
+    color: var(--color-black);
+}
+
+#wireplumber.muted {
+    background-color: var(--color-danger);
+}
+
+#custom-media {
+    background-color: var(--color-media);
+    color: var(--color-media-text);
+    min-width: 100px;
+}
+
+#custom-media.custom-spotify {
+    background-color: var(--color-media);
+}
+
+#custom-media.custom-vlc {
+    background-color: var(--color-media-vlc);
+}
+
+#temperature {
+    background-color: var(--color-temperature);
+}
+
+#temperature.critical {
+    background-color: var(--color-urgent);
+}
+
+#tray {
+    background-color: var(--color-network);
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: var(--color-urgent);
+}
+
+#idle_inhibitor {
+    background-color: var(--color-idle);
+}
+
+#idle_inhibitor.activated {
+    background-color: var(--color-idle-active);
+    color: var(--color-idle);
+}
+
+#mpd {
+    background-color: var(--color-mpd);
+    color: var(--color-media-text);
+}
+
+#mpd.disconnected {
+    background-color: var(--color-danger);
+}
+
+#mpd.stopped {
+    background-color: var(--color-backlight);
+}
+
+#mpd.paused {
+    background-color: var(--color-mpd-paused);
+}
+
+#language {
+    background: var(--color-language);
+    color: var(--color-language-text);
+    padding: 0 5px;
+    margin: 0 5px;
+    min-width: 16px;
+}
+
+#keyboard-state {
+    background: var(--color-keyboard);
+    color: var(--color-black);
+    padding: 0 0px;
+    margin: 0 5px;
+    min-width: 16px;
+}
+
+#keyboard-state > label {
+    padding: 0 5px;
+}
+
+#keyboard-state > label.locked {
+    background: var(--bg-hover);
+}
+
+#scratchpad {
+    background: var(--bg-hover);
+}
+
+#scratchpad.empty {
+	background-color: var(--color-transparent);
+}
+
+#privacy {
+    padding: 0;
+}
+
+#privacy-item {
+    padding: 0 5px;
+    color: var(--color-white);
+}
+
+#privacy-item.screenshare {
+    background-color: var(--color-privacy-screenshare);
+}
+
+#privacy-item.audio-in {
+    background-color: var(--color-privacy-audio-in);
+}
+
+#privacy-item.audio-out {
+    background-color: var(--color-privacy-audio-out);
+}

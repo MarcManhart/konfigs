@@ -11,6 +11,11 @@
 			<property name="label">Hibernate</property>
         </object>
 	</child>
+	<child>
+		<object class="GtkMenuItem" id="logout">
+			<property name="label">Logout</property>
+		</object>
+	</child>
     <child>
         <object class="GtkMenuItem" id="shutdown">
 			<property name="label">Shutdown</property>
