@@ -30,7 +30,7 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
- # 25.05: neues Modul 'hardware.graphics' statt 'hardware.opengl'
+  # 25.05: neues Modul 'hardware.graphics' statt 'hardware.opengl'
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -41,30 +41,36 @@
     extraPackages32 = with pkgs; [ ];
   };
 
-   hardware.opengl = 
-    { enable = true; 
-      #driSupport = true; system told me I didn't need this any more
-      driSupport32Bit = true;
-      extraPackages = with pkgs; [
-        intel-media-driver 
-        #vaaiVdupau # keeping disabled for now
-        libvdpau-va-gl
-      ];
-    };
+  hardware.opengl = {
+    enable = true;
+    #driSupport = true; system told me I didn't need this any more
+    driSupport32Bit = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      #vaaiVdupau # keeping disabled for now
+      libvdpau-va-gl
+    ];
+  };
+
+  # Cooler Control
+  programs.coolercontrol = {
+    enable = true;
+    nvidiaSupport = true;
+  };
 
   # VA-API/GLX/GBM sauber auf NVIDIA zeigen lassen
   environment.variables = {
-    LIBVA_DRIVER_NAME = "nvidia";      # VA-API via nvidia-vaapi-driver
+    LIBVA_DRIVER_NAME = "nvidia"; # VA-API via nvidia-vaapi-driver
     VDPAU_DRIVER = "nvidia";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    GBM_BACKEND = "nvidia-drm";        # Wayland/GBM Stack
+    GBM_BACKEND = "nvidia-drm"; # Wayland/GBM Stack
   };
 
   environment.systemPackages = with pkgs; [
     # Diagnose
-    mesa-demos     # liefert glxinfo
-    vulkan-tools   # liefert vulkaninfo
-    libva-utils    # liefert vainfo
+    mesa-demos # liefert glxinfo
+    vulkan-tools # liefert vulkaninfo
+    libva-utils # liefert vainfo
     vdpauinfo
 
     # GStreamer (Videos/Browser-Backends)
@@ -73,7 +79,7 @@
     gst_all_1.gst-plugins-bad
     gst_all_1.gst-plugins-ugly
     gst_all_1.gst-libav
-    gst_all_1.gst-vaapi         # wichtig für VA-API
+    gst_all_1.gst-vaapi # wichtig für VA-API
   ];
 
   # Sanfter Governor (optional)
