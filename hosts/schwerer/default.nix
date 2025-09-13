@@ -8,7 +8,12 @@
 
 { config, pkgs, ... }:
 let
-  coolerDir = ./../../home/mauschel/dotfiles/etc/coolercontrol;
+  # coolerDir = /home/mauschel/konfigs/home/mauschel/dotfiles/etc/coolercontrol;
+  # # Deine versionierten Defaults (werden in den Store gepackt)
+  # ccDefaults = builtins.path {
+  #   path = /home/mauschel/konfigs/home/mauschel/dotfiles/etc/coolercontrol;
+  #   name = "coolercontrol-defaults";
+  # };
 in
 {
   system.stateVersion = "25.05";
@@ -56,15 +61,10 @@ in
   };
 
   # Cooler Control
-  programs.coolercontrol = {
-    enable = true;
-    nvidiaSupport = true;
-  };
-  # environment.etc."coolercontrol/config.toml".source = "${coolerDir}/config.toml";
-  # environment.etc."coolercontrol/alerts.json".source = "${coolerDir}/alerts.json";
-  # environment.etc."coolercontrol/config-ui.json".source = "${coolerDir}/config-ui.json";
-  # environment.etc."coolercontrol/modes.json".source = "${coolerDir}/modes.json";
-  environment.etc."coolercontrol".source = coolerDir;
+  # programs.coolercontrol = {
+  #   enable = true;
+  #   nvidiaSupport = true;
+  # };
 
   # VA-API/GLX/GBM sauber auf NVIDIA zeigen lassen
   environment.variables = {
