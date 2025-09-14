@@ -44,6 +44,7 @@
           modules = [
             ./modules/base.nix
             ./modules/desktop.nix
+            ./modules/hyprland.nix
             ./modules/gnome.nix
             ./modules/users/mauschel.nix
             ./hosts/BLX-INV-28/hardware-configuration.nix
