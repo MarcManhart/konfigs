@@ -1,7 +1,5 @@
 # Konfigs - Meine NixOS Konfiguration
 
-## Vorbereitung
-
 Nach frisch installiertem NixOS:
 
 ```bash
@@ -10,13 +8,7 @@ ssh-keygen # public key dann zu github
 
 ```bash
 sudo nixos-generate-config
-# wenn im repository root:
 cp /etc/nixos/hardware-configuration.nix ./hosts/BLX-INV-28/hardware-configuration.nix
-```
-
-# Bauen
-
-```bash
 sudo nixos-rebuild switch --flake .#BLX-INV-28
 ```
 
