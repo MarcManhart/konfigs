@@ -61,10 +61,10 @@ in
   };
 
   # Cooler Control
-  # programs.coolercontrol = {
-  #   enable = true;
-  #   nvidiaSupport = true;
-  # };
+  programs.coolercontrol = {
+    enable = true;
+    nvidiaSupport = true;
+  };
 
   # VA-API/GLX/GBM sauber auf NVIDIA zeigen lassen
   environment.variables = {
@@ -80,6 +80,7 @@ in
     vulkan-tools # liefert vulkaninfo
     libva-utils # liefert vainfo
     vdpauinfo
+    liquidctl
 
     # GStreamer (Videos/Browser-Backends)
     gst_all_1.gst-plugins-base
