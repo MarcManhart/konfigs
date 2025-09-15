@@ -21,7 +21,7 @@
 
   # Host-spezifisches kommt hier rein (nur so viel wie nötig).
   networking.hostName = "BLX-INV-28";
-  
+
   # UEFI-Boot mit systemd-boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -30,8 +30,15 @@
   # AMD: Microcode + Grafiktreiber
   hardware.cpu.amd.updateMicrocode = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true; # für 32-bit OpenGL/Steam/Wine
+    extraPackages = with pkgs; [
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+  };
 
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";
 }
-

@@ -37,6 +37,15 @@ in
   };
   programs.starship.enable = true;
 
+  # Cursor
+  home.pointerCursor = {
+    package = pkgs.adwaita-icon-theme; # alternativ: pkgs.bibata-cursors
+    name = "Adwaita"; # oder "Bibata-Modern-Ice"
+    size = 24;
+    gtk.enable = true;
+    x11.enable = true;
+  };
+
   # Git
   # home.file.".config/git/config" = {
   #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/git/config";
