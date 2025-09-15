@@ -47,45 +47,53 @@ in
   home.file.".config/terminator/config" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/terminator/config";
     recursive = true;
+    force = true;
   };
 
   # VIM
   home.file.".vimrc" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.vimrc";
     recursive = true;
+    force = true;
   };
 
   # ZSH
   home.file.".zshrc" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.zshrc";
-    recursive = true;
+    force = true;
   };
 
   # MPlayer
   home.file.".mplayer/config" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.mplayer/config";
+    force = true;
   };
 
   # Hyperland + hyprpaper
   home.file.".config/hypr/hyprland.conf" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/hypr/hyprland.conf";
     recursive = true;
+    force = true;
   };
   home.file.".config/hypr/hyprpaper.conf" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/hypr/hyprpaper.conf";
     recursive = true;
+    force = true;
   };
   home.file.".config/waybar/power_menu.xml" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/waybar/power_menu.xml";
     recursive = true;
+    force = true;
   };
   home.file.".config/waybar/config.jsonc" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/waybar/config.jsonc";
     recursive = true;
+    force = true;
   };
   home.file.".config/waybar/style.css" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/waybar/style.css";
     recursive = true;
+    force = true;
   };
 
   # direnv + nix-direnv (automatische dev-shells in Projekten)

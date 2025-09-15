@@ -8,20 +8,20 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/19b7b6fc-771b-4efd-a7d2-0a8fc347496b";
+    { device = "/dev/disk/by-uuid/024d3ca0-09e3-46da-8979-824e1873f657";
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."luks-6e37f2bf-3098-4b66-bfb7-341672b36b21".device = "/dev/disk/by-uuid/6e37f2bf-3098-4b66-bfb7-341672b36b21";
+  boot.initrd.luks.devices."luks-f2a89e16-e422-459c-b94d-6e07f6e3cad1".device = "/dev/disk/by-uuid/f2a89e16-e422-459c-b94d-6e07f6e3cad1";
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/3887-6072";
+    { device = "/dev/disk/by-uuid/7F92-04D2";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
@@ -33,9 +33,10 @@
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp81s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp82s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.wlp83s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.docker0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp195s0f0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.virbr0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp194s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
