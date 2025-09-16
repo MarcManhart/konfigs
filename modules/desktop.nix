@@ -31,5 +31,6 @@
     brave
     thunderbird
     terminator
+    blender
   ];
 }

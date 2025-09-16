@@ -27,10 +27,9 @@
       slack
       megasync
       tor-browser
-      # nordvpn muss über separates Overlay oder manuell installiert werden
       openvpn # Alternative für VPN-Verbindungen
       _1password-gui
-      _1password
+      _1password-cli
       mplayer
     ];
   };

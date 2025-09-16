@@ -12,7 +12,7 @@
 # - `services.xserver.videoDrivers = [ "amdgpu" ];` stellt sicher, dass der AMD‑Treiber genutzt wird.
 # - Halte diese Datei *schlank*; globale Dinge wandern in `modules/base.nix` oder `modules/desktop.nix`.
 
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   system.stateVersion = "25.05";
 
@@ -38,6 +38,28 @@
       libvdpau-va-gl
     ];
   };
+
+  # Fingerabdruck-Scanner
+  services.fprintd.enable = true; # D-Bus Dienst für Fingerabdrücke
+  # PAM: Fingerprint überall gewollt → GDM-Defaults überstimmen
+  security.pam.services = {
+    # TTY/Console-Login:
+    login.fprintAuth = lib.mkForce true;
+
+    # GDM hat eigene PAM-Stacks:
+    gdm.fprintAuth = lib.mkForce true;
+    gdm-password.fprintAuth = lib.mkForce true;
+
+    # sudo mit Finger:
+    sudo.fprintAuth = true;
+
+    # (Optional) polkit-Authentifizierung per Fingerabdruck:
+    # "polkit-1".fprintAuth = true;
+  };
+
+  # Praktische Tools
+  environment.systemPackages = with pkgs; [ fprintd ];
+
 
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";
