@@ -33,6 +33,7 @@
       _1password
       mplayer
       uget
+      uget-integrator
     ];
   };
 
