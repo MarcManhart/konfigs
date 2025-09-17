@@ -19,6 +19,7 @@
 let
   dot = "/home/mauschel/konfigs/home/mauschel/dotfiles";
   styles = "/home/mauschel/konfigs/styling";
+  blenderVersion = "4.4";
 in
 {
   home.username = "mauschel";
@@ -137,103 +138,114 @@ in
     nix-direnv.enable = true;
   };
 
+  # Blender
+  home.file.".config/blender/${blenderVersion}/config" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/blender/${blenderVersion}/config";
+    recursive = true;
+    force = true;
+  };
+  home.file.".config/blender/${blenderVersion}/scripts/presets/interface_theme/Gruvbox_Dark.xml" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${styles}/Themes/Blender/theme-gruvbox-dark-v1.5.0/Gruvbox_Dark.xml";
+    force = true;
+  };
+
   ######################################################
   # KDE Einstellungen
   ######################################################
-  home.activation.kdeClean = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
-    # Nur die kritischen Pfade – erweitere bei Bedarf:
-    rm -rf \
-      "${config.home.homeDirectory}/.config/kdeconnect" \
-      "${config.home.homeDirectory}/.config/kded5rc" \
-      "${config.home.homeDirectory}/.config/kded6rc" \
-      "${config.home.homeDirectory}/.config/kdedefaults" \
-      "${config.home.homeDirectory}/.config/kdeglobals" \
-      "${config.home.homeDirectory}/.config/kde.org" \
-      "${config.home.homeDirectory}/.config/kwinoutputconfig.json" \
-      "${config.home.homeDirectory}/.config/kwinrc" \
-      "${config.home.homeDirectory}/.config/plasma-localerc" \
-      "${config.home.homeDirectory}/.config/plasma-org.kde.plasma.desktop-appletsrc" \
-      "${config.home.homeDirectory}/.config/plasmashellrc" \
-      "${config.home.homeDirectory}/.config/plasmarc" \
-      "${config.home.homeDirectory}/.config/plasmanotifyrc" \
-      "${config.home.homeDirectory}/.config/Trolltech.conf"
-  '';
+  # home.activation.kdeClean = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
+  #   # Nur die kritischen Pfade – erweitere bei Bedarf:
+  #   rm -rf \
+  #     "${config.home.homeDirectory}/.config/kdeconnect" \
+  #     "${config.home.homeDirectory}/.config/kded5rc" \
+  #     "${config.home.homeDirectory}/.config/kded6rc" \
+  #     "${config.home.homeDirectory}/.config/kdedefaults" \
+  #     "${config.home.homeDirectory}/.config/kdeglobals" \
+  #     "${config.home.homeDirectory}/.config/kde.org" \
+  #     "${config.home.homeDirectory}/.config/kwinoutputconfig.json" \
+  #     "${config.home.homeDirectory}/.config/kwinrc" \
+  #     "${config.home.homeDirectory}/.config/plasma-localerc" \
+  #     "${config.home.homeDirectory}/.config/plasma-org.kde.plasma.desktop-appletsrc" \
+  #     "${config.home.homeDirectory}/.config/plasmashellrc" \
+  #     "${config.home.homeDirectory}/.config/plasmarc" \
+  #     "${config.home.homeDirectory}/.config/plasmanotifyrc" \
+  #     "${config.home.homeDirectory}/.config/Trolltech.conf"
+  # '';
 
-  # KDE Connect
-  home.file.".config/kdeconnect" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kdeconnect";
-    force = true;
-  };
+  # # KDE Connect
+  # home.file.".config/kdeconnect" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kdeconnect";
+  #   force = true;
+  # };
 
-  # KDE Daemon configs
-  home.file.".config/kded5rc" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kded5rc";
-    force = true;
-  };
-  home.file.".config/kded6rc" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kded6rc";
-    force = true;
-  };
+  # # KDE Daemon configs
+  # home.file.".config/kded5rc" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kded5rc";
+  #   force = true;
+  # };
+  # home.file.".config/kded6rc" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kded6rc";
+  #   force = true;
+  # };
 
-  # KDE defaults folder
-  home.file.".config/kdedefaults" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kdedefaults";
-    force = true;
-    recursive = true;
-  };
+  # # KDE defaults folder
+  # home.file.".config/kdedefaults" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kdedefaults";
+  #   force = true;
+  #   recursive = true;
+  # };
 
-  # KDE globals
-  home.file.".config/kdeglobals" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kdeglobals";
-    force = true;
-  };
+  # # KDE globals
+  # home.file.".config/kdeglobals" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kdeglobals";
+  #   force = true;
+  # };
 
-  # KDE.org folder
-  home.file.".config/kde.org" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kde.org";
-    force = true;
-    recursive = true;
-  };
+  # # KDE.org folder
+  # home.file.".config/kde.org" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kde.org";
+  #   force = true;
+  #   recursive = true;
+  # };
 
-  # KWin configs
-  home.file.".config/kwinoutputconfig.json" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kwinoutputconfig.json";
-    force = true;
-  };
-  home.file.".config/kwinrc" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kwinrc";
-    force = true;
-  };
+  # # KWin configs
+  # home.file.".config/kwinoutputconfig.json" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kwinoutputconfig.json";
+  #   force = true;
+  # };
+  # home.file.".config/kwinrc" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kwinrc";
+  #   force = true;
+  # };
 
-  # Plasma configs
-  home.file.".config/plasma-localerc" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasma-localerc";
-    force = true;
-  };
-  home.file.".config/plasma-org.kde.plasma.desktop-appletsrc" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasma-org.kde.plasma.desktop-appletsrc";
-    force = true;
-  };
-  home.file.".config/plasmashellrc" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasmashellrc";
-    force = true;
-  };
+  # # Plasma configs
+  # home.file.".config/plasma-localerc" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasma-localerc";
+  #   force = true;
+  # };
+  # home.file.".config/plasma-org.kde.plasma.desktop-appletsrc" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasma-org.kde.plasma.desktop-appletsrc";
+  #   force = true;
+  # };
+  # home.file.".config/plasmashellrc" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasmashellrc";
+  #   force = true;
+  # };
 
-  # Additional Plasma configs for themes and notifications
-  home.file.".config/plasmarc" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasmarc";
-    force = true;
-  };
-  home.file.".config/plasmanotifyrc" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasmanotifyrc";
-    force = true;
-  };
+  # # Additional Plasma configs for themes and notifications
+  # home.file.".config/plasmarc" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasmarc";
+  #   force = true;
+  # };
+  # home.file.".config/plasmanotifyrc" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/plasmanotifyrc";
+  #   force = true;
+  # };
 
-  # Qt/KDE theme config
-  home.file.".config/Trolltech.conf" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/Trolltech.conf";
-    force = true;
-  };
+  # # Qt/KDE theme config
+  # home.file.".config/Trolltech.conf" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/Trolltech.conf";
+  #   force = true;
+  # };
 
   ######################################################
   # Gnome Einstellungen

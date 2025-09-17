@@ -32,5 +32,6 @@
     thunderbird
     terminator
     blender
+    obsidian
   ];
 }

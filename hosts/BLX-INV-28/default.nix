@@ -36,6 +36,9 @@
     extraPackages = with pkgs; [
       vaapiVdpau
       libvdpau-va-gl
+      rocmPackages.clr.icd # OpenCL/ROCr ICD – wichtig fürs Device-Listing
+      rocmPackages.rocminfo # "rocminfo" zum Prüfen
+      rocmPackages.rocm-smi # Monitoring/Debug
     ];
   };
 
@@ -58,8 +61,13 @@
   };
 
   # Praktische Tools
-  environment.systemPackages = with pkgs; [ fprintd ];
-
+  environment.systemPackages = with pkgs; [
+    fprintd
+    (blender.override {
+      hipSupport = true;
+      rocmPackages = rocmPackages; # passende ROCm-Variante aus demselben nixpkgs
+    })
+  ];
 
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";

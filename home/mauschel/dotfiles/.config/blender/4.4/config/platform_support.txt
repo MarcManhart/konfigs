@@ -1,0 +1,1 @@
+{AMD/AMD Radeon Graphics (radeonsi, gfx1150, LLVM 19.1.7, DRM 3.61, 6.12.45)/4.6 (Core Profile) Mesa 25.0.7}=SUPPORTED
