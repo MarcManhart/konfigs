@@ -298,7 +298,7 @@ in
         "brave-browser.desktop"
         "firefox.desktop"
         "thunderbird.desktop"
-        "slack_slack.desktop"
+        "slack.desktop"
         "org.gnome.Nautilus.desktop"
         "org.gnome.Settings.desktop"
         "org.gnome.tweaks.desktop"
@@ -328,6 +328,20 @@ in
       # Fenster mit Super+Mausklicks verschieben/größe ändern
       mouse-button-modifier = "<Super>";
       resize-with-right-button = true;
+    };
+
+    # Custom Keybinding Liste
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings" = {
+      custom0 = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/";
+    };
+
+    # Konkretes Keybinding
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+      name = "Screenshot like Windows";
+      # auszuführenes Kommando
+      command = "gnome-screenshot -a";
+      # Tastenkombination: Shift + Super + s
+      binding = "<Shift><Super>s";
     };
 
     "org/gnome/desktop/background" = {
