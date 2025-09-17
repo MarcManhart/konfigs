@@ -52,8 +52,8 @@
 
             # sinnvolle HW-Profile
             nixos-hardware.nixosModules.common-cpu-amd
-            nixos-hardware.nixosModules.common-pc-laptop
             nixos-hardware.nixosModules.common-pc-ssd
+            nixos-hardware.nixosModules.common-pc-laptop
 
             # Home-Manager als NixOS-Modul; User-Config folgt später
             home-manager.nixosModules.home-manager

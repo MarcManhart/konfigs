@@ -74,6 +74,9 @@
     jq
     tree
     nodejs_22
+    bun
+    zip
+    unzip
   ];
 
   fonts.packages =
