@@ -32,6 +32,7 @@
       _1password-gui
       _1password
       mplayer
+      uget
     ];
   };
 
