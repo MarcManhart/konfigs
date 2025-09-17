@@ -78,6 +78,26 @@ in
     force = true;
   };
 
+  # Neovim
+  home.file.".config/nvim/init.lua" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/nvim/init.lua";
+    force = true;
+  };
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    withNodeJs = true; # LSP/Tools, falls gebraucht
+    withPython3 = true; # optional
+    withRuby = false;
+    extraPackages = with pkgs; [
+      git # lazy.nvim bootstrap braucht git
+      wl-clipboard # Wayland clipboard
+      xclip # X11 clipboard (GNOME/XWayland)
+      ripgrep # nützlich für Suche/Plugins
+    ];
+  };
+
   # Hyperland + hyprpaper
   home.file.".config/hypr/hyprland.conf" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/hypr/hyprland.conf";
@@ -102,6 +122,12 @@ in
   home.file.".config/waybar/style.css" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/waybar/style.css";
     recursive = true;
+    force = true;
+  };
+
+  # Starship
+  home.file.".config/starship.toml" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/starship.toml";
     force = true;
   };
 
