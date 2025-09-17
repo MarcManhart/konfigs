@@ -34,9 +34,6 @@
       uget
       uget-integrator
     ];
-
-    programs.firefox.enable = true;
-    programs.firefox.nativeMessagingHosts.packages = with pkgs; [ uget-integrator ];
   };
 
   ######################################################
