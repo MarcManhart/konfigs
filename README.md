@@ -12,6 +12,12 @@ cp /etc/nixos/hardware-configuration.nix ./hosts/BLX-INV-28/hardware-configurati
 sudo nixos-rebuild switch --flake .#BLX-INV-28
 ```
 
+```bash
+sudo nixos-generate-config
+cp /etc/nixos/hardware-configuration.nix ./hosts/schwerer/hardware-configuration.nix
+sudo nixos-rebuild switch --flake .#schwerer
+```
+
 # Alte Generations wegwerfen
 
 ```bash

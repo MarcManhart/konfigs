@@ -25,7 +25,7 @@
 
   environment.systemPackages = with pkgs; [
     nixfmt-rfc-style
-    firefox
+    # firefox
     direnv
     vscode
     brave
