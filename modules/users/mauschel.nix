@@ -37,6 +37,8 @@
       spotify-player
       localsend
       cava
+      lazygit
+      lazydocker
     ];
   };
 
