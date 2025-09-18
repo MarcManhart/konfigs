@@ -22,6 +22,7 @@
     hypridle
     hyprlock
     swappy # Screenshots/Clipboard (nice to have)
+    wdisplays
   ];
 
   # Polkit-Agent als User-Service (wichtig!)

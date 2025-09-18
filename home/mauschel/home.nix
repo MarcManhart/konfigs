@@ -132,6 +132,12 @@ in
     force = true;
   };
 
+  # Claude
+  home.file.".claude/settings.json" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.claude/settings.json";
+    force = true;
+  };
+
   # direnv + nix-direnv (automatische dev-shells in Projekten)
   programs.direnv = {
     enable = true;
@@ -275,6 +281,7 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${styles}/Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/gtk-dark.css";
   };
 
+  # DConf Settings
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       text-scaling-factor = 1.0;
@@ -292,6 +299,7 @@ in
         "dash-to-dock@micxgx.gmail.com"
         "appindicatorsupport@rgcjonas.gmail.com"
         "mock-tray@kramo.page"
+        "gsconnect@andyholmes.github.io"
         # "blur-my-shell@aunetx"  # wenn du sie auch aktiv setzen willst
       ];
       favorite-apps = [
@@ -302,7 +310,7 @@ in
         "org.gnome.Nautilus.desktop"
         "org.gnome.Settings.desktop"
         "org.gnome.tweaks.desktop"
-        "spotify_spotify.desktop"
+        "spotify.desktop"
         "megasync.desktop"
         "discord.desktop"
         "org.kde.digikam.desktop"
@@ -331,17 +339,31 @@ in
     };
 
     # Custom Keybinding Liste
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings" = {
-      custom0 = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/";
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+      ];
     };
 
     # Konkretes Keybinding
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "Screenshot like Windows";
-      # auszuführenes Kommando
-      command = "gnome-screenshot -a";
-      # Tastenkombination: Shift + Super + s
       binding = "<Shift><Super>s";
+      command = "flameshot gui --clipboard --pin --path $HOME/Schreibtisch";
+      name = "make-a-screenshot";
+    };
+
+    "org/gnome/desktop/wm/keybindings" = {
+      switch-applications = [ ];
+      switch-applications-backward = [ ];
+
+      switch-windows = [
+        "<Alt>Tab"
+        "<Super>Tab"
+      ];
+      switch-windows-backward = [
+        "<Shift><Alt>Tab"
+        "<Shift><Super>Tab"
+      ];
     };
 
     "org/gnome/desktop/background" = {

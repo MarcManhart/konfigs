@@ -1,0 +1,13 @@
+{
+  "env": {
+    "PREFERRED_LANGUAGE": "deutsch",
+    "USER_NAME": "Mauschelbär"
+  },
+  "permissions": {
+    "allow": [
+      "*"
+    ]
+  },
+  "model": "opus",
+  "outputStyle": "Concise"
+}

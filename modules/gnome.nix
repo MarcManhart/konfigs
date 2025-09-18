@@ -17,6 +17,7 @@
     gnomeExtensions.blur-my-shell
     gnomeExtensions.user-themes
     gnomeExtensions.mock-tray
+    gnomeExtensions.gsconnect
 
     # NetworkManager OpenVPN Support für GNOME
     networkmanager-openvpn

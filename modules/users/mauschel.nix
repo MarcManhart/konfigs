@@ -31,8 +31,20 @@
       _1password-gui
       _1password-cli
       mplayer
+      uget
+      uget-integrator
+      spotify
+      spotify-player
+      localsend
+      cava
+      lazygit
+      lazydocker
     ];
   };
+
+  # Für Spotify Local discovery
+  networking.firewall.allowedTCPPorts = [ 57621 ];
+  networking.firewall.allowedUDPPorts = [ 5353 ];
 
   ######################################################
   # 1Password
