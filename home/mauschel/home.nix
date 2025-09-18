@@ -299,6 +299,7 @@ in
         "dash-to-dock@micxgx.gmail.com"
         "appindicatorsupport@rgcjonas.gmail.com"
         "mock-tray@kramo.page"
+        "gsconnect@andyholmes.github.io"
         # "blur-my-shell@aunetx"  # wenn du sie auch aktiv setzen willst
       ];
       favorite-apps = [
