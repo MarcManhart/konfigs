@@ -303,7 +303,7 @@ in
         "org.gnome.Nautilus.desktop"
         "org.gnome.Settings.desktop"
         "org.gnome.tweaks.desktop"
-        "spotify_spotify.desktop"
+        "spotify.desktop"
         "megasync.desktop"
         "discord.desktop"
         "org.kde.digikam.desktop"

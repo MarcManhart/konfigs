@@ -33,8 +33,14 @@
       mplayer
       uget
       uget-integrator
+      spotify
+      spotify-player
     ];
   };
+
+  # Für Spotify Local discovery
+  networking.firewall.allowedTCPPorts = [ 57621 ];
+  networking.firewall.allowedUDPPorts = [ 5353 ];
 
   ######################################################
   # 1Password
