@@ -275,6 +275,7 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${styles}/Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/gtk-dark.css";
   };
 
+  # DConf Settings
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       text-scaling-factor = 1.0;
@@ -331,17 +332,17 @@ in
     };
 
     # Custom Keybinding Liste
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings" = {
-      custom0 = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/";
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+      ];
     };
 
     # Konkretes Keybinding
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "Screenshot like Windows";
-      # auszuführenes Kommando
-      command = "gnome-screenshot -a";
-      # Tastenkombination: Shift + Super + s
       binding = "<Shift><Super>s";
+      command = "flameshot gui --clipboard --pin --path $HOME/Schreibtisch";
+      name = "make-a-screenshot";
     };
 
     "org/gnome/desktop/background" = {

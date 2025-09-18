@@ -33,5 +33,10 @@
     terminator
     blender
     obsidian
+    rofi-screenshot
   ];
+
+  # GNOME hat seinen eigenen Portal-Backend
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
 }
