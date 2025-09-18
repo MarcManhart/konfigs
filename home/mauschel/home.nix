@@ -345,6 +345,20 @@ in
       name = "make-a-screenshot";
     };
 
+    "org/gnome/desktop/wm/keybindings" = {
+      switch-applications = [ ];
+      switch-applications-backward = [ ];
+
+      switch-windows = [
+        "<Alt>Tab"
+        "<Super>Tab"
+      ];
+      switch-windows-backward = [
+        "<Shift><Alt>Tab"
+        "<Shift><Super>Tab"
+      ];
+    };
+
     "org/gnome/desktop/background" = {
       # hier mit file:// Prefix!
       picture-uri = "file://${styles}/Wallpapers/stairs.png";
