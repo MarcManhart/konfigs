@@ -36,6 +36,7 @@
       spotify
       spotify-player
       localsend
+      cava
     ];
   };
 
