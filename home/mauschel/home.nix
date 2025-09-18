@@ -132,6 +132,12 @@ in
     force = true;
   };
 
+  # Claude
+  home.file.".claude/settings.json" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.claude/settings.json";
+    force = true;
+  };
+
   # direnv + nix-direnv (automatische dev-shells in Projekten)
   programs.direnv = {
     enable = true;
