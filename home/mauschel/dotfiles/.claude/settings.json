@@ -1,11 +1,13 @@
 {
-  "model": "claude-3-opus-20240229",
-  "outputStyle": "Concise",
   "env": {
     "PREFERRED_LANGUAGE": "deutsch",
     "USER_NAME": "Mauschelbär"
   },
   "permissions": {
-    "allow": ["*"]
-  }
+    "allow": [
+      "*"
+    ]
+  },
+  "model": "opus",
+  "outputStyle": "Concise"
 }
