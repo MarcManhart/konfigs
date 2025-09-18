@@ -35,6 +35,7 @@
       uget-integrator
       spotify
       spotify-player
+      localsend
     ];
   };
 
