@@ -31,8 +31,6 @@
       _1password-gui
       _1password-cli
       mplayer
-      uget
-      uget-integrator
     ];
   };
 
