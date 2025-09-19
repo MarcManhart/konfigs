@@ -94,51 +94,9 @@ in
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";
 
-  # Automatisches Mounten der SSDs beim Einloggen
-
-  # 1. Unverschlüsselte NTFS SSD (nvme1n1p1)
-  fileSystems."/mnt/daten1" = {
-    device = "/dev/disk/by-uuid/9A6646026645DF9D";
-    fsType = "ntfs3";
-    options = [
-      "rw"
-      "uid=1000"
-      "gid=100"
-      "dmask=022"
-      "fmask=133"
-      "noatime"
-      "nofail"
-      "x-systemd.automount"
-      "x-systemd.device-timeout=5"
-    ];
-  };
-
-  # 2. LUKS-verschlüsselte SSD (sda1)
-  # Für On-Demand-Entschlüsselung mit systemd-cryptsetup
-  systemd.services."systemd-cryptsetup@sda1-crypt" = {
-    overrideStrategy = "asDropin";
-    # Passwort-Prompt beim ersten Zugriff
-    serviceConfig = {
-      TimeoutSec = 0; # Unbegrenzte Zeit für Passwort-Eingabe
-    };
-  };
-
+  # LUKS-verschlüsselte SSD (sda1) - On-Demand-Entschlüsselung mit systemd
   # Crypttab-Eintrag für systemd
   environment.etc.crypttab.text = ''
-    sda1-crypt UUID=1fcea52c-c3cc-4b86-9e9c-e35fe31b8b6f none luks,noauto,x-systemd.device-timeout=5
+    sda1-crypt UUID=1fcea52c-c3cc-4b86-9e9c-e35fe31b8b6f none luks,noauto
   '';
-
-  # Mount-Punkt für die entschlüsselte Partition
-  fileSystems."/mnt/daten2" = {
-    device = "/dev/mapper/sda1-crypt";
-    fsType = "ext4"; # Anpassen je nach tatsächlichem Dateisystem
-    options = [
-      "defaults"
-      "noatime"
-      "nofail"
-      "x-systemd.automount"
-      "x-systemd.device-timeout=5"
-      "x-systemd.idle-timeout=60" # Unmount nach 60s Inaktivität
-    ];
-  };
 }
