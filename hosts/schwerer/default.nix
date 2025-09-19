@@ -93,10 +93,4 @@ in
 
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";
-
-  # LUKS-verschlüsselte SSD (sda1) - On-Demand-Entschlüsselung mit systemd
-  # Crypttab-Eintrag für systemd
-  environment.etc.crypttab.text = ''
-    sda1-crypt UUID=1fcea52c-c3cc-4b86-9e9c-e35fe31b8b6f none luks,noauto
-  '';
 }
