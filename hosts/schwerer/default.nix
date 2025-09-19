@@ -114,14 +114,19 @@ in
   };
 
   # 2. LUKS-verschlüsselte SSD (sda1)
-  # Erst LUKS-Gerät definieren
-  boot.initrd.luks.devices."sda1-crypt" = {
-    device = "/dev/disk/by-uuid/1fcea52c-c3cc-4b86-9e9c-e35fe31b8b6f";
-    # Falls du das Passwort beim Boot eingeben möchtest:
-    preLVM = false;
-    # Alternativ: keyFile für automatische Entschlüsselung (muss vorhanden sein)
-    # keyFile = "/root/keyfile";
+  # Für On-Demand-Entschlüsselung mit systemd-cryptsetup
+  systemd.services."systemd-cryptsetup@sda1-crypt" = {
+    overrideStrategy = "asDropin";
+    # Passwort-Prompt beim ersten Zugriff
+    serviceConfig = {
+      TimeoutSec = 0; # Unbegrenzte Zeit für Passwort-Eingabe
+    };
   };
+
+  # Crypttab-Eintrag für systemd
+  environment.etc.crypttab.text = ''
+    sda1-crypt UUID=1fcea52c-c3cc-4b86-9e9c-e35fe31b8b6f none luks,noauto,x-systemd.device-timeout=5
+  '';
 
   # Mount-Punkt für die entschlüsselte Partition
   fileSystems."/mnt/daten2" = {
@@ -133,6 +138,7 @@ in
       "nofail"
       "x-systemd.automount"
       "x-systemd.device-timeout=5"
+      "x-systemd.idle-timeout=60" # Unmount nach 60s Inaktivität
     ];
   };
 }
