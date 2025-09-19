@@ -93,4 +93,46 @@ in
 
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";
+
+  # Automatisches Mounten der SSDs beim Einloggen
+
+  # 1. Unverschlüsselte NTFS SSD (nvme1n1p1)
+  fileSystems."/mnt/daten1" = {
+    device = "/dev/disk/by-uuid/9A6646026645DF9D";
+    fsType = "ntfs3";
+    options = [
+      "rw"
+      "uid=1000"
+      "gid=100"
+      "dmask=022"
+      "fmask=133"
+      "noatime"
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=5"
+    ];
+  };
+
+  # 2. LUKS-verschlüsselte SSD (sda1)
+  # Erst LUKS-Gerät definieren
+  boot.initrd.luks.devices."sda1-crypt" = {
+    device = "/dev/disk/by-uuid/1fcea52c-c3cc-4b86-9e9c-e35fe31b8b6f";
+    # Falls du das Passwort beim Boot eingeben möchtest:
+    preLVM = false;
+    # Alternativ: keyFile für automatische Entschlüsselung (muss vorhanden sein)
+    # keyFile = "/root/keyfile";
+  };
+
+  # Mount-Punkt für die entschlüsselte Partition
+  fileSystems."/mnt/daten2" = {
+    device = "/dev/mapper/sda1-crypt";
+    fsType = "ext4"; # Anpassen je nach tatsächlichem Dateisystem
+    options = [
+      "defaults"
+      "noatime"
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=5"
+    ];
+  };
 }

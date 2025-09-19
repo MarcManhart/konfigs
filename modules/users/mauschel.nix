@@ -39,6 +39,7 @@
       cava
       lazygit
       lazydocker
+      parted
     ];
   };
 
