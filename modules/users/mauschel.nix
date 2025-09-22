@@ -40,6 +40,7 @@
       lazygit
       lazydocker
       bruno
+      parted
     ];
   };
 

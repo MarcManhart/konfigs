@@ -33,6 +33,11 @@
     terminator
     blender
     obsidian
+    persepolis
+    uget-integrator
+    mplayer
+    tor-browser
+    openvpn
     rofi-screenshot
   ];
 

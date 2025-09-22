@@ -318,6 +318,7 @@ in
         "virt-manager.desktop"
         "blender_blender.desktop"
         "terminator.desktop"
+        "bruno.desktop"
         "code.desktop"
         "1password.desktop"
       ];
