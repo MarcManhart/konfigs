@@ -22,4 +22,12 @@
     # NetworkManager OpenVPN Support für GNOME
     networkmanager-openvpn
   ];
+
+  # GSConnect benötigt diese Ports für die Gerätekommunikation
+  networking.firewall.allowedTCPPortRanges = [
+    { from = 1716; to = 1764; }  # KDE Connect / GSConnect TCP ports
+  ];
+  networking.firewall.allowedUDPPortRanges = [
+    { from = 1716; to = 1764; }  # KDE Connect / GSConnect UDP ports
+  ];
 }
