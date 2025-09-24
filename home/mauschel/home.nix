@@ -196,17 +196,7 @@ in
   # # KDE defaults folder
   # home.file.".config/kdedefaults" = {
   #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kdedefaults";
-  #   force = true;
-  #   recursive = true;
-  # };
-
-  # # KDE globals
-  # home.file.".config/kdeglobals" = {
-  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kdeglobals";
-  #   force = true;
-  # };
-
-  # # KDE.org folder
+  #   force = true;V
   # home.file.".config/kde.org" = {
   #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kde.org";
   #   force = true;
