@@ -47,6 +47,9 @@
       sassc
       gnome-themes-extra
       gtk-engine-murrine
+      (chromium.override {
+        enableWideVine = true;
+      })
       (pkgs.writeShellApplication {
         name = "claude";
         runtimeInputs = [ pkgs.nodejs_22 ]; # oder _20/_18 je nach Setup
