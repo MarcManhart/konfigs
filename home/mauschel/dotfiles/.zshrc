@@ -42,3 +42,9 @@ eval "$(/nix/store/8cz47vsx8z9ksx63472i2p8jqk86r45j-direnv-2.36.0/bin/direnv hoo
 alias -- gs='git status'
 alias -- ll='ls -alh'
 alias -- l='ls -lisa'
+
+# AsyncAPI CLI Autocomplete
+
+ASYNCAPI_AC_ZSH_SETUP_PATH=/home/mauschel/.cache/@asyncapi/cli/autocomplete/zsh_setup && test -f $ASYNCAPI_AC_ZSH_SETUP_PATH && source $ASYNCAPI_AC_ZSH_SETUP_PATH; # asyncapi autocomplete setup
+
+

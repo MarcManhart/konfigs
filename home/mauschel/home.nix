@@ -310,6 +310,7 @@ in
         "org.gnome.Nautilus.desktop"
         "org.gnome.Settings.desktop"
         "org.gnome.tweaks.desktop"
+        "obsidian.desktop"
         "spotify.desktop"
         "megasync.desktop"
         "discord.desktop"
