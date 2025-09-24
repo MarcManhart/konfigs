@@ -26,36 +26,6 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  # NTFS-Partition
-  fileSystems."/mnt/daten1" =
-    { device = "/dev/disk/by-uuid/9A6646026645DF9D";
-      fsType = "ntfs3";
-      options = [
-        "rw"
-        "uid=1000"
-        "gid=100"
-        "dmask=022"
-        "fmask=133"
-        "noatime"
-        "nofail"
-        "x-systemd.automount"
-        "x-systemd.device-timeout=5"
-      ];
-    };
-
-  # LUKS-verschlüsselte Partition
-  fileSystems."/mnt/daten2" =
-    { device = "/dev/mapper/sda1-crypt";
-      fsType = "ext4";
-      options = [
-        "defaults"
-        "noatime"
-        "nofail"
-        "x-systemd.automount"
-        "x-systemd.device-timeout=5"
-      ];
-    };
-
   swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
