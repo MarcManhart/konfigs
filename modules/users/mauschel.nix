@@ -41,6 +41,20 @@
       lazydocker
       bruno
       parted
+      direnv
+      nix-direnv
+      starship
+      sassc
+      gnome-themes-extra
+      gtk-engine-murrine
+      (pkgs.writeShellApplication {
+        name = "claude";
+        runtimeInputs = [ pkgs.nodejs_22 ]; # oder _20/_18 je nach Setup
+        text = ''
+          #!/usr/bin/env bash
+          exec npx -y @anthropic-ai/claude-code "$@"
+        '';
+      })
     ];
   };
 

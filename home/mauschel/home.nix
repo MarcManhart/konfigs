@@ -390,20 +390,8 @@ in
   # Zusatzpakete nur für den User
   ######################################################
   home.packages = with pkgs; [
-    direnv
-    nix-direnv
-    starship
-    sassc
-    gnome-themes-extra
-    gtk-engine-murrine
-    (pkgs.writeShellApplication {
-      name = "claude";
-      runtimeInputs = [ pkgs.nodejs_22 ]; # oder _20/_18 je nach Setup
-      text = ''
-        #!/usr/bin/env bash
-        exec npx -y @anthropic-ai/claude-code "$@"
-      '';
-    })
+    # Die meisten Packages sind in modules/users/mauschel.nix
+    # Aber direnv muss hier bleiben, weil programs.direnv es braucht
   ];
 
   # WICHTIG: zur Systemversion passend

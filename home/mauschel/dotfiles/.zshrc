@@ -34,10 +34,10 @@ unsetopt EXTENDED_HISTORY
 
 
 if [[ $TERM != "dumb" ]]; then
-  eval "$(/nix/store/74rp5qfv37kp1nb6v7dnvsvpfn9rpy4j-starship-1.23.0/bin/starship init zsh)"
+  eval "$(starship init zsh)"
 fi
 
-eval "$(/nix/store/8cz47vsx8z9ksx63472i2p8jqk86r45j-direnv-2.36.0/bin/direnv hook zsh)"
+eval "$(direnv hook zsh)"
 
 alias -- gs='git status'
 alias -- ll='ls -alh'

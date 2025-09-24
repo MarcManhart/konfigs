@@ -35,6 +35,7 @@
     obsidian
     persepolis
     uget-integrator
+    flameshot
     mplayer
     tor-browser
     openvpn
