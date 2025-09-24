@@ -340,19 +340,28 @@ in
       resize-with-right-button = true;
     };
 
-    # Custom Keybinding Liste
-    "org/gnome/settings-daemon/plugins/media-keys" = {
-      custom-keybindings = [
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-      ];
-    };
+    #################################################
+    # GNOME-eigenes Screenshot-UI deaktivieren, damit <Shift><Super>s frei wird
+    # "org/gnome/shell/keybindings" = {
+    #   show-screenshot-ui = [ ]; # war standardmäßig ["<Shift><Super>s"]
+    #   # optional auch diese leeren, falls du sie nie nutzt:
+    #   screenshot = [ ];
+    #   screenshot-window = [ ];
+    #   screenshot-area = [ ];
+    # };
 
-    # Konkretes Keybinding
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      binding = "<Shift><Super>s";
-      command = "flameshot gui --clipboard --pin --path $HOME/Schreibtisch";
-      name = "make-a-screenshot";
-    };
+    # "org/gnome/settings-daemon/plugins/media-keys" = {
+    #   custom-keybindings = [
+    #     "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+    #   ];
+    # };
+
+    # "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+    #   binding = "<Shift><Super>s"; # oder z.B. "<Super><Shift>Print"
+    #   command = "flameshot gui"; # ← ohne das stray-Quote
+    #   name = "make-a-screenshot";
+    # };
+    #################################################
 
     "org/gnome/desktop/wm/keybindings" = {
       switch-applications = [ ];
@@ -392,6 +401,7 @@ in
   home.packages = with pkgs; [
     # Die meisten Packages sind in modules/users/mauschel.nix
     # Aber direnv muss hier bleiben, weil programs.direnv es braucht
+    flameshot
   ];
 
   # WICHTIG: zur Systemversion passend

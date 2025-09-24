@@ -35,11 +35,9 @@
     obsidian
     persepolis
     uget-integrator
-    flameshot
     mplayer
     tor-browser
     openvpn
-    rofi-screenshot
   ];
 
   # GNOME hat seinen eigenen Portal-Backend
