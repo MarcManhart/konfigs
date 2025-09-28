@@ -38,7 +38,7 @@
   programs.ssh.extraConfig = ''
     # Use step for SSH certificates
     Host *.buildlinx.io
-      ProxyCommand step ssh proxycommand %h %p
+      ProxyCommand step ssh proxycommand %r %h %p
       UserKnownHostsFile /dev/null
       StrictHostKeyChecking no
   '';
