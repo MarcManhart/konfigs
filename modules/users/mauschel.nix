@@ -41,6 +41,7 @@
       lazydocker
       bruno
       parted
+      veracrypt
       direnv
       nix-direnv
       starship
@@ -64,6 +65,43 @@
   # Für Spotify Local discovery
   networking.firewall.allowedTCPPorts = [ 57621 ];
   networking.firewall.allowedUDPPorts = [ 5353 ];
+
+  ######################################################
+  # ClamAV Antivirus Scanner
+  ######################################################
+  services.clamav = {
+    daemon.enable = true;
+    updater.enable = true;
+    updater.interval = "daily"; # Automatische Updates der Virendefinitionen
+    updater.frequency = 12; # Updates alle 12 Stunden
+  };
+
+  # ClamAV Scanner-Einstellungen
+  systemd.services.clamav-scan = {
+    description = "ClamAV virus scan";
+    after = [ "clamav-freshclam.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.clamav}/bin/clamscan --recursive --infected --log=/var/log/clamav/scan.log /home";
+      User = "clamav";
+      Group = "clamav";
+    };
+  };
+
+  # Wöchentlicher Scan-Timer
+  systemd.timers.clamav-scan = {
+    description = "Schedule ClamAV scan";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "weekly"; # Wöchentlicher Scan, kann angepasst werden
+      Persistent = true;
+    };
+  };
+
+  # Log-Verzeichnis für ClamAV
+  systemd.tmpfiles.rules = [
+    "d /var/log/clamav 0755 clamav clamav -"
+  ];
 
   ######################################################
   # 1Password
