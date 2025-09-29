@@ -78,6 +78,7 @@
             ./modules/gnome.nix
             ./modules/container.nix
             ./modules/blx.nix
+            ./modules/gaming.nix
             ./modules/i2p.nix
             ./modules/users/mauschel.nix
             ./hosts/schwerer/hardware-configuration.nix
