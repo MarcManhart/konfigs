@@ -46,6 +46,7 @@
             ./modules/desktop.nix
             ./modules/hyprland.nix
             ./modules/gnome.nix
+            ./modules/container.nix
             ./modules/blx.nix
             ./modules/users/mauschel.nix
             ./hosts/BLX-INV-28/hardware-configuration.nix
@@ -75,6 +76,7 @@
             ./modules/desktop.nix
             ./modules/hyprland.nix
             ./modules/gnome.nix
+            ./modules/container.nix
             ./modules/blx.nix
             ./modules/i2p.nix
             ./modules/users/mauschel.nix
