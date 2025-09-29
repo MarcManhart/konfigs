@@ -9,8 +9,20 @@
 # - `extraGroups` passend zu Desktop‑/Docker‑Nutzung. Prüfe `networkmanager` vs. systemweite Netzprofile.
 # - Den öffentlichen SSH‑Key regelmäßig rotieren und ggf. zusätzlich FIDO2/ed25519‑sk nutzen.
 
-{ pkgs, dconf, ... }:
+{ config, pkgs, dconf, ... }:
 {
+  # Kernel-Module für OBS virtuelle Webcam
+  boot = {
+    kernelModules = [ "v4l2loopback" ];
+    extraModulePackages = with config.boot.kernelPackages; [
+      v4l2loopback
+    ];
+    # Konfiguration für v4l2loopback - erstellt /dev/video10 für OBS
+    extraModprobeConfig = ''
+      options v4l2loopback devices=1 video_nr=10 card_label="OBS Virtual Camera" exclusive_caps=1
+    '';
+  };
+
   users.users.mauschel = {
     isNormalUser = true;
     description = "Mauschel";
@@ -27,6 +39,8 @@
       slack
       discord
       obs-studio
+      obs-studio-plugins.obs-vkcapture  # Vulkan/OpenGL game capture
+      obs-studio-plugins.obs-pipewire-audio-capture  # PipeWire audio capture
       megasync
       tor-browser
       openvpn # Alternative für VPN-Verbindungen
