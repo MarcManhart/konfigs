@@ -25,6 +25,8 @@
     hashedPassword = "*"; # kein Login per Passwort, nur SSH-Key
     packages = with pkgs; [
       slack
+      discord
+      obs-studio
       megasync
       tor-browser
       openvpn # Alternative für VPN-Verbindungen
