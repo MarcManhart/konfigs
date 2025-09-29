@@ -34,7 +34,9 @@
       uget
       uget-integrator
       spotify
-      spotify-player
+      (spotify-player.override {
+        withImage = true;
+      })
       localsend
       cava
       lazygit
