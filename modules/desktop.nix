@@ -18,7 +18,7 @@
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;
 
-  virtualisation.docker.enable = true;
+  # virtualisation.docker.enable = true;  # Deaktiviert zugunsten von Podman in container.nix
 
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;

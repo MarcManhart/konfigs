@@ -42,7 +42,6 @@
       localsend
       cava
       lazygit
-      lazydocker
       bruno
       parted
       veracrypt
