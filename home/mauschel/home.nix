@@ -330,28 +330,6 @@ in
       resize-with-right-button = true;
     };
 
-    #################################################
-    # GNOME-eigenes Screenshot-UI deaktivieren, damit <Shift><Super>s frei wird
-    # "org/gnome/shell/keybindings" = {
-    #   show-screenshot-ui = [ ]; # war standardmäßig ["<Shift><Super>s"]
-    #   # optional auch diese leeren, falls du sie nie nutzt:
-    #   screenshot = [ ];
-    #   screenshot-window = [ ];
-    #   screenshot-area = [ ];
-    # };
-
-    # "org/gnome/settings-daemon/plugins/media-keys" = {
-    #   custom-keybindings = [
-    #     "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-    #   ];
-    # };
-
-    # "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-    #   binding = "<Shift><Super>s"; # oder z.B. "<Super><Shift>Print"
-    #   command = "flameshot gui"; # ← ohne das stray-Quote
-    #   name = "make-a-screenshot";
-    # };
-    #################################################
 
     "org/gnome/desktop/wm/keybindings" = {
       switch-applications = [ ];
@@ -365,6 +343,11 @@ in
         "<Shift><Alt>Tab"
         "<Shift><Super>Tab"
       ];
+    };
+
+    "org/gnome/shell/keybindings" = {
+      # Screenshot-Tool auf Super+Shift+S setzen
+      show-screenshot-ui = [ "<Super><Shift>s" ];
     };
 
     "org/gnome/desktop/background" = {
