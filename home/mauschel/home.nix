@@ -372,9 +372,6 @@ in
   # Zusatzpakete nur für den User
   ######################################################
   home.packages = with pkgs; [
-    # Die meisten Packages sind in modules/users/mauschel.nix
-    # Aber direnv muss hier bleiben, weil programs.direnv es braucht
-    flameshot
   ];
 
   # WICHTIG: zur Systemversion passend

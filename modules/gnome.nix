@@ -21,9 +21,6 @@
 
     # NetworkManager OpenVPN Support für GNOME
     networkmanager-openvpn
-
-    # gnome-screenshot # altes (eigentlich von gnome-shell abgelöstes) Screenshot-Tool als Workaround für shortcut in home.nix
-    (flameshot.override { enableWlrSupport = true; })
   ];
 
   # GSConnect benötigt diese Ports für die Gerätekommunikation

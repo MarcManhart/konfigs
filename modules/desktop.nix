@@ -40,6 +40,7 @@
     openvpn
     libreoffice
     onlyoffice-bin
+    copyq
   ];
 
   # GNOME hat seinen eigenen Portal-Backend
