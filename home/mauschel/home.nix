@@ -132,6 +132,25 @@ in
     force = true;
   };
 
+  # Copyq
+  home.file.".config/copyq/copyq.conf" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/copyq/copyq.conf";
+    force = true;
+  };
+  home.file.".config/copyq/copyq-commands.ini" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/copyq/copyq-commands.ini";
+    force = true;
+  };
+  home.file.".config/copyq/copyq_tabs.ini" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/copyq/copyq_tabs.ini";
+    force = true;
+  };
+  # home.file.".config/copyq/themes" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/copyq/themes";
+  #   recursive = true;
+  #   force = true;
+  # };
+
   # Claude
   home.file.".claude/settings.json" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.claude/settings.json";
@@ -348,6 +367,21 @@ in
     "org/gnome/shell/keybindings" = {
       # Screenshot-Tool auf Super+Shift+S setzen
       show-screenshot-ui = [ "<Super><Shift>s" ];
+      # Super+V Shortcut für Message-Tray deaktivieren (nur Super+M behalten)
+      toggle-message-tray = [ "<Super>m" ];
+    };
+
+    # Benutzerdefinierte Keybindings
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+      ];
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+      binding = "<Super>v";
+      command = "copyq show";
+      name = "CopyQ - Clipboard Manager";
     };
 
     "org/gnome/desktop/background" = {
