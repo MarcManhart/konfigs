@@ -414,6 +414,24 @@ in
   home.packages = with pkgs; [
   ];
 
+  # Systemd User Services
+  systemd.user.services.copyq = {
+    Unit = {
+      Description = "CopyQ clipboard manager";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.copyq}/bin/copyq";
+      Restart = "on-failure";
+      RestartSec = 1;
+      TimeoutStopSec = 10;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
   # WICHTIG: zur Systemversion passend
   home.stateVersion = "25.05";
 }
