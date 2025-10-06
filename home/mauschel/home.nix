@@ -132,6 +132,11 @@ in
     force = true;
   };
 
+  # Conky
+  home.file.".config/conky/conky.conf" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/conky/conky.conf";
+    force = true;
+  };
   # Copyq
   home.file.".config/copyq/copyq.conf" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/copyq/copyq.conf";

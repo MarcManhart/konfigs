@@ -44,6 +44,7 @@
     (pkgs.writeShellScriptBin "copyq" ''
       exec env QT_QPA_PLATFORM=xcb ${pkgs.copyq}/bin/copyq "$@"
     '')
+    conky
   ];
 
   # GNOME hat seinen eigenen Portal-Backend
