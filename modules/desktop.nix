@@ -38,6 +38,8 @@
     mplayer
     tor-browser
     openvpn
+    libreoffice
+    onlyoffice-bin
   ];
 
   # GNOME hat seinen eigenen Portal-Backend

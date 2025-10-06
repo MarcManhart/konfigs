@@ -77,6 +77,7 @@
     bun
     zip
     unzip
+    p7zip
   ];
 
   fonts.packages =
