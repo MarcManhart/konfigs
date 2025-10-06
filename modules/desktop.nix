@@ -40,7 +40,10 @@
     openvpn
     libreoffice
     onlyoffice-bin
-    copyq
+    # CopyQ mit XWayland-Wrapper für Wayland-Kompatibilität
+    (pkgs.writeShellScriptBin "copyq" ''
+      exec env QT_QPA_PLATFORM=xcb ${pkgs.copyq}/bin/copyq "$@"
+    '')
   ];
 
   # GNOME hat seinen eigenen Portal-Backend
