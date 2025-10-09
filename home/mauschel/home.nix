@@ -386,7 +386,7 @@ in
 
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
       binding = "<Super>v";
-      command = "copyq show";
+      command = "env QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 copyq show";
       name = "CopyQ - Clipboard Manager";
     };
 
@@ -422,10 +422,20 @@ in
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
-      ExecStart = "${pkgs.copyq}/bin/copyq";
+      ExecStart = "${pkgs.writeShellScript "copyq-wayland" ''
+        # Wayland-kompatible Umgebungsvariablen setzen
+        export QT_QPA_PLATFORM=xcb
+        export GDK_BACKEND=x11
+        export COPYQ_CLIPBOARD_MODE=selection
+        exec ${pkgs.copyq}/bin/copyq "$@"
+      ''}";
       Restart = "on-failure";
       RestartSec = 1;
       TimeoutStopSec = 10;
+      Environment = [
+        "QT_QPA_PLATFORM=xcb"
+        "GDK_BACKEND=x11"
+      ];
     };
     Install = {
       WantedBy = [ "graphical-session.target" ];
