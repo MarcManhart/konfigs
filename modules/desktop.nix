@@ -27,7 +27,7 @@
     nixfmt-rfc-style
     firefox
     direnv
-    vscode
+    vscode.fhs
     brave
     thunderbird
     terminator
