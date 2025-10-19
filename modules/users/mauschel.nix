@@ -77,6 +77,7 @@
           exec npx -y @anthropic-ai/claude-code "$@"
         '';
       })
+      pnpm
       pureref
     ];
   };
