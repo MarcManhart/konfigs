@@ -27,7 +27,10 @@
     nixfmt-rfc-style
     firefox
     direnv
-    vscode.fhs
+    # VSCode mit GPU-Beschleunigung deaktiviert
+    (pkgs.writeShellScriptBin "code" ''
+      exec ${pkgs.vscode.fhs}/bin/code --disable-gpu "$@"
+    '')
     brave
     thunderbird
     terminator

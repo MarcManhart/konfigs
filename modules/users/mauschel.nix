@@ -59,6 +59,7 @@
       bruno
       parted
       veracrypt
+      go  # Go programming language
       direnv
       nix-direnv
       starship
