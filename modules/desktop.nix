@@ -35,6 +35,7 @@
     thunderbird
     terminator
     blender
+    inkscape
     obsidian
     persepolis
     uget-integrator
