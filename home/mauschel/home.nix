@@ -137,6 +137,11 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/conky/conky.conf";
     force = true;
   };
+  # syncthing
+  # home.file.".config/syncthing" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/syncthing";
+  #   force = true;
+  # };
   
   # Copyq
   home.file.".config/copyq/copyq.conf" = {

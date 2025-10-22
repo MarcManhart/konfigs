@@ -37,6 +37,7 @@
     hashedPassword = "*"; # kein Login per Passwort, nur SSH-Key
     packages = with pkgs; [
       slack
+      go
       discord
       obs-studio
       obs-studio-plugins.obs-vkcapture  # Vulkan/OpenGL game capture
@@ -76,6 +77,7 @@
           exec npx -y @anthropic-ai/claude-code "$@"
         '';
       })
+      pnpm
       pureref
     ];
   };

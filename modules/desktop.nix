@@ -16,7 +16,28 @@
   # services.xserver.desktopManager.gnome.enable = true; # Deaktiviert für Hyprland
 
   hardware.bluetooth.enable = true;
+  hardware.logitech.wireless.enable = true;  # Für Solaar - Logitech Wireless-Geräte Support
   services.power-profiles-daemon.enable = true;
+
+  # Syncthing - Datei-Synchronisation
+  services.syncthing = {
+    enable = true;
+    user = "mauschel";
+    dataDir = "/home/mauschel/Documents";    # Standardverzeichnis für Syncthing-Daten
+    configDir = "/home/mauschel/.config/syncthing";   # Konfigurationsverzeichnis
+    openDefaultPorts = true;  # Öffnet Ports 8384 (Web UI) und 22000 (Sync)
+    settings = {
+      gui = {
+        # Web-Interface auf localhost:8384
+        enabled = true;
+        insecureSkipHostcheck = false;
+      };
+      options = {
+        urAccepted = -1;  # Keine Nutzungsstatistiken senden
+        relaysEnabled = true;  # Relay-Server für NAT-Traversal nutzen
+      };
+    };
+  };
 
   # virtualisation.docker.enable = true;  # Deaktiviert zugunsten von Podman in container.nix
 
@@ -27,6 +48,7 @@
     nixfmt-rfc-style
     firefox
     direnv
+    solaar
     vscode.fhs
     brave
     thunderbird
