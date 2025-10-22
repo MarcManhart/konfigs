@@ -49,11 +49,15 @@
     firefox
     direnv
     solaar
-    vscode.fhs
+    # VSCode mit GPU-Beschleunigung deaktiviert
+    (pkgs.writeShellScriptBin "code" ''
+      exec ${pkgs.vscode.fhs}/bin/code --disable-gpu "$@"
+    '')
     brave
     thunderbird
     terminator
     blender
+    inkscape
     obsidian
     persepolis
     uget-integrator
