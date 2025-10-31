@@ -32,6 +32,6 @@
   };
 
   # Docker CLI Vervollständigung für Bash und Zsh
-  programs.bash.enableCompletion = true;
+  programs.bash.completion.enable = true;
   programs.zsh.enableCompletion = true;
 } 
