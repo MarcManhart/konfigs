@@ -6,7 +6,7 @@
 # - Feintuning für DIESEN Host (Hostname, Bootloader, Kernelwahl, HW-Treiber, Gouvernor etc.).
 # - Alles, was *nur* diesen Rechner betrifft – nicht global.
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   # coolerDir = /home/mauschel/konfigs/home/mauschel/dotfiles/etc/coolercontrol;
   # # Deine versionierten Defaults (werden in den Store gepackt)
@@ -34,7 +34,7 @@ in
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.finegrained = false;
-    open = false; # Nutze closed-source Treiber (oder true für open source bei RTX/GTX 16xx)
+    open = false; # closed-source Treiber (für RTX/GTX i. d. R. stabiler)
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
@@ -42,22 +42,10 @@ in
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-    # hier statt environment.systemPackages → saubere Einbindung
     extraPackages = with pkgs; [
       nvidia-vaapi-driver
     ];
     extraPackages32 = with pkgs; [ ];
-  };
-
-  hardware.opengl = {
-    enable = true;
-    #driSupport = true; system told me I didn't need this any more
-    driSupport32Bit = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      #vaaiVdupau # keeping disabled for now
-      libvdpau-va-gl
-    ];
   };
 
   # Cooler Control
@@ -66,7 +54,7 @@ in
     nvidiaSupport = true;
   };
 
-  # VA-API/GLX/GBM sauber auf NVIDIA zeigen lassen
+  # VA-API/GLX/GBM auf NVIDIA zeigen lassen
   environment.variables = {
     LIBVA_DRIVER_NAME = "nvidia"; # VA-API via nvidia-vaapi-driver
     VDPAU_DRIVER = "nvidia";
@@ -76,9 +64,9 @@ in
 
   environment.systemPackages = with pkgs; [
     # Diagnose
-    mesa-demos # liefert glxinfo
-    vulkan-tools # liefert vulkaninfo
-    libva-utils # liefert vainfo
+    mesa-demos      # glxinfo
+    vulkan-tools    # vulkaninfo
+    libva-utils     # vainfo
     vdpauinfo
     liquidctl
 
@@ -88,9 +76,44 @@ in
     gst_all_1.gst-plugins-bad
     gst_all_1.gst-plugins-ugly
     gst_all_1.gst-libav
-    gst_all_1.gst-vaapi # wichtig für VA-API
+    gst_all_1.gst-vaapi
   ];
 
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";
+  powerManagement.enable = true;
+
+  # GPP0 dauerhaft als Wake-Quelle deaktivieren (wie dein echo-Befehl, nur automatisch)
+  systemd.services.disable-gpp0-wakeup = {
+    description = "Disable ACPI wakeup for GPP0";
+    wantedBy    = [ "multi-user.target" ];
+    after       = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "disable-gpp0-wakeup" ''
+        set -eu
+        if [ -r /proc/acpi/wakeup ]; then
+          # Nur toggeln, wenn aktuell *enabled* ist
+          if grep -q "^\s*GPP0\s\+S[0-9]\+\s\+\*enabled" /proc/acpi/wakeup; then
+            echo "GPP0 > /proc/acpi/wakeup (disable)"
+            echo GPP0 > /proc/acpi/wakeup
+          else
+            echo "GPP0 wakeup already disabled"
+          fi
+        fi
+      '';
+      RemainAfterExit = true;
+    };
+  };
+
+  # Optional, falls Firmware nach Resume wieder einschaltet (selten):
+  powerManagement.resumeCommands = lib.mkAfter ''
+    if [ -r /proc/acpi/wakeup ]; then
+      grep -q "^\s*GPP0\s\+S[0-9]\+\s\+\*enabled" /proc/acpi/wakeup && echo GPP0 > /proc/acpi/wakeup
+    fi
+  '';
+
+  # Falls nach *korrektem* Suspend/Resume weiterhin Grafik-Artefakte auftreten sollten,
+  # kann testweise aktiviert werden (vorerst auskommentiert lassen):
+  # boot.kernelParams = [ "amdgpu.reset=1" ];
 }
