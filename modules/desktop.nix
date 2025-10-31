@@ -39,7 +39,7 @@
     };
   };
 
-  # virtualisation.docker.enable = true;  # Deaktiviert zugunsten von Podman in container.nix
+  # Docker wird jetzt in container.nix konfiguriert
 
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
