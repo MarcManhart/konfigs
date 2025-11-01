@@ -21,6 +21,13 @@ in
   # Auf konkreten Kernel pinnen
   boot.kernelPackages = pkgs.linuxPackages_6_12;
 
+  # Kernel-Parameter für besseres NVIDIA Suspend/Resume mit Wayland
+  boot.kernelParams = [
+    "nvidia-drm.modeset=1"  # Wichtig für Wayland
+    "nvidia.NVreg_PreserveVideoMemoryAllocations=1"  # Bewahrt Video-Memory bei Suspend
+    "nvidia.NVreg_TemporaryFilePath=/var/tmp"  # Speicherort für temporäre Dateien
+  ];
+
   # Host-spezifisches kommt hier rein (nur so viel wie nötig).
   networking.hostName = "schwerer";
 
@@ -33,9 +40,12 @@ in
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = true;
+    powerManagement.enable = true; # Aktiviert NVIDIA Power Management für Suspend/Resume
     powerManagement.finegrained = false;
     open = false; # closed-source Treiber (für RTX/GTX i. d. R. stabiler)
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+    # Preserve video memory after suspend (wichtig für Wayland)
+    nvidiaPersistenced = true;
   };
 
   # 25.05: neues Modul 'hardware.graphics' statt 'hardware.opengl'
@@ -82,6 +92,17 @@ in
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";
   powerManagement.enable = true;
+
+  # NVIDIA Persistenz-Dienst für Wayland
+  systemd.services.nvidia-persistenced-custom = {
+    description = "NVIDIA Persistence Daemon for Wayland";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "forking";
+      Restart = "always";
+      ExecStart = "${config.hardware.nvidia.package}/bin/nvidia-persistenced --persistence-mode --no-persistence-mode-log-dir";
+    };
+  };
 
   # GPP0 dauerhaft als Wake-Quelle deaktivieren (wie dein echo-Befehl, nur automatisch)
   systemd.services.disable-gpp0-wakeup = {
