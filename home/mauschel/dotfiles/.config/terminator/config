@@ -21,14 +21,56 @@
     use_system_font = False
 [layouts]
   [[default]]
-    [[[child1]]]
-      type = Terminal
-      parent = window0
-      profile = default
-      directory = ""
-    [[[window0]]]
+    [[[child0]]]
       type = Window
       parent = ""
-      profile = None
-      size = 2000, 1000
+      order = 0
+      position = 102:102
+      maximised = False
+      fullscreen = False
+      size = 2377, 1220
+      title = komplex
+      last_active_term = 6153f987-1b46-4b96-bfe4-7f67c089f7e1
+      last_active_window = True
+    [[[child1]]]
+      type = HPaned
+      parent = child0
+      order = 0
+      position = 1186
+      ratio = 0.5
+    [[[terminal2]]]
+      type = Terminal
+      parent = child1
+      order = 0
+      profile = default
+      title = nanu
+      uuid = c336f0ce-4a94-4cbf-8bb0-0d6d3ffa1629
+      directory = /home/mauschel/repo
+      command = ""
+    [[[terminal3]]]
+      type = Terminal
+      parent = child1
+      order = 1
+      profile = default
+      uuid = 6153f987-1b46-4b96-bfe4-7f67c089f7e1
+      directory = /home/mauschel/repo
+  [[schaltzentrale]]
+    [[[child0]]]
+      type = Window
+      parent = ""
+      order = 0
+      position = 0:0
+      maximised = False
+      fullscreen = True
+      size = 2560, 1440
+      title = komplex
+      last_active_term = c24a336f-86a0-4931-8ca7-e934ff52588c
+      last_active_window = True
+    [[[terminal1]]]
+      type = Terminal
+      parent = child0
+      order = 0
+      profile = default
+      uuid = c24a336f-86a0-4931-8ca7-e934ff52588c
+      command = lazydocker
 [plugins]

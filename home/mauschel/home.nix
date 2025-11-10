@@ -185,6 +185,12 @@ in
     force = true;
   };
 
+  # Krita
+  home.file.".config/kritarc" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/kritarc";
+    force = true;
+  };
+
   ######################################################
   # KDE Einstellungen
   ######################################################

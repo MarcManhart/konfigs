@@ -58,6 +58,7 @@
     terminator
     blender
     inkscape
+    krita
     obsidian
     persepolis
     uget-integrator
