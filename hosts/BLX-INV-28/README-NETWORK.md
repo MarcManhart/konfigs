@@ -3,46 +3,51 @@
 ## Problem
 Beim Abziehen des USB-C Docks (mit Ethernet) verlor das System die Netzwerkverbindung, da WiFi nicht automatisch aktiviert wurde. Zusätzlich froren die GNOME Network Settings ein.
 
+## Ursache
+- WiFi war nicht parallel zu Ethernet aktiv
+- Beim Dock-Disconnect gab es keine Fallback-Verbindung
+- GNOME Keyring war beim Boot noch nicht bereit, wenn NetworkManager WiFi aktivieren wollte
+
 ## Lösung
-Die Konfiguration in `default.nix` implementiert:
+Die Konfiguration in `default.nix` implementiert einen **systemd user service**, der:
 
-1. **Automatische WiFi-Aktivierung beim Ethernet-Disconnect**
-   - NetworkManager Dispatcher-Script überwacht Ethernet-Verbindungen
-   - Aktiviert WiFi automatisch wenn Ethernet getrennt wird
-
-2. **Verbindungsprioritäten**
+1. **NACH dem GNOME-Login läuft** (wenn Keyring verfügbar ist)
+2. **Verbindungsprioritäten und Metriken setzt:**
    - Ethernet: Priorität 200, Route-Metrik 100 (bevorzugt)
    - WiFi: Priorität 100, Route-Metrik 600 (Fallback)
 
-3. **Parallel-Betrieb**
-   - WiFi läuft parallel zu Ethernet
-   - Sofortige Fallback-Verbindung verfügbar
+## Setup (einmalig)
+**WiFi muss einmal manuell aktiviert werden:**
+```bash
+nmcli connection up "Blinx"
+```
+
+Danach bleibt WiFi automatisch aktiv und verbindet sich beim Neustart.
 
 ## Nach dem Rebuild
-Nach `sudo nixos-rebuild switch` werden:
-- Die Prioritäten automatisch gesetzt
-- WiFi parallel aktiviert
-- Das Dispatcher-Script installiert
+Nach `sudo nixos-rebuild switch` und Login werden automatisch die Metriken gesetzt.
 
-## Manuell Testen
+## Testen
 ```bash
 # Zeige aktuelle Verbindungen
 nmcli device status
 
 # Zeige Prioritäten
-nmcli -f NAME,AUTOCONNECT,AUTOCONNECT-PRIORITY connection show
+nmcli -f NAME,AUTOCONNECT,AUTOCONNECT-PRIORITY connection show | grep -E "NAME|Blinx|Kabel"
 
-# Zeige Routing
-ip route show
+# Zeige Default-Routen (niedrigere metric = bevorzugt)
+ip route show | grep default
 
-# Logs überwachen
-journalctl -u NetworkManager -f
+# User-Service Status prüfen
+systemctl --user status networkmanager-connection-metrics.service
 ```
 
 ## Erwartetes Verhalten
 - **Dock angeschlossen:** Ethernet aktiv (metric 100), WiFi aktiv (metric 600)
-- **Dock abgezogen:** WiFi übernimmt sofort (metric 600), keine Unterbrechung
+- **Dock abgezogen:** WiFi übernimmt sofort, keine Unterbrechung
 - **GNOME Settings:** Keine Freezes mehr
 
-## WiFi-Passwort
-Das WiFi-Passwort bleibt in der bestehenden NetworkManager-Konfiguration gespeichert (`/etc/NetworkManager/system-connections/`). Die NixOS-Konfiguration ändert nur Prioritäten und Metriken, nicht die Credentials.
+## Wichtig
+- WiFi-Passwort bleibt in `/etc/NetworkManager/system-connections/` gespeichert
+- Die NixOS-Konfiguration ändert nur Prioritäten/Metriken, keine Credentials
+- Der Service läuft als User-Service (nicht System-Service) um Keyring-Probleme zu vermeiden
