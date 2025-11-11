@@ -27,6 +27,13 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
 
+  # Kernel-Parameter für AMD Suspend/Resume Fix
+  boot.kernelParams = [
+    "amdgpu.dc=1"           # Display Core aktivieren
+    "amdgpu.dpm=1"          # Dynamic Power Management
+    "amdgpu.gpu_recovery=1" # GPU Recovery bei Problemen
+  ];
+
   # AMD: Microcode + Grafiktreiber
   hardware.cpu.amd.updateMicrocode = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
@@ -71,4 +78,15 @@
 
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";
+
+  # AMD GPU Reset nach Suspend (falls Kernel-Params nicht reichen)
+  systemd.services.amdgpu-resume-fix = {
+    description = "Reset AMD GPU nach Suspend";
+    after = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" ];
+    wantedBy = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.kmod}/bin/modprobe -r amdgpu && ${pkgs.kmod}/bin/modprobe amdgpu";
+    };
+  };
 }
