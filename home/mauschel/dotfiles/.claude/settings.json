@@ -10,5 +10,5 @@
   },
   "model": "opus",
   "outputStyle": "Concise",
-  "alwaysThinkingEnabled": false
+  "alwaysThinkingEnabled": true
 }

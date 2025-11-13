@@ -104,7 +104,11 @@
         "args": ["/var/opt/godot-mcp/build/index.js"],
         "env": {
           "DEBUG": "true",
-          "GODOT_PATH": "/etc/profiles/per-user/mauschel/bin/godot-mono"
+          "GODOT_PATH": "/etc/profiles/per-user/mauschel/bin/godot-mono",
+          "DISPLAY": ":0",
+          "WAYLAND_DISPLAY": "wayland-0",
+          "XDG_RUNTIME_DIR": "/run/user/1000",
+          "HOME": "/home/mauschel"
         },
         "autoApprove": [
           "launch_editor",
