@@ -48,6 +48,7 @@
             ./modules/gnome.nix
             ./modules/container.nix
             ./modules/blx.nix
+            ./modules/godot-mcp.nix
             ./modules/users/mauschel.nix
             ./hosts/BLX-INV-28/hardware-configuration.nix
             ./hosts/BLX-INV-28/default.nix
@@ -78,6 +79,7 @@
             ./modules/gnome.nix
             ./modules/container.nix
             ./modules/blx.nix
+            ./modules/godot-mcp.nix
             ./modules/gaming.nix
             ./modules/i2p.nix
             ./modules/users/mauschel.nix
