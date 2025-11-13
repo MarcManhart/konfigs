@@ -49,11 +49,29 @@
     firefox
     direnv
     solaar
-    # VSCode mit GPU-Beschleunigung deaktiviert
-    # (pkgs.writeShellScriptBin "code" ''
-    #   exec ${pkgs.vscode.fhs}/bin/code --disable-gpu "$@"
-    # '')
-    vscode
+    # VSCode mit GPU-Beschleunigung deaktiviert und Desktop-Icon
+    (pkgs.symlinkJoin {
+      name = "vscode-wrapper";
+      paths = [
+        (pkgs.writeShellScriptBin "code" ''
+          exec ${pkgs.vscode.fhs}/bin/code --disable-gpu "$@"
+        '')
+        (pkgs.makeDesktopItem {
+          name = "code";
+          desktopName = "Visual Studio Code";
+          comment = "Code Editing. Redefined.";
+          genericName = "Text Editor";
+          exec = "code %F";
+          icon = "${pkgs.vscode}/share/pixmaps/vscode.png";
+          startupNotify = true;
+          startupWMClass = "Code";
+          categories = [ "Utility" "TextEditor" "Development" "IDE" ];
+          mimeTypes = [ "text/plain" "inode/directory" ];
+          keywords = [ "vscode" ];
+        })
+      ];
+    })
+    # vscode
     brave
     thunderbird
     terminator

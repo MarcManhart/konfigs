@@ -24,6 +24,7 @@
       nodejs_22
       bash
       coreutils
+      godot-mono
     ];
 
     script = ''
@@ -96,13 +97,14 @@
       fi
 
       # Create the MCP server configuration
-      MCP_CONFIG=$(cat <<'EOF'
+      MCP_CONFIG=$(cat <<EOF
       {
         "type": "stdio",
         "command": "node",
         "args": ["/var/opt/godot-mcp/build/index.js"],
         "env": {
-          "DEBUG": "true"
+          "DEBUG": "true",
+          "GODOT_PATH": "/etc/profiles/per-user/mauschel/bin/godot-mono"
         },
         "autoApprove": [
           "launch_editor",
@@ -121,7 +123,7 @@
           "update_project_uids"
         ]
       }
-      EOF
+EOF
       )
 
       # Update the Claude configuration file with jq
