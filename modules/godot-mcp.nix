@@ -6,6 +6,7 @@
 }:
 
 {
+  # System-level service to clone and build the repository
   systemd.services.godot-mcp-setup = {
     description = "Clone and build godot-mcp repository";
     wantedBy = [ "multi-user.target" ];
@@ -23,13 +24,6 @@
       nodejs_22
       bash
       coreutils
-      (writeShellApplication {
-        name = "claude";
-        runtimeInputs = [ nodejs_22 ];
-        text = ''
-          exec npx -y @anthropic-ai/claude-code "$@"
-        '';
-      })
     ];
 
     script = ''
@@ -55,16 +49,61 @@
         echo "Running npm run build..."
         npm run build
 
-        echo "godot-mcp setup completed successfully"
+        # Make the build directory readable by all users
+        chmod -R a+rX "$REPO_PATH"
 
-        MCP_JSON=$(cat <<EOF
+        echo "godot-mcp setup completed successfully"
+    '';
+  };
+
+  # User-level service to configure Claude MCP
+  systemd.user.services.godot-mcp-config = {
+    description = "Configure Claude MCP for Godot";
+    wantedBy = [ "default.target" ];
+    after = [ "godot-mcp-setup.service" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+
+    path = with pkgs; [
+      nodejs_22
+      jq
+      bash
+      coreutils
+      (writeShellApplication {
+        name = "claude";
+        runtimeInputs = [ nodejs_22 ];
+        text = ''
+          exec npx -y @anthropic-ai/claude-code "$@"
+        '';
+      })
+    ];
+
+    script = ''
+      CLAUDE_CONFIG="$HOME/.claude.json"
+
+      # Wait for the system service to complete building
+      while [ ! -f "/var/opt/godot-mcp/build/index.js" ]; do
+        echo "Waiting for godot-mcp to be built..."
+        sleep 2
+      done
+
+      # Ensure Claude config file exists
+      if [ ! -f "$CLAUDE_CONFIG" ]; then
+        echo "{}" > "$CLAUDE_CONFIG"
+      fi
+
+      # Create the MCP server configuration
+      MCP_CONFIG=$(cat <<'EOF'
       {
+        "type": "stdio",
         "command": "node",
-        "args": ["$REPO_PATH/build/index.js"],
+        "args": ["/var/opt/godot-mcp/build/index.js"],
         "env": {
           "DEBUG": "true"
         },
-        "disabled": false,
         "autoApprove": [
           "launch_editor",
           "run_project",
@@ -85,11 +124,35 @@
       EOF
       )
 
-        echo "Registering MCP server 'godot' in Claude..."
-        if ! claude mcp add-json "godot" "$MCP_JSON"; then
-          echo "claude mcp add-json failed (vermutlich existiert 'godot' schon). Ignoriere Fehler."
-        fi
-    '';
+      # Update the Claude configuration file with jq
+      echo "Updating Claude MCP configuration for user..."
 
+      # Backup current config
+      cp "$CLAUDE_CONFIG" "$CLAUDE_CONFIG.backup.$(date +%s)"
+
+      # Add or update the godot MCP server configuration
+      jq --argjson mcp "$MCP_CONFIG" '.mcpServers.godot = $mcp' "$CLAUDE_CONFIG" > "$CLAUDE_CONFIG.tmp" && mv "$CLAUDE_CONFIG.tmp" "$CLAUDE_CONFIG"
+
+      echo "Claude MCP configuration updated successfully for user $USER"
+
+      # Verify the configuration
+      if jq -e '.mcpServers.godot' "$CLAUDE_CONFIG" > /dev/null; then
+        echo "Configuration verified: godot MCP server is configured"
+      else
+        echo "Warning: Failed to verify godot MCP configuration"
+        exit 1
+      fi
+    '';
   };
+
+  # Ensure claude command is available in all user shells
+  environment.systemPackages = with pkgs; [
+    (writeShellApplication {
+      name = "claude";
+      runtimeInputs = [ nodejs_22 ];
+      text = ''
+        exec npx -y @anthropic-ai/claude-code "$@"
+      '';
+    })
+  ];
 }
