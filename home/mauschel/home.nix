@@ -191,6 +191,12 @@ in
     force = true;
   };
 
+  # Godot
+  home.file.".config/godot/editor_settings-4.4.tres" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dot}/.config/godot/editor_settings-4.4.tres";
+    force = true;
+  };
+
   ######################################################
   # KDE Einstellungen
   ######################################################
@@ -338,10 +344,10 @@ in
         "org.gnome.tweaks.desktop"
         "obsidian.desktop"
         "spotify.desktop"
-        "megasync.desktop"
         "discord.desktop"
         "org.kde.digikam.desktop"
         "pureref.desktop"
+        "org.godotengine.Godot4.4-mono.desktop"
         "virt-manager.desktop"
         "blender_blender.desktop"
         "terminator.desktop"
@@ -447,6 +453,23 @@ in
         "QT_QPA_PLATFORM=xcb"
         "GDK_BACKEND=x11"
       ];
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
+  systemd.user.services.megasync = {
+    Unit = {
+      Description = "MEGAsync automatic sync client";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.megasync}/bin/megasync";
+      Restart = "on-failure";
+      RestartSec = 3;
+      TimeoutStopSec = 10;
     };
     Install = {
       WantedBy = [ "graphical-session.target" ];

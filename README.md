@@ -18,6 +18,12 @@ cp /etc/nixos/hardware-configuration.nix ./hosts/schwerer/hardware-configuration
 sudo nixos-rebuild switch --flake .#schwerer
 ```
 
+```bash
+# hier liegen die desktop-files
+ls -l /run/current-system/sw/share/applications
+ls -l /etc/profiles/per-user/mauschel/share/applications
+```
+
 # Alte Generations wegwerfen
 
 ```bash

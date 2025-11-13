@@ -50,9 +50,10 @@
     direnv
     solaar
     # VSCode mit GPU-Beschleunigung deaktiviert
-    (pkgs.writeShellScriptBin "code" ''
-      exec ${pkgs.vscode.fhs}/bin/code --disable-gpu "$@"
-    '')
+    # (pkgs.writeShellScriptBin "code" ''
+    #   exec ${pkgs.vscode.fhs}/bin/code --disable-gpu "$@"
+    # '')
+    vscode
     brave
     thunderbird
     terminator

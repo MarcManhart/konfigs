@@ -37,7 +37,6 @@
     hashedPassword = "*"; # kein Login per Passwort, nur SSH-Key
     packages = with pkgs; [
       slack
-      go
       discord
       obs-studio
       obs-studio-plugins.obs-vkcapture  # Vulkan/OpenGL game capture
@@ -49,6 +48,7 @@
       _1password-cli
       mplayer
       uget
+      godot-mono
       uget-integrator
       spotify
       (spotify-player.override {
@@ -60,7 +60,7 @@
       bruno
       parted
       veracrypt
-      go  # Go programming language
+      go
       direnv
       nix-direnv
       starship
