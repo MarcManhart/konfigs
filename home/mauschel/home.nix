@@ -419,6 +419,17 @@ in
       custom-background-color = true; # erlaubt eigene Farbe
       background-color = "#1d2021"; # RGB ohne Alpha
       background-opacity = 1.0; # 0.0–1.0; hier voll deckend
+
+      # Auto-Hide Einstellungen
+      dock-fixed = false; # Dock nicht immer sichtbar
+      autohide = true; # Automatisches Ausblenden aktivieren
+      autohide-in-fullscreen = true; # Auch im Vollbildmodus ausblenden
+      intellihide = false; # Nicht nur bei überlappenden Fenstern ausblenden
+      intellihide-mode = "FOCUS_APPLICATION_WINDOWS"; # Falls intellihide später aktiviert wird
+      hide-delay = 0.2; # Verzögerung beim Ausblenden in Sekunden
+      show-delay = 0.1; # Verzögerung beim Einblenden in Sekunden
+      pressure-threshold = 100.0; # Mausdruck-Schwellenwert (wenn am Bildschirmrand)
+
       # optional nützlich:
       # apply-custom-theme = false;        # falls das Built-in-Theme dich überfährt
     };

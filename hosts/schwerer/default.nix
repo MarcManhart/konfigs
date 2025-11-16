@@ -93,17 +93,6 @@ in
   powerManagement.cpuFreqGovernor = "schedutil";
   powerManagement.enable = true;
 
-  # NVIDIA Persistenz-Dienst für Wayland
-  systemd.services.nvidia-persistenced-custom = {
-    description = "NVIDIA Persistence Daemon for Wayland";
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "forking";
-      Restart = "always";
-      ExecStart = "${config.hardware.nvidia.package}/bin/nvidia-persistenced --persistence-mode --no-persistence-mode-log-dir";
-    };
-  };
-
   # GPP0 dauerhaft als Wake-Quelle deaktivieren (wie dein echo-Befehl, nur automatisch)
   systemd.services.disable-gpp0-wakeup = {
     description = "Disable ACPI wakeup for GPP0";
