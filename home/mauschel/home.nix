@@ -184,6 +184,10 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${styles}/Themes/Blender/theme-gruvbox-dark-v1.5.0/Gruvbox_Dark.xml";
     force = true;
   };
+  home.file.".config/blender/${blenderVersion}/scripts/addons/quick_mesh_rename.py" = {
+    source = config.lib.file.mkOutOfStoreSymlink "/home/mauschel/konfigs/res/blender_extentions/quick_mesh_rename.py";
+    force = true;
+  };
 
   # Krita
   home.file.".config/kritarc" = {
