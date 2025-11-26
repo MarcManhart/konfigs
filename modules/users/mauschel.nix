@@ -49,6 +49,7 @@
       mplayer
       uget
       godot-mono
+      dotnet-sdk_8  # .NET SDK für C# Entwicklung mit Godot
       uget-integrator
       spotify
       (spotify-player.override {
