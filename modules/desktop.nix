@@ -19,6 +19,32 @@
   hardware.logitech.wireless.enable = true;  # Für Solaar - Logitech Wireless-Geräte Support
   services.power-profiles-daemon.enable = true;
 
+  ############################################################################
+  # Druckerdienst (CUPS)
+  ############################################################################
+  # CUPS - Common Unix Printing System
+  # Web-Interface: http://localhost:631
+  services.printing = {
+    enable = true;
+    # Automatische Treiber-Erkennung für gängige Drucker
+    drivers = with pkgs; [
+      gutenprint          # Viele Drucker (Canon, Epson, HP, etc.)
+      hplip               # HP Drucker (inkl. Scanner-Support)
+      brlaser             # Brother Laser-Drucker
+    ];
+    # Netzwerkdrucker automatisch erkennen (Bonjour/mDNS)
+    browsing = true;
+    defaultShared = false;  # Drucker nicht standardmäßig teilen
+  };
+
+  # Avahi für Netzwerkdrucker-Erkennung (mDNS/DNS-SD)
+  # Ermöglicht automatische Erkennung von Druckern im lokalen Netzwerk
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;      # .local Hostnamen auflösen (IPv4)
+    openFirewall = true;  # mDNS Port 5353 öffnen
+  };
+
   # Syncthing - Datei-Synchronisation
   services.syncthing = {
     enable = true;

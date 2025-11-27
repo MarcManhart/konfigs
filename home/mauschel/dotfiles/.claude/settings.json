@@ -8,7 +8,6 @@
       "*"
     ]
   },
-  "model": "opus",
   "outputStyle": "Concise",
   "alwaysThinkingEnabled": true
 }

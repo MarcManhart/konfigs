@@ -27,11 +27,98 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
 
-  # Kernel-Parameter für AMD Suspend/Resume Fix
+  # Kernel-Parameter für AMD Suspend/Resume Fix + WLAN-Stabilität
   boot.kernelParams = [
-    "amdgpu.dc=1"           # Display Core aktivieren
-    "amdgpu.dpm=1"          # Dynamic Power Management
-    "amdgpu.gpu_recovery=1" # GPU Recovery bei Problemen
+    "amdgpu.dc=1"                   # Display Core aktivieren
+    "amdgpu.dpm=1"                  # Dynamic Power Management
+    "amdgpu.gpu_recovery=1"         # GPU Recovery bei Problemen
+    "cfg80211.ieee80211_regdom=DE"  # WiFi: Regulatory Domain auf DE setzen (reduziert Roaming-Probleme)
+  ];
+
+  ############################################################################
+  # MediaTek MT7925 WiFi-Stabilität (PCI ID 14c3:7925)
+  ############################################################################
+  # Problem (2025-11-26): System-Freezes durch blockierenden WLAN-Treiber
+  # Symptome: GNOME unresponsiv, Terminal hängt, nur Hard-Reset hilft
+  # Ursache: mt7925e-Treiber blockiert in ieee80211_ifa_changed (mac80211)
+  #          bei Power-Save und AP-Roaming (5GHz/6GHz Mesh-Netzwerk "Blinx")
+  # Siehe: dokumentation.md für vollständige Analyse
+
+  # 1. NetworkManager: WiFi Power-Save komplett deaktivieren
+  # Power-Save ist die Hauptursache für Treiber-Deadlocks
+  networking.networkmanager.wifi.powersave = false;
+
+  # 2. NetworkManager-Einstellungen für Stabilität
+  networking.networkmanager.settings = {
+    wifi = {
+      # MAC-Randomisierung beim Scannen deaktivieren (kann AP-Probleme verursachen)
+      scan-rand-mac-address = "no";
+    };
+    "connection" = {
+      # Stabile Verbindungs-ID (verhindert "vergessene" Verbindungen)
+      stable-id = "\${CONNECTION}/\${BOOT}";
+    };
+  };
+
+  # 3. Udev-Regel: Power-Management auf Hardware-Ebene deaktivieren
+  # Greift früher als NetworkManager, bereits beim Laden des Treibers
+  services.udev.extraRules = ''
+    # MediaTek MT7925 WiFi: PCI Power-Management deaktivieren
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x14c3", ATTR{device}=="0x7925", ATTR{power/control}="on"
+    # WiFi-Interface: Power-Save via iw deaktivieren
+    ACTION=="add", SUBSYSTEM=="net", KERNEL=="wl*", RUN+="${pkgs.iw}/bin/iw dev %k set power_save off"
+  '';
+
+  # 4. Sysctl: TCP Keepalive für stabilere Verbindungen bei kurzen WLAN-Drops
+  boot.kernel.sysctl = {
+    "net.ipv4.tcp_keepalive_time" = 60;
+    "net.ipv4.tcp_keepalive_intvl" = 10;
+    "net.ipv4.tcp_keepalive_probes" = 6;
+    "net.ipv4.tcp_fin_timeout" = 15;
+  };
+
+  # 5. Systemd-Service: Power-Save Fallback nach Network-Online
+  systemd.services.wifi-powersave-off = {
+    description = "Disable WiFi Power Save for MT7925 stability";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "wifi-powersave-off" ''
+        sleep 2
+        for iface in /sys/class/net/wl*; do
+          if [ -d "$iface" ]; then
+            ifname=$(basename "$iface")
+            ${pkgs.iw}/bin/iw dev "$ifname" set power_save off 2>/dev/null || true
+          fi
+        done
+      '';
+    };
+  };
+
+  # 6. NetworkManager Dispatcher: Power-Save nach jedem Reconnect deaktivieren
+  networking.networkmanager.dispatcherScripts = [
+    {
+      source = pkgs.writeText "99-wifi-powersave" ''
+        #!/bin/sh
+        # MT7925: Power-Save nach Verbindungsänderung deaktivieren
+        INTERFACE="$1"
+        ACTION="$2"
+        case "$INTERFACE" in
+          wl*)
+            case "$ACTION" in
+              up|dhcp4-change|dhcp6-change|connectivity-change)
+                logger "MT7925-stability: Disabling power save for $INTERFACE after $ACTION"
+                ${pkgs.iw}/bin/iw dev "$INTERFACE" set power_save off 2>/dev/null || true
+                ;;
+            esac
+            ;;
+        esac
+      '';
+      type = "basic";
+    }
   ];
 
   # AMD: Microcode + Grafiktreiber
@@ -74,6 +161,10 @@
       hipSupport = true;
       rocmPackages = rocmPackages; # passende ROCm-Variante aus demselben nixpkgs
     })
+    # WiFi-Tools für MT7925 Debugging und Management
+    iw              # iw dev wlan0 info, iw dev wlan0 get power_save
+    wirelesstools   # iwconfig (Legacy)
+    wavemon         # Interaktiver WiFi-Monitor
   ];
 
   # Sanfter Governor (optional)
