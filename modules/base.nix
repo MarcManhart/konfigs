@@ -75,6 +75,7 @@
     tree
     nodejs_22
     bun
+    python3
     zip
     unzip
     p7zip
