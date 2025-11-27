@@ -11,7 +11,7 @@
   [[default]]
     icon_bell = False
     background_color = "#282828"
-    background_darkness = 0.95
+    background_darkness = 1.0
     background_type = transparent
     font = SauceCodePro Nerd Font 10
     foreground_color = "#ebdbb2"
