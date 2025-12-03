@@ -1,6 +1,7 @@
 [Bookmarks]
 [Recent]
-/run/media/mauschel/Daten2/MEGA/res/Blender/Keymaps/
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levels/Level_01_DerAnfang/
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/
+/run/media/mauschel/Daten2/MEGA/res/Blender/Keymaps/
 /run/media/mauschel/Daten2/MEGA/Leben/Wohnen/Wohnung_Riverbank/elbstieg2_3d/Models/
 /run/media/mauschel/Daten2/MEGA/Leben/Wohnen/Wohnung_Riverbank/elbstieg2_3d/
