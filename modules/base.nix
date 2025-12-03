@@ -78,6 +78,7 @@
     zip
     unzip
     p7zip
+    devenv
   ];
 
   fonts.packages =
