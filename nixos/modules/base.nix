@@ -80,6 +80,8 @@
     unzip
     p7zip
     devenv
+    ansible
+    # ansible-lint  # temporarily disabled - dependency version mismatch in nixpkgs
   ];
 
   fonts.packages =
