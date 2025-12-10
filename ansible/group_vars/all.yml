@@ -19,7 +19,7 @@ install_steam: true
 install_i2p: false  # Nur auf bestimmten Hosts
 
 # Pfad zu den Dotfiles (relativ zum Ansible-Verzeichnis)
-dotfiles_source: "{{ playbook_dir }}/../nixos/home/mauschel/dotfiles"
+dotfiles_source: "{{ playbook_dir }}/../dotfiles"
 styling_source: "{{ playbook_dir }}/../styling"
 
 # Syncthing-Konfiguration

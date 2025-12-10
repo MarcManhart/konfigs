@@ -17,7 +17,7 @@
   ...
 }:
 let
-  dot = "/home/mauschel/konfigs/home/mauschel/dotfiles";
+  dot = "/home/mauschel/konfigs/dotfiles";
   styles = "/home/mauschel/konfigs/styling";
   blenderVersion = "4.4";
 in

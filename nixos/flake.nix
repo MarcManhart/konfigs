@@ -66,7 +66,7 @@
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
               # Platzhalter – wir legen die Datei im nächsten Schritt an:
-              home-manager.users.mauschel = import ./home/mauschel/home.nix;
+              home-manager.users.mauschel = import ./home.nix;
             }
           ];
         };
@@ -98,7 +98,7 @@
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
               # Platzhalter – wir legen die Datei im nächsten Schritt an:
-              home-manager.users.mauschel = import ./home/mauschel/home.nix;
+              home-manager.users.mauschel = import ./home.nix;
             }
           ];
         };
