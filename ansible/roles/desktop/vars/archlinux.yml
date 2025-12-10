@@ -1,0 +1,55 @@
+---
+# Arch Linux Desktop packages
+
+xorg_gdm_packages:
+  - xorg-server
+  - xorg-xinit
+  - gdm
+
+bluetooth_packages:
+  - bluez
+  - bluez-utils
+  - blueman
+
+solaar_package: solaar
+
+cups_packages:
+  - cups
+  - cups-filters
+  - cups-pdf
+  - gutenprint
+  - hplip
+
+avahi_packages:
+  - avahi
+  - nss-mdns
+
+libvirt_packages:
+  - qemu-full
+  - libvirt
+  - virt-manager
+  - dnsmasq
+  - bridge-utils
+
+desktop_apps:
+  - firefox
+  - thunderbird
+  - terminator
+  - blender
+  - inkscape
+  - krita
+  - vlc
+  - libreoffice-fresh
+  - openvpn
+  - conky
+
+xdg_portal_packages:
+  - xdg-desktop-portal
+  - xdg-desktop-portal-gnome
+  - xdg-desktop-portal-gtk
+
+flatpak_apps:
+  - com.obsproject.Studio
+  - md.obsidian.Obsidian
+  - com.brave.Browser
+  - org.onlyoffice.desktopeditors

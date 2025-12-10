@@ -1,0 +1,57 @@
+---
+# Globale Variablen für alle Hosts
+
+# Benutzer-Konfiguration
+main_user: mauschel
+main_user_home: "/home/{{ main_user }}"
+main_user_description: "Mauschel"
+
+# Zeitzone und Locale
+timezone: "Europe/Berlin"
+locale: "de_DE.UTF-8"
+
+# Feature-Flags (können pro Host überschrieben werden)
+install_gaming: true
+install_hyprland: true
+install_gnome: true
+install_docker: true
+install_steam: true
+install_i2p: false  # Nur auf bestimmten Hosts
+
+# Pfad zu den Dotfiles (relativ zum Ansible-Verzeichnis)
+dotfiles_source: "{{ playbook_dir }}/../nixos/home/mauschel/dotfiles"
+styling_source: "{{ playbook_dir }}/../styling"
+
+# Syncthing-Konfiguration
+syncthing_data_dir: "{{ main_user_home }}/Documents"
+syncthing_config_dir: "{{ main_user_home }}/.config/syncthing"
+
+# Blender Version für Dotfiles
+blender_version: "4.4"
+
+# Firewall-Ports
+firewall_tcp_ports:
+  - 22      # SSH
+  - 57621   # Spotify Local Discovery
+  - 8384    # Syncthing Web UI
+  - 22000   # Syncthing Sync
+
+firewall_udp_ports:
+  - 5353    # mDNS
+  - 21027   # Syncthing Discovery
+
+# GSConnect/KDE Connect Ports
+gsconnect_tcp_ports: "1716:1764"
+gsconnect_udp_ports: "1716:1764"
+
+# Steam/Gaming Ports
+gaming_tcp_ports:
+  - 27015
+  - 27036
+  - 27037
+
+gaming_udp_ports:
+  - 27015
+  - 27031
+  - 27036
+  - 4380

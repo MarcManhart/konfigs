@@ -1,0 +1,35 @@
+---
+# Arch Linux Hyprland packages
+
+hyprland_packages:
+  - hyprland
+  - hyprpaper
+  - hypridle
+  - hyprlock
+
+hyprland_tools:
+  - wdisplays
+
+waybar_package: waybar
+rofi_package: rofi-wayland
+polkit_package: lxqt-policykit
+nm_applet_package: network-manager-applet
+
+clipboard_packages:
+  - wl-clipboard
+  - xclip
+
+screenshot_packages:
+  - grim
+  - slurp
+  - swappy
+
+pipewire_packages:
+  - pipewire
+  - pipewire-pulse
+  - pipewire-alsa
+  - wireplumber
+
+xdg_portal_hyprland:
+  - xdg-desktop-portal-hyprland
+  - xdg-desktop-portal-gtk

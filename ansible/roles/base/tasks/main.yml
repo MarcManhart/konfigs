@@ -1,0 +1,182 @@
+---
+# Base Role - Grundkonfiguration (entspricht modules/base.nix)
+
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "default.yml"
+
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+- name: Configure locale
+  block:
+    - name: Generate locale (Debian/Ubuntu)
+      ansible.builtin.locale_gen:
+        name: "{{ locale }}"
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Set system locale
+      ansible.builtin.copy:
+        dest: /etc/locale.conf
+        content: |
+          LANG={{ locale }}
+          LC_ALL={{ locale }}
+        mode: '0644'
+      when: ansible_os_family != 'Debian'
+
+- name: Install base packages
+  ansible.builtin.package:
+    name: "{{ base_packages }}"
+    state: present
+
+- name: Install Zsh
+  ansible.builtin.package:
+    name: zsh
+    state: present
+
+- name: Install Nerd Fonts
+  block:
+    - name: Create fonts directory
+      ansible.builtin.file:
+        path: /usr/local/share/fonts/nerd-fonts
+        state: directory
+        mode: '0755'
+
+    - name: Download and install popular Nerd Fonts
+      ansible.builtin.unarchive:
+        src: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ item }}.zip"
+        dest: /usr/local/share/fonts/nerd-fonts
+        remote_src: true
+        creates: "/usr/local/share/fonts/nerd-fonts/{{ item }}"
+      loop:
+        - FiraCode
+        - JetBrainsMono
+        - Hack
+        - SourceCodePro
+      ignore_errors: true
+
+    - name: Update font cache
+      ansible.builtin.command: fc-cache -fv
+      changed_when: false
+
+- name: Configure SSH server
+  block:
+    - name: Install OpenSSH server
+      ansible.builtin.package:
+        name: "{{ ssh_server_package }}"
+        state: present
+
+    - name: Configure SSH - disable password authentication
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?PasswordAuthentication"
+        line: "PasswordAuthentication no"
+        backup: true
+      notify: Restart SSH
+
+    - name: Enable SSH service
+      ansible.builtin.systemd:
+        name: "{{ ssh_service_name }}"
+        enabled: true
+        state: started
+
+- name: Configure SSH agent
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/ssh_config
+    line: "    AddKeysToAgent yes"
+    insertafter: "^Host \\*"
+    create: true
+    mode: '0644'
+
+- name: Install and configure NetworkManager
+  block:
+    - name: Install NetworkManager
+      ansible.builtin.package:
+        name: "{{ networkmanager_packages }}"
+        state: present
+
+    - name: Enable NetworkManager
+      ansible.builtin.systemd:
+        name: NetworkManager
+        enabled: true
+        state: started
+
+- name: Configure firewall
+  block:
+    - name: Install firewall (firewalld or ufw)
+      ansible.builtin.package:
+        name: "{{ firewall_package }}"
+        state: present
+
+    - name: Enable firewalld (Fedora/RHEL/Arch)
+      ansible.builtin.systemd:
+        name: firewalld
+        enabled: true
+        state: started
+      when: firewall_package == 'firewalld'
+
+    - name: Enable ufw (Debian/Ubuntu)
+      block:
+        - name: Enable UFW
+          community.general.ufw:
+            state: enabled
+            policy: deny
+
+        - name: Allow SSH
+          community.general.ufw:
+            rule: allow
+            port: '22'
+            proto: tcp
+      when: firewall_package == 'ufw'
+
+- name: Configure reverse path filtering for VPN
+  ansible.posix.sysctl:
+    name: net.ipv4.conf.all.rp_filter
+    value: '0'
+    state: present
+    reload: true
+
+- name: Install Node.js
+  block:
+    - name: Install Node.js (distribution package)
+      ansible.builtin.package:
+        name: "{{ nodejs_package }}"
+        state: present
+      when: not install_nodejs_from_nodesource | default(false)
+
+    - name: Install Node.js from NodeSource (Debian/Ubuntu)
+      when:
+        - ansible_os_family == 'Debian'
+        - install_nodejs_from_nodesource | default(true)
+      block:
+        - name: Add NodeSource GPG key
+          ansible.builtin.apt_key:
+            url: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
+            state: present
+
+        - name: Add NodeSource repository
+          ansible.builtin.apt_repository:
+            repo: "deb https://deb.nodesource.com/node_22.x nodistro main"
+            state: present
+            filename: nodesource
+
+        - name: Install Node.js from NodeSource
+          ansible.builtin.apt:
+            name: nodejs
+            state: present
+            update_cache: true
+
+- name: Install Bun
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.shell: |
+    curl -fsSL https://bun.sh/install | bash
+  args:
+    creates: "{{ main_user_home }}/.bun/bin/bun"
+  environment:
+    HOME: "{{ main_user_home }}"

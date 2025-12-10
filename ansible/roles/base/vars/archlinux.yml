@@ -1,0 +1,31 @@
+---
+# Arch Linux spezifische Paketnamen
+
+base_packages:
+  - vim
+  - git
+  - git-lfs
+  - vlc
+  - htop
+  - curl
+  - wget
+  - jq
+  - tree
+  - python
+  - python-pip
+  - zip
+  - unzip
+  - p7zip
+  - base-devel
+
+ssh_server_package: openssh
+ssh_service_name: sshd
+
+networkmanager_packages:
+  - networkmanager
+  - network-manager-applet
+
+firewall_package: firewalld
+
+nodejs_package: nodejs
+install_nodejs_from_nodesource: false

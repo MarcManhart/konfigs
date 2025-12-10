@@ -1,0 +1,36 @@
+---
+# Fedora user packages
+
+user_packages:
+  - discord
+  - mplayer
+  - chromium
+  - parted
+  - neovim
+
+obs_package: obs-studio
+
+dotnet_sdk_package: dotnet-sdk-8.0
+
+golang_package: golang
+
+dev_packages:
+  - direnv
+  - sassc
+  - gnome-themes-extra
+  - gtk-murrine-engine
+
+clamav_packages:
+  - clamav
+  - clamd
+  - clamav-update
+
+clamav_daemon_service: clamd@scan
+clamav_freshclam_service: clamav-freshclam
+
+user_flatpak_apps:
+  - com.slack.Slack
+  - com.spotify.Client
+  - org.localsend.localsend_app
+  - com.megacmd.MEGAcmd
+  - com.usebruno.Bruno

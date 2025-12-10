@@ -1,0 +1,36 @@
+---
+# Fedora Hyprland packages
+
+hyprland_packages:
+  - hyprland
+  - hyprpaper
+
+hyprland_tools:
+  - hypridle
+  - hyprlock
+  - wdisplays
+
+waybar_package: waybar
+rofi_package: rofi-wayland
+polkit_package: lxqt-policykit
+nm_applet_package: network-manager-applet
+
+clipboard_packages:
+  - wl-clipboard
+  - xclip
+
+screenshot_packages:
+  - grim
+  - slurp
+  - swappy
+
+pipewire_packages:
+  - pipewire
+  - pipewire-pulseaudio
+  - pipewire-alsa
+  - pipewire-utils
+  - wireplumber
+
+xdg_portal_hyprland:
+  - xdg-desktop-portal-hyprland
+  - xdg-desktop-portal-gtk

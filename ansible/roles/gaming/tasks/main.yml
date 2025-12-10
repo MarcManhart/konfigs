@@ -1,0 +1,262 @@
+---
+# Gaming Role - Steam, Emulatoren, Controller (entspricht modules/gaming.nix)
+
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "default.yml"
+
+- name: Enable 32-bit architecture (Debian/Ubuntu)
+  ansible.builtin.command: dpkg --add-architecture i386
+  when: ansible_os_family == 'Debian'
+  changed_when: false
+
+- name: Update cache after adding i386
+  ansible.builtin.apt:
+    update_cache: true
+  when: ansible_os_family == 'Debian'
+
+- name: Install graphics drivers and Vulkan
+  ansible.builtin.package:
+    name: "{{ graphics_packages }}"
+    state: present
+
+- name: Install Steam
+  when: install_steam | default(true)
+  block:
+    - name: Install Steam (Debian/Ubuntu)
+      ansible.builtin.apt:
+        name: steam-installer
+        state: present
+      when: ansible_os_family == 'Debian'
+      ignore_errors: true
+
+    - name: Install Steam (Fedora)
+      ansible.builtin.dnf:
+        name: steam
+        state: present
+      when: ansible_os_family == 'RedHat'
+      ignore_errors: true
+
+    - name: Install Steam (Arch)
+      community.general.pacman:
+        name: steam
+        state: present
+      when: ansible_os_family == 'Archlinux'
+
+    - name: Install Steam via Flatpak (fallback)
+      community.general.flatpak:
+        name: com.valvesoftware.Steam
+        state: present
+      ignore_errors: true
+
+- name: Install gaming tools
+  ansible.builtin.package:
+    name: "{{ gaming_tools }}"
+    state: present
+  ignore_errors: true
+
+- name: Install MangoHud
+  ansible.builtin.package:
+    name: "{{ mangohud_package }}"
+    state: present
+  ignore_errors: true
+
+- name: Install GameMode
+  block:
+    - name: Install gamemode package
+      ansible.builtin.package:
+        name: "{{ gamemode_package }}"
+        state: present
+
+    - name: Create GameMode user service
+      become: true
+      become_user: "{{ main_user }}"
+      ansible.builtin.copy:
+        dest: "{{ main_user_home }}/.config/systemd/user/gamemoded.service"
+        content: |
+          [Unit]
+          Description=GameMode Daemon
+
+          [Service]
+          ExecStart=/usr/bin/gamemoded
+          Restart=on-failure
+
+          [Install]
+          WantedBy=default.target
+        mode: '0644'
+      ignore_errors: true
+
+- name: Install Lutris
+  ansible.builtin.package:
+    name: lutris
+    state: present
+  ignore_errors: true
+
+- name: Install Wine
+  ansible.builtin.package:
+    name: "{{ wine_packages }}"
+    state: present
+  ignore_errors: true
+
+- name: Install Bottles via Flatpak
+  community.general.flatpak:
+    name: com.usebottles.bottles
+    state: present
+  ignore_errors: true
+
+- name: Install ProtonUp-Qt via Flatpak
+  community.general.flatpak:
+    name: net.davidotek.pupgui2
+    state: present
+  ignore_errors: true
+
+- name: Install Nintendo Switch Emulator (Ryujinx) via Flatpak
+  community.general.flatpak:
+    name: org.ryujinx.Ryujinx
+    state: present
+  ignore_errors: true
+
+- name: Install PlayStation Emulators via Flatpak
+  community.general.flatpak:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - net.pcsx2.PCSX2
+    - net.rpcs3.RPCS3
+    - org.duckstation.DuckStation
+  ignore_errors: true
+
+- name: Install RetroArch
+  ansible.builtin.package:
+    name: "{{ retroarch_package }}"
+    state: present
+  ignore_errors: true
+
+- name: Install RetroArch via Flatpak (fallback)
+  community.general.flatpak:
+    name: org.libretro.RetroArch
+    state: present
+  ignore_errors: true
+
+- name: Install mupen64plus (N64)
+  ansible.builtin.package:
+    name: "{{ mupen64plus_package }}"
+    state: present
+  ignore_errors: true
+
+- name: Install Xbox controller support
+  ansible.builtin.package:
+    name: "{{ xbox_controller_packages }}"
+    state: present
+  ignore_errors: true
+
+- name: Create udev rules for controllers
+  ansible.builtin.copy:
+    dest: /etc/udev/rules.d/99-game-controllers.rules
+    content: |
+      # Nintendo Switch Pro Controller
+      KERNEL=="hidraw*", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="2009", MODE="0666"
+
+      # PlayStation Controller
+      KERNEL=="hidraw*", ATTRS{idVendor}=="054c", MODE="0666"
+
+      # 8BitDo Controller
+      KERNEL=="hidraw*", ATTRS{idVendor}=="2dc8", MODE="0666"
+
+      # Steam Controller
+      KERNEL=="hidraw*", ATTRS{idVendor}=="28de", MODE="0666"
+
+      # Xbox Controllers
+      KERNEL=="hidraw*", ATTRS{idVendor}=="045e", MODE="0666"
+    mode: '0644'
+  notify: Reload udev
+
+- name: Configure gaming firewall rules (TCP)
+  ansible.posix.firewalld:
+    port: "{{ item }}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ gaming_tcp_ports }}"
+  when: ansible_os_family != 'Debian'
+  ignore_errors: true
+
+- name: Configure gaming firewall rules (UDP)
+  ansible.posix.firewalld:
+    port: "{{ item }}/udp"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ gaming_udp_ports }}"
+  when: ansible_os_family != 'Debian'
+  ignore_errors: true
+
+- name: Configure Steam ports range (TCP)
+  ansible.posix.firewalld:
+    port: "27015-27030/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  when: ansible_os_family != 'Debian'
+  ignore_errors: true
+
+- name: Configure Steam ports range (UDP)
+  ansible.posix.firewalld:
+    port: "27000-27100/udp"
+    permanent: true
+    immediate: true
+    state: enabled
+  when: ansible_os_family != 'Debian'
+  ignore_errors: true
+
+- name: Set PAM limits for gaming
+  ansible.builtin.copy:
+    dest: /etc/security/limits.d/99-gaming.conf
+    content: |
+      # Gaming memory limits
+      @users soft memlock unlimited
+      @users hard memlock unlimited
+    mode: '0644'
+
+- name: Load v4l2loopback module for streaming
+  block:
+    - name: Install v4l2loopback
+      ansible.builtin.package:
+        name: "{{ v4l2loopback_package }}"
+        state: present
+      ignore_errors: true
+
+    - name: Configure v4l2loopback module
+      ansible.builtin.copy:
+        dest: /etc/modprobe.d/v4l2loopback.conf
+        content: |
+          options v4l2loopback devices=1 video_nr=10 card_label="OBS Virtual Camera" exclusive_caps=1
+        mode: '0644'
+
+    - name: Load v4l2loopback
+      community.general.modprobe:
+        name: v4l2loopback
+        state: present
+      ignore_errors: true
+
+- name: Install gaming fonts (Microsoft)
+  ansible.builtin.package:
+    name: "{{ gaming_fonts }}"
+    state: present
+  ignore_errors: true
+
+- name: Configure low-latency PipeWire for gaming
+  ansible.builtin.copy:
+    dest: /etc/pipewire/pipewire.conf.d/92-low-latency.conf
+    content: |
+      context.properties = {
+          default.clock.rate = 48000
+          default.clock.quantum = 512
+          default.clock.min-quantum = 512
+          default.clock.max-quantum = 512
+      }
+    mode: '0644'
+  ignore_errors: true

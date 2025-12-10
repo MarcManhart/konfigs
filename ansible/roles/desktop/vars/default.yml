@@ -1,0 +1,35 @@
+---
+# Default Desktop packages
+
+xorg_gdm_packages:
+  - xorg-server
+  - gdm
+
+bluetooth_packages:
+  - bluez
+  - blueman
+
+solaar_package: solaar
+
+cups_packages:
+  - cups
+
+avahi_packages:
+  - avahi
+
+libvirt_packages:
+  - qemu
+  - libvirt
+  - virt-manager
+
+desktop_apps:
+  - firefox
+  - thunderbird
+  - vlc
+
+xdg_portal_packages:
+  - xdg-desktop-portal
+
+flatpak_apps:
+  - md.obsidian.Obsidian
+  - com.brave.Browser

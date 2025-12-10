@@ -1,0 +1,32 @@
+---
+# Debian/Ubuntu Hyprland packages
+# Note: Hyprland may need to be built from source on Debian/Ubuntu
+
+hyprland_packages: []  # Often not in official repos
+
+hyprland_tools:
+  - wdisplays
+
+waybar_package: waybar
+rofi_package: rofi
+polkit_package: lxpolkit
+nm_applet_package: network-manager-gnome
+
+clipboard_packages:
+  - wl-clipboard
+  - xclip
+
+screenshot_packages:
+  - grim
+  - slurp
+
+pipewire_packages:
+  - pipewire
+  - pipewire-audio
+  - pipewire-pulse
+  - pipewire-alsa
+  - wireplumber
+
+xdg_portal_hyprland:
+  - xdg-desktop-portal-wlr
+  - xdg-desktop-portal-gtk

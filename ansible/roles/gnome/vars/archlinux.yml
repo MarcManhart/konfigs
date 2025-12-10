@@ -1,0 +1,17 @@
+---
+# Arch Linux GNOME packages
+
+gnome_packages:
+  - gnome
+  - gnome-extra
+
+gnome_tweaks_package: gnome-tweaks
+
+dconf_package: dconf
+
+gnome_extension_packages:
+  - gnome-shell-extension-appindicator
+  - gnome-shell-extension-dash-to-dock
+  - gnome-shell-extension-gsconnect
+
+nm_openvpn_package: networkmanager-openvpn

@@ -1,0 +1,57 @@
+---
+# Fedora/RHEL Desktop packages
+
+xorg_gdm_packages:
+  - xorg-x11-server-Xorg
+  - gdm
+  - xorg-x11-drv-libinput
+
+bluetooth_packages:
+  - bluez
+  - bluez-tools
+  - blueman
+
+solaar_package: solaar
+
+cups_packages:
+  - cups
+  - cups-filters
+  - cups-pdf
+  - gutenprint
+  - gutenprint-cups
+  - hplip
+
+avahi_packages:
+  - avahi
+  - avahi-tools
+  - nss-mdns
+
+libvirt_packages:
+  - qemu-kvm
+  - libvirt
+  - virt-manager
+  - virt-install
+  - bridge-utils
+
+desktop_apps:
+  - firefox
+  - thunderbird
+  - terminator
+  - blender
+  - inkscape
+  - krita
+  - vlc
+  - libreoffice
+  - openvpn
+  - conky
+
+xdg_portal_packages:
+  - xdg-desktop-portal
+  - xdg-desktop-portal-gnome
+  - xdg-desktop-portal-gtk
+
+flatpak_apps:
+  - com.obsproject.Studio
+  - md.obsidian.Obsidian
+  - com.brave.Browser
+  - org.onlyoffice.desktopeditors

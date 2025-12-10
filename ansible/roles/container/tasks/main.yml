@@ -1,0 +1,153 @@
+---
+# Container Role - Docker (entspricht modules/container.nix)
+
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "default.yml"
+
+- name: Install Docker (Debian/Ubuntu)
+  when: ansible_os_family == 'Debian'
+  block:
+    - name: Install prerequisites
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Add Docker GPG key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
+        state: present
+
+    - name: Add Docker repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+        state: present
+        filename: docker
+
+    - name: Install Docker packages
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+
+- name: Install Docker (Fedora/RHEL)
+  when: ansible_os_family == 'RedHat'
+  block:
+    - name: Add Docker repository
+      ansible.builtin.command: |
+        dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+      args:
+        creates: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install Docker packages
+      ansible.builtin.dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+
+- name: Install Docker (Arch)
+  when: ansible_os_family == 'Archlinux'
+  block:
+    - name: Install Docker packages
+      community.general.pacman:
+        name:
+          - docker
+          - docker-compose
+          - docker-buildx
+        state: present
+
+- name: Enable Docker service
+  ansible.builtin.systemd:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Enable containerd service
+  ansible.builtin.systemd:
+    name: containerd
+    enabled: true
+    state: started
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ main_user }}"
+    groups: docker
+    append: true
+
+- name: Install Docker tools
+  ansible.builtin.package:
+    name: "{{ docker_tools }}"
+    state: present
+  ignore_errors: true
+
+- name: Install dive (Docker image analyzer)
+  block:
+    - name: Download dive
+      ansible.builtin.get_url:
+        url: "https://github.com/wagoodman/dive/releases/download/v0.12.0/dive_0.12.0_linux_amd64.deb"
+        dest: /tmp/dive.deb
+        mode: '0644'
+      when: ansible_os_family == 'Debian'
+
+    - name: Install dive (Debian)
+      ansible.builtin.apt:
+        deb: /tmp/dive.deb
+      when: ansible_os_family == 'Debian'
+
+    - name: Install dive (Arch)
+      community.general.pacman:
+        name: dive
+        state: present
+      when: ansible_os_family == 'Archlinux'
+      ignore_errors: true
+
+- name: Install lazydocker
+  block:
+    - name: Download lazydocker
+      ansible.builtin.get_url:
+        url: "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_{{ lazydocker_version }}_Linux_x86_64.tar.gz"
+        dest: /tmp/lazydocker.tar.gz
+        mode: '0644'
+
+    - name: Extract lazydocker
+      ansible.builtin.unarchive:
+        src: /tmp/lazydocker.tar.gz
+        dest: /usr/local/bin
+        remote_src: true
+        creates: /usr/local/bin/lazydocker
+        extra_opts:
+          - lazydocker
+  vars:
+    lazydocker_version: "0.23.3"
+
+- name: Configure Docker pruning cron job
+  ansible.builtin.cron:
+    name: "Docker prune"
+    special_time: weekly
+    job: "docker system prune -af --volumes"
+    user: root
+
+- name: Enable bash completion for Docker
+  ansible.builtin.lineinfile:
+    path: /etc/bash.bashrc
+    line: "complete -F _docker docker"
+    create: true
+    mode: '0644'
+  ignore_errors: true

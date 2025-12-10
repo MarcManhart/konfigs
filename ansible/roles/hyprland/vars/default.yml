@@ -1,0 +1,25 @@
+---
+# Default Hyprland packages
+
+hyprland_packages: []
+
+hyprland_tools: []
+
+waybar_package: waybar
+rofi_package: rofi
+polkit_package: polkit
+nm_applet_package: network-manager-applet
+
+clipboard_packages:
+  - wl-clipboard
+
+screenshot_packages:
+  - grim
+  - slurp
+
+pipewire_packages:
+  - pipewire
+  - wireplumber
+
+xdg_portal_hyprland:
+  - xdg-desktop-portal-wlr

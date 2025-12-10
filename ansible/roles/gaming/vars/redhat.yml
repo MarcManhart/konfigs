@@ -1,0 +1,33 @@
+---
+# Fedora Gaming packages
+
+graphics_packages:
+  - mesa-vulkan-drivers
+  - vulkan-loader
+  - vulkan-tools
+  - mesa-libGL
+  - mesa-dri-drivers
+
+gaming_tools:
+  - gamescope
+
+mangohud_package: mangohud
+
+gamemode_package: gamemode
+
+wine_packages:
+  - wine
+  - winetricks
+
+retroarch_package: retroarch
+
+mupen64plus_package: mupen64plus
+
+xbox_controller_packages:
+  - xone
+
+v4l2loopback_package: v4l2loopback
+
+gaming_fonts:
+  - liberation-fonts
+  - mscore-fonts-all

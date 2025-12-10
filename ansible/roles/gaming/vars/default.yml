@@ -1,0 +1,24 @@
+---
+# Default Gaming packages
+
+graphics_packages:
+  - vulkan-tools
+
+gaming_tools: []
+
+mangohud_package: mangohud
+
+gamemode_package: gamemode
+
+wine_packages:
+  - wine
+
+retroarch_package: retroarch
+
+mupen64plus_package: mupen64plus
+
+xbox_controller_packages: []
+
+v4l2loopback_package: v4l2loopback
+
+gaming_fonts: []

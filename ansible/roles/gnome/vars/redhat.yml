@@ -1,0 +1,18 @@
+---
+# Fedora GNOME packages
+
+gnome_packages:
+  - "@gnome-desktop"
+  - gnome-shell
+
+gnome_tweaks_package: gnome-tweaks
+
+dconf_package: dconf
+
+gnome_extension_packages:
+  - gnome-shell-extension-appindicator
+  - gnome-shell-extension-dash-to-dock
+  - gnome-shell-extension-user-theme
+  - gnome-shell-extension-gsconnect
+
+nm_openvpn_package: NetworkManager-openvpn-gnome

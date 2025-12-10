@@ -1,0 +1,13 @@
+---
+# Default GNOME packages
+
+gnome_packages:
+  - gnome-shell
+
+gnome_tweaks_package: gnome-tweaks
+
+dconf_package: dconf
+
+gnome_extension_packages: []
+
+nm_openvpn_package: networkmanager-openvpn

@@ -1,0 +1,59 @@
+---
+# Debian/Ubuntu Desktop packages
+
+xorg_gdm_packages:
+  - xorg
+  - gdm3
+  - xserver-xorg
+
+bluetooth_packages:
+  - bluez
+  - bluez-tools
+  - blueman
+
+solaar_package: solaar
+
+cups_packages:
+  - cups
+  - cups-filters
+  - cups-pdf
+  - printer-driver-gutenprint
+  - hplip
+  - printer-driver-brlaser
+
+avahi_packages:
+  - avahi-daemon
+  - avahi-utils
+  - libnss-mdns
+
+libvirt_packages:
+  - qemu-kvm
+  - libvirt-daemon-system
+  - libvirt-clients
+  - virt-manager
+  - bridge-utils
+
+desktop_apps:
+  - firefox
+  - thunderbird
+  - terminator
+  - blender
+  - inkscape
+  - krita
+  - vlc
+  - libreoffice
+  - openvpn
+  - conky
+
+xdg_portal_packages:
+  - xdg-desktop-portal
+  - xdg-desktop-portal-gnome
+  - xdg-desktop-portal-gtk
+
+flatpak_apps:
+  - com.obsproject.Studio
+  - md.obsidian.Obsidian
+  - com.brave.Browser
+  - com.persepolis.Persepolis
+  - org.onlyoffice.desktopeditors
+  - io.github.AliGholami7.persepolis

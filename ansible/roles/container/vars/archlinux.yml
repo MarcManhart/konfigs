@@ -1,0 +1,5 @@
+---
+# Arch Linux Docker tools
+
+docker_tools:
+  - dive

@@ -1,0 +1,15 @@
+---
+- name: Restart GDM
+  ansible.builtin.systemd:
+    name: gdm
+    state: restarted
+
+- name: Restart CUPS
+  ansible.builtin.systemd:
+    name: cups
+    state: restarted
+
+- name: Restart libvirtd
+  ansible.builtin.systemd:
+    name: libvirtd
+    state: restarted

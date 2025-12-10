@@ -1,0 +1,34 @@
+---
+# Arch Linux user packages
+
+user_packages:
+  - discord
+  - mplayer
+  - chromium
+  - parted
+  - veracrypt
+  - neovim
+  - spotify-launcher
+
+obs_package: obs-studio
+
+dotnet_sdk_package: dotnet-sdk
+
+golang_package: go
+
+dev_packages:
+  - direnv
+  - sassc
+  - gnome-themes-extra
+  - gtk-engine-murrine
+
+clamav_packages:
+  - clamav
+
+clamav_daemon_service: clamav-daemon
+clamav_freshclam_service: clamav-freshclam
+
+user_flatpak_apps:
+  - com.slack.Slack
+  - org.localsend.localsend_app
+  - com.usebruno.Bruno

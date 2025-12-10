@@ -1,0 +1,181 @@
+---
+# Desktop Role - GUI/Workstation (entspricht modules/desktop.nix)
+
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "default.yml"
+
+- name: Install X.Org and GDM
+  ansible.builtin.package:
+    name: "{{ xorg_gdm_packages }}"
+    state: present
+
+- name: Enable GDM
+  ansible.builtin.systemd:
+    name: gdm
+    enabled: true
+  ignore_errors: true
+
+- name: Configure Bluetooth
+  block:
+    - name: Install Bluetooth packages
+      ansible.builtin.package:
+        name: "{{ bluetooth_packages }}"
+        state: present
+
+    - name: Enable Bluetooth service
+      ansible.builtin.systemd:
+        name: bluetooth
+        enabled: true
+        state: started
+
+- name: Install Logitech Solaar
+  ansible.builtin.package:
+    name: "{{ solaar_package }}"
+    state: present
+  ignore_errors: true
+
+- name: Enable power-profiles-daemon
+  block:
+    - name: Install power-profiles-daemon
+      ansible.builtin.package:
+        name: power-profiles-daemon
+        state: present
+
+    - name: Enable service
+      ansible.builtin.systemd:
+        name: power-profiles-daemon
+        enabled: true
+        state: started
+
+- name: Configure CUPS printing
+  block:
+    - name: Install CUPS and drivers
+      ansible.builtin.package:
+        name: "{{ cups_packages }}"
+        state: present
+
+    - name: Enable CUPS service
+      ansible.builtin.systemd:
+        name: cups
+        enabled: true
+        state: started
+
+- name: Configure Avahi for network printer discovery
+  block:
+    - name: Install Avahi
+      ansible.builtin.package:
+        name: "{{ avahi_packages }}"
+        state: present
+
+    - name: Enable Avahi daemon
+      ansible.builtin.systemd:
+        name: avahi-daemon
+        enabled: true
+        state: started
+
+    - name: Open mDNS port in firewall (firewalld)
+      ansible.posix.firewalld:
+        port: 5353/udp
+        permanent: true
+        immediate: true
+        state: enabled
+      when: ansible_os_family != 'Debian'
+      ignore_errors: true
+
+- name: Install and configure Syncthing
+  block:
+    - name: Install Syncthing
+      ansible.builtin.package:
+        name: syncthing
+        state: present
+
+    - name: Create Syncthing directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ main_user }}"
+        group: "{{ main_user }}"
+        mode: '0755'
+      loop:
+        - "{{ syncthing_data_dir }}"
+        - "{{ syncthing_config_dir }}"
+
+    - name: Enable Syncthing user service
+      become: true
+      become_user: "{{ main_user }}"
+      ansible.builtin.systemd:
+        name: syncthing
+        enabled: true
+        state: started
+        scope: user
+      ignore_errors: true
+
+    - name: Open Syncthing ports
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        immediate: true
+        state: enabled
+      loop:
+        - 8384/tcp
+        - 22000/tcp
+        - 22000/udp
+        - 21027/udp
+      when: ansible_os_family != 'Debian'
+      ignore_errors: true
+
+- name: Install and configure libvirt/KVM
+  block:
+    - name: Install virtualization packages
+      ansible.builtin.package:
+        name: "{{ libvirt_packages }}"
+        state: present
+
+    - name: Enable libvirtd service
+      ansible.builtin.systemd:
+        name: libvirtd
+        enabled: true
+        state: started
+
+    - name: Add user to libvirt group
+      ansible.builtin.user:
+        name: "{{ main_user }}"
+        groups: libvirt
+        append: true
+
+- name: Install desktop applications
+  ansible.builtin.package:
+    name: "{{ desktop_apps }}"
+    state: present
+  ignore_errors: true
+
+- name: Install Flatpak
+  block:
+    - name: Install Flatpak
+      ansible.builtin.package:
+        name: flatpak
+        state: present
+
+    - name: Add Flathub repository
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        state: present
+
+- name: Install applications via Flatpak (fallback)
+  community.general.flatpak:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ flatpak_apps }}"
+  ignore_errors: true
+
+- name: Configure XDG Portal
+  block:
+    - name: Install XDG portal packages
+      ansible.builtin.package:
+        name: "{{ xdg_portal_packages }}"
+        state: present

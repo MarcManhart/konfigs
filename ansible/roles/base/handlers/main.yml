@@ -1,0 +1,10 @@
+---
+- name: Restart SSH
+  ansible.builtin.systemd:
+    name: "{{ ssh_service_name }}"
+    state: restarted
+
+- name: Reload firewall
+  ansible.builtin.systemd:
+    name: "{{ 'firewalld' if firewall_package == 'firewalld' else 'ufw' }}"
+    state: reloaded

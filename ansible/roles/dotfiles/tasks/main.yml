@@ -1,0 +1,283 @@
+---
+# Dotfiles Role - Konfigurationsdateien (entspricht home/mauschel/home.nix)
+
+- name: Ensure config directories exist
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    path: "{{ main_user_home }}/{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - .config/hypr
+    - .config/waybar
+    - .config/terminator
+    - .config/nvim
+    - .config/copyq
+    - .config/conky
+    - .config/blender/{{ blender_version }}/config
+    - .config/blender/{{ blender_version }}/scripts/presets/interface_theme
+    - .config/blender/{{ blender_version }}/scripts/addons
+    - .config/godot
+    - .config/gtk-4.0
+    - .config/git
+    - .mplayer
+    - .themes
+    - .claude
+
+- name: Install Oh-My-Zsh
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.shell: |
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  args:
+    creates: "{{ main_user_home }}/.oh-my-zsh"
+  environment:
+    HOME: "{{ main_user_home }}"
+
+- name: Deploy dotfiles - Zsh
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.zshrc"
+    dest: "{{ main_user_home }}/.zshrc"
+    state: link
+    force: true
+
+- name: Deploy dotfiles - Vim
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.vimrc"
+    dest: "{{ main_user_home }}/.vimrc"
+    state: link
+    force: true
+
+- name: Deploy dotfiles - Neovim
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.config/nvim/init.lua"
+    dest: "{{ main_user_home }}/.config/nvim/init.lua"
+    state: link
+    force: true
+
+- name: Deploy dotfiles - Starship
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.config/starship.toml"
+    dest: "{{ main_user_home }}/.config/starship.toml"
+    state: link
+    force: true
+
+- name: Deploy dotfiles - Terminator
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.config/terminator/config"
+    dest: "{{ main_user_home }}/.config/terminator/config"
+    state: link
+    force: true
+
+- name: Deploy dotfiles - Hyprland
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.config/hypr/{{ item }}"
+    dest: "{{ main_user_home }}/.config/hypr/{{ item }}"
+    state: link
+    force: true
+  loop:
+    - hyprland.conf
+    - hyprpaper.conf
+  ignore_errors: true
+
+- name: Deploy dotfiles - Waybar
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.config/waybar/{{ item }}"
+    dest: "{{ main_user_home }}/.config/waybar/{{ item }}"
+    state: link
+    force: true
+  loop:
+    - config.jsonc
+    - style.css
+    - power_menu.xml
+  ignore_errors: true
+
+- name: Deploy dotfiles - MPlayer
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.mplayer/config"
+    dest: "{{ main_user_home }}/.mplayer/config"
+    state: link
+    force: true
+  ignore_errors: true
+
+- name: Deploy dotfiles - Conky
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.config/conky/conky.conf"
+    dest: "{{ main_user_home }}/.config/conky/conky.conf"
+    state: link
+    force: true
+  ignore_errors: true
+
+- name: Deploy dotfiles - CopyQ
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.config/copyq/{{ item }}"
+    dest: "{{ main_user_home }}/.config/copyq/{{ item }}"
+    state: link
+    force: true
+  loop:
+    - copyq.conf
+    - copyq-commands.ini
+    - copyq_tabs.ini
+  ignore_errors: true
+
+- name: Deploy dotfiles - Claude settings
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.claude/settings.json"
+    dest: "{{ main_user_home }}/.claude/settings.json"
+    state: link
+    force: true
+  ignore_errors: true
+
+- name: Deploy dotfiles - Blender config
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.config/blender/{{ blender_version }}/config"
+    dest: "{{ main_user_home }}/.config/blender/{{ blender_version }}/config"
+    state: link
+    force: true
+  ignore_errors: true
+
+- name: Deploy dotfiles - Godot
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ dotfiles_source }}/.config/godot/editor_settings-4.4.tres"
+    dest: "{{ main_user_home }}/.config/godot/editor_settings-4.4.tres"
+    state: link
+    force: true
+  ignore_errors: true
+
+- name: Deploy Gruvbox GTK Theme
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ styling_source }}/Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark"
+    dest: "{{ main_user_home }}/.themes/Gruvbox-Dark"
+    state: link
+    force: true
+  ignore_errors: true
+
+- name: Deploy GTK4 theme assets
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    src: "{{ styling_source }}/Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/{{ item }}"
+    dest: "{{ main_user_home }}/.config/gtk-4.0/{{ item }}"
+    state: link
+    force: true
+  loop:
+    - assets
+    - gtk.css
+    - gtk-dark.css
+  ignore_errors: true
+
+- name: Create systemd user directory
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.file:
+    path: "{{ main_user_home }}/.config/systemd/user"
+    state: directory
+    mode: '0755'
+
+- name: Create CopyQ user service
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.copy:
+    dest: "{{ main_user_home }}/.config/systemd/user/copyq.service"
+    content: |
+      [Unit]
+      Description=CopyQ clipboard manager
+      After=graphical-session-pre.target
+      PartOf=graphical-session.target
+
+      [Service]
+      ExecStart=/usr/bin/copyq
+      Restart=on-failure
+      RestartSec=1
+      TimeoutStopSec=10
+      Environment=QT_QPA_PLATFORM=xcb
+      Environment=GDK_BACKEND=x11
+
+      [Install]
+      WantedBy=graphical-session.target
+    mode: '0644'
+  ignore_errors: true
+
+- name: Enable CopyQ user service
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.systemd:
+    name: copyq
+    enabled: true
+    scope: user
+    daemon_reload: true
+  ignore_errors: true
+
+- name: Configure direnv
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.copy:
+    dest: "{{ main_user_home }}/.config/direnv/direnvrc"
+    content: |
+      # Enable nix-direnv if available
+      if command -v nix-direnv-reload &> /dev/null; then
+        source_up_if_exists .envrc
+      fi
+    mode: '0644'
+  ignore_errors: true
+
+- name: Add Starship to shell config
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.blockinfile:
+    path: "{{ main_user_home }}/.zshrc"
+    block: |
+      # Starship prompt
+      eval "$(starship init zsh)"
+
+      # direnv hook
+      eval "$(direnv hook zsh)"
+
+      # Add local bin to PATH
+      export PATH="$HOME/.local/bin:$PATH"
+      export PATH="$HOME/.bun/bin:$PATH"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    create: false
+  ignore_errors: true
+
+- name: Set cursor theme
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.copy:
+    dest: "{{ main_user_home }}/.icons/default/index.theme"
+    content: |
+      [Icon Theme]
+      Name=Default
+      Comment=Default Cursor Theme
+      Inherits=Adwaita
+    mode: '0644'
+  ignore_errors: true

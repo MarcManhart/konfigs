@@ -1,0 +1,207 @@
+---
+# User Role - Benutzer mauschel (entspricht modules/users/mauschel.nix)
+
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "default.yml"
+
+- name: Create user
+  ansible.builtin.user:
+    name: "{{ main_user }}"
+    comment: "{{ main_user_description }}"
+    shell: /bin/zsh
+    groups:
+      - wheel
+      - docker
+      - video
+      - audio
+      - networkmanager
+      - libvirt
+    append: true
+    create_home: true
+
+- name: Ensure user home directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ main_user }}"
+    group: "{{ main_user }}"
+    mode: '0755'
+  loop:
+    - "{{ main_user_home }}/.config"
+    - "{{ main_user_home }}/.local/share"
+    - "{{ main_user_home }}/.local/bin"
+    - "{{ main_user_home }}/Documents"
+    - "{{ main_user_home }}/Downloads"
+    - "{{ main_user_home }}/Projects"
+
+- name: Add user to sudoers
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/{{ main_user }}"
+    content: "{{ main_user }} ALL=(ALL) NOPASSWD: ALL"
+    mode: '0440'
+    validate: 'visudo -cf %s'
+
+- name: Install user-specific packages
+  ansible.builtin.package:
+    name: "{{ user_packages }}"
+    state: present
+  ignore_errors: true
+
+- name: Install user packages via Flatpak
+  community.general.flatpak:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ user_flatpak_apps }}"
+  ignore_errors: true
+
+- name: Install OBS Studio
+  block:
+    - name: Install OBS package
+      ansible.builtin.package:
+        name: "{{ obs_package }}"
+        state: present
+      ignore_errors: true
+
+    - name: Install OBS via Flatpak (fallback)
+      community.general.flatpak:
+        name: com.obsproject.Studio
+        state: present
+      ignore_errors: true
+
+- name: Install Godot with Mono
+  block:
+    - name: Install Godot via Flatpak
+      community.general.flatpak:
+        name: org.godotengine.Godot
+        state: present
+      ignore_errors: true
+
+    - name: Install .NET SDK
+      ansible.builtin.package:
+        name: "{{ dotnet_sdk_package }}"
+        state: present
+      ignore_errors: true
+
+- name: Install Go programming language
+  ansible.builtin.package:
+    name: "{{ golang_package }}"
+    state: present
+
+- name: Install development tools
+  ansible.builtin.package:
+    name: "{{ dev_packages }}"
+    state: present
+  ignore_errors: true
+
+- name: Install lazygit
+  block:
+    - name: Download lazygit
+      ansible.builtin.get_url:
+        url: "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_{{ lazygit_version }}_Linux_x86_64.tar.gz"
+        dest: /tmp/lazygit.tar.gz
+        mode: '0644'
+
+    - name: Extract lazygit
+      ansible.builtin.unarchive:
+        src: /tmp/lazygit.tar.gz
+        dest: /usr/local/bin
+        remote_src: true
+        creates: /usr/local/bin/lazygit
+        extra_opts:
+          - lazygit
+  vars:
+    lazygit_version: "0.44.1"
+
+- name: Install Starship prompt
+  ansible.builtin.shell: |
+    curl -sS https://starship.rs/install.sh | sh -s -- -y
+  args:
+    creates: /usr/local/bin/starship
+
+- name: Configure ClamAV
+  block:
+    - name: Install ClamAV
+      ansible.builtin.package:
+        name: "{{ clamav_packages }}"
+        state: present
+
+    - name: Enable ClamAV daemon
+      ansible.builtin.systemd:
+        name: "{{ clamav_daemon_service }}"
+        enabled: true
+        state: started
+      ignore_errors: true
+
+    - name: Enable ClamAV freshclam
+      ansible.builtin.systemd:
+        name: "{{ clamav_freshclam_service }}"
+        enabled: true
+        state: started
+      ignore_errors: true
+
+    - name: Create ClamAV log directory
+      ansible.builtin.file:
+        path: /var/log/clamav
+        state: directory
+        owner: clamav
+        group: clamav
+        mode: '0755'
+      ignore_errors: true
+
+    - name: Create weekly scan cron job
+      ansible.builtin.cron:
+        name: "ClamAV weekly scan"
+        special_time: weekly
+        job: "/usr/bin/clamscan --recursive --infected --log=/var/log/clamav/scan.log /home"
+        user: root
+
+- name: Install 1Password
+  block:
+    - name: Add 1Password GPG key (Debian/Ubuntu)
+      ansible.builtin.apt_key:
+        url: https://downloads.1password.com/linux/keys/1password.asc
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Add 1Password repository (Debian/Ubuntu)
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://downloads.1password.com/linux/debian/amd64 stable main"
+        state: present
+        filename: 1password
+      when: ansible_os_family == 'Debian'
+
+    - name: Install 1Password (Debian/Ubuntu)
+      ansible.builtin.apt:
+        name:
+          - 1password
+          - 1password-cli
+        state: present
+        update_cache: true
+      when: ansible_os_family == 'Debian'
+      ignore_errors: true
+
+    - name: Install 1Password via Flatpak (fallback)
+      community.general.flatpak:
+        name: com.onepassword.OnePassword
+        state: present
+      ignore_errors: true
+
+- name: Open Spotify discovery port
+  ansible.posix.firewalld:
+    port: 57621/tcp
+    permanent: true
+    immediate: true
+    state: enabled
+  when: ansible_os_family != 'Debian'
+  ignore_errors: true
+
+- name: Configure v4l2loopback for OBS Virtual Camera
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/v4l2loopback-obs.conf
+    content: |
+      options v4l2loopback devices=1 video_nr=10 card_label="OBS Virtual Camera" exclusive_caps=1
+    mode: '0644'

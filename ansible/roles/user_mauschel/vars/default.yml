@@ -1,0 +1,24 @@
+---
+# Default user packages
+
+user_packages:
+  - neovim
+
+obs_package: obs-studio
+
+dotnet_sdk_package: dotnet-sdk
+
+golang_package: go
+
+dev_packages:
+  - direnv
+
+clamav_packages:
+  - clamav
+
+clamav_daemon_service: clamav-daemon
+clamav_freshclam_service: clamav-freshclam
+
+user_flatpak_apps:
+  - com.slack.Slack
+  - com.spotify.Client

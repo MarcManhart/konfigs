@@ -1,0 +1,31 @@
+---
+# Debian/Ubuntu spezifische Paketnamen
+
+base_packages:
+  - vim
+  - git
+  - git-lfs
+  - vlc
+  - htop
+  - curl
+  - wget
+  - jq
+  - tree
+  - python3
+  - python3-pip
+  - zip
+  - unzip
+  - p7zip-full
+  - build-essential
+
+ssh_server_package: openssh-server
+ssh_service_name: ssh
+
+networkmanager_packages:
+  - network-manager
+  - network-manager-gnome
+
+firewall_package: ufw
+
+nodejs_package: nodejs
+install_nodejs_from_nodesource: true

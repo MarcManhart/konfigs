@@ -1,0 +1,25 @@
+---
+# Fallback/Default Paketnamen
+
+base_packages:
+  - vim
+  - git
+  - htop
+  - curl
+  - wget
+  - jq
+  - tree
+  - python3
+  - zip
+  - unzip
+
+ssh_server_package: openssh
+ssh_service_name: sshd
+
+networkmanager_packages:
+  - NetworkManager
+
+firewall_package: firewalld
+
+nodejs_package: nodejs
+install_nodejs_from_nodesource: false

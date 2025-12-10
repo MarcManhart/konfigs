@@ -1,0 +1,32 @@
+---
+# Fedora/RHEL spezifische Paketnamen
+
+base_packages:
+  - vim-enhanced
+  - git
+  - git-lfs
+  - vlc
+  - htop
+  - curl
+  - wget
+  - jq
+  - tree
+  - python3
+  - python3-pip
+  - zip
+  - unzip
+  - p7zip
+  - p7zip-plugins
+  - "@development-tools"
+
+ssh_server_package: openssh-server
+ssh_service_name: sshd
+
+networkmanager_packages:
+  - NetworkManager
+  - NetworkManager-wifi
+
+firewall_package: firewalld
+
+nodejs_package: nodejs
+install_nodejs_from_nodesource: false

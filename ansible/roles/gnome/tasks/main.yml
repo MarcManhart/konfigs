@@ -1,0 +1,146 @@
+---
+# GNOME Role - Desktop Environment (entspricht modules/gnome.nix)
+
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "default.yml"
+
+- name: Install GNOME Desktop
+  ansible.builtin.package:
+    name: "{{ gnome_packages }}"
+    state: present
+
+- name: Install GNOME Tweaks
+  ansible.builtin.package:
+    name: "{{ gnome_tweaks_package }}"
+    state: present
+
+- name: Install dconf
+  ansible.builtin.package:
+    name: "{{ dconf_package }}"
+    state: present
+
+- name: Install GNOME Extensions via package manager
+  ansible.builtin.package:
+    name: "{{ gnome_extension_packages }}"
+    state: present
+  ignore_errors: true
+
+- name: Install GNOME Shell Extensions tool
+  ansible.builtin.package:
+    name: gnome-shell-extension-prefs
+    state: present
+  ignore_errors: true
+
+- name: Install NetworkManager OpenVPN
+  ansible.builtin.package:
+    name: "{{ nm_openvpn_package }}"
+    state: present
+
+- name: Open GSConnect/KDE Connect firewall ports (TCP)
+  ansible.posix.firewalld:
+    port: "{{ gsconnect_tcp_ports }}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  when: ansible_os_family != 'Debian'
+  ignore_errors: true
+
+- name: Open GSConnect/KDE Connect firewall ports (UDP)
+  ansible.posix.firewalld:
+    port: "{{ gsconnect_udp_ports }}/udp"
+    permanent: true
+    immediate: true
+    state: enabled
+  when: ansible_os_family != 'Debian'
+  ignore_errors: true
+
+- name: Open GSConnect ports with UFW (Debian/Ubuntu)
+  when: ansible_os_family == 'Debian'
+  block:
+    - name: Allow GSConnect TCP ports
+      community.general.ufw:
+        rule: allow
+        port: "1716:1764"
+        proto: tcp
+
+    - name: Allow GSConnect UDP ports
+      community.general.ufw:
+        rule: allow
+        port: "1716:1764"
+        proto: udp
+
+- name: Install Flatpak GNOME Extensions (fallback)
+  community.general.flatpak:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - com.mattjakeman.ExtensionManager
+  ignore_errors: true
+
+- name: Configure GNOME settings via dconf
+  become: true
+  become_user: "{{ main_user }}"
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    # Interface settings
+    - key: "/org/gnome/desktop/interface/text-scaling-factor"
+      value: "1.0"
+    - key: "/org/gnome/desktop/interface/enable-hot-corners"
+      value: "true"
+    - key: "/org/gnome/desktop/interface/gtk-theme"
+      value: "'Gruvbox-Dark'"
+
+    # Mutter experimental features
+    - key: "/org/gnome/mutter/experimental-features"
+      value: "['scale-monitor-framebuffer']"
+
+    # Window manager preferences
+    - key: "/org/gnome/desktop/wm/preferences/button-layout"
+      value: "'appmenu:minimize,maximize,close'"
+    - key: "/org/gnome/desktop/wm/preferences/action-double-click-titlebar"
+      value: "'toggle-maximize'"
+    - key: "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar"
+      value: "'minimize'"
+    - key: "/org/gnome/desktop/wm/preferences/mouse-button-modifier"
+      value: "'<Super>'"
+    - key: "/org/gnome/desktop/wm/preferences/resize-with-right-button"
+      value: "true"
+
+    # Window switching (Alt+Tab behavior)
+    - key: "/org/gnome/desktop/wm/keybindings/switch-applications"
+      value: "@as []"
+    - key: "/org/gnome/desktop/wm/keybindings/switch-applications-backward"
+      value: "@as []"
+    - key: "/org/gnome/desktop/wm/keybindings/switch-windows"
+      value: "['<Alt>Tab', '<Super>Tab']"
+    - key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward"
+      value: "['<Shift><Alt>Tab', '<Shift><Super>Tab']"
+
+    # Screenshot shortcut
+    - key: "/org/gnome/shell/keybindings/show-screenshot-ui"
+      value: "['<Super><Shift>s']"
+    - key: "/org/gnome/shell/keybindings/toggle-message-tray"
+      value: "['<Super>m']"
+  ignore_errors: true
+
+- name: Configure GNOME Shell enabled extensions
+  become: true
+  become_user: "{{ main_user }}"
+  community.general.dconf:
+    key: "/org/gnome/shell/enabled-extensions"
+    value: "['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-dock@micxgx.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com', 'gsconnect@andyholmes.github.io']"
+  ignore_errors: true
+
+- name: Configure favorite apps in dock
+  become: true
+  become_user: "{{ main_user }}"
+  community.general.dconf:
+    key: "/org/gnome/shell/favorite-apps"
+    value: "['brave-browser.desktop', 'firefox.desktop', 'thunderbird.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'terminator.desktop', 'code.desktop']"
+  ignore_errors: true

@@ -1,0 +1,54 @@
+---
+# Ansible Playbook - Reproduktion der NixOS Flake Konfiguration
+# Verwendung: ansible-playbook -i inventory/hosts.yml site.yml
+#
+# Für SSH-Ausführung:
+# ansible-playbook -i inventory/hosts.yml site.yml --ask-become-pass
+
+- name: Mauschel's Multi-Distribution Linux Setup
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars_files:
+    - group_vars/all.yml
+
+  pre_tasks:
+    - name: Detect distribution family
+      ansible.builtin.set_fact:
+        pkg_manager: "{{ 'apt' if ansible_os_family == 'Debian' else 'dnf' if ansible_os_family == 'RedHat' else 'pacman' if ansible_os_family == 'Archlinux' else 'zypper' if ansible_os_family == 'Suse' else 'unknown' }}"
+
+    - name: Update package cache (Debian/Ubuntu)
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_os_family == 'Debian'
+
+    - name: Update package cache (Fedora/RHEL)
+      ansible.builtin.dnf:
+        update_cache: true
+      when: ansible_os_family == 'RedHat'
+
+    - name: Update package cache (Arch)
+      community.general.pacman:
+        update_cache: true
+      when: ansible_os_family == 'Archlinux'
+
+  roles:
+    - role: base
+      tags: [base, always]
+    - role: desktop
+      tags: [desktop]
+    - role: hyprland
+      tags: [hyprland, wayland]
+    - role: gnome
+      tags: [gnome]
+    - role: container
+      tags: [container, docker]
+    - role: gaming
+      tags: [gaming]
+      when: install_gaming | default(true)
+    - role: user_mauschel
+      tags: [user]
+    - role: dotfiles
+      tags: [dotfiles]

@@ -1,0 +1,148 @@
+---
+# Hyprland Role - Wayland Compositor (entspricht modules/hyprland.nix)
+
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "default.yml"
+
+- name: Check if Hyprland is available
+  ansible.builtin.shell: |
+    command -v hyprland || command -v Hyprland
+  register: hyprland_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Hyprland (if available in repos)
+  ansible.builtin.package:
+    name: "{{ hyprland_packages }}"
+    state: present
+  when: hyprland_packages | length > 0
+  ignore_errors: true
+
+- name: Install Hyprland from Copr (Fedora)
+  when: ansible_distribution == 'Fedora'
+  block:
+    - name: Enable Hyprland Copr repository
+      ansible.builtin.command: dnf copr enable -y solopasha/hyprland
+      args:
+        creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:solopasha:hyprland.repo
+      ignore_errors: true
+
+    - name: Install Hyprland from Copr
+      ansible.builtin.dnf:
+        name:
+          - hyprland
+          - hyprpaper
+          - hypridle
+          - hyprlock
+        state: present
+      ignore_errors: true
+
+- name: Install Hyprland tools and utilities
+  ansible.builtin.package:
+    name: "{{ hyprland_tools }}"
+    state: present
+  ignore_errors: true
+
+- name: Install Waybar
+  ansible.builtin.package:
+    name: "{{ waybar_package }}"
+    state: present
+
+- name: Install Rofi Wayland
+  ansible.builtin.package:
+    name: "{{ rofi_package }}"
+    state: present
+
+- name: Install terminal emulator (Kitty)
+  ansible.builtin.package:
+    name: kitty
+    state: present
+
+- name: Install Polkit agent
+  ansible.builtin.package:
+    name: "{{ polkit_package }}"
+    state: present
+
+- name: Install clipboard utilities
+  ansible.builtin.package:
+    name: "{{ clipboard_packages }}"
+    state: present
+
+- name: Install screenshot tools
+  ansible.builtin.package:
+    name: "{{ screenshot_packages }}"
+    state: present
+  ignore_errors: true
+
+- name: Install NetworkManager applet
+  ansible.builtin.package:
+    name: "{{ nm_applet_package }}"
+    state: present
+
+- name: Configure PipeWire Audio
+  block:
+    - name: Install PipeWire
+      ansible.builtin.package:
+        name: "{{ pipewire_packages }}"
+        state: present
+
+    - name: Enable PipeWire user services
+      become: true
+      become_user: "{{ main_user }}"
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+        scope: user
+      loop:
+        - pipewire
+        - pipewire-pulse
+        - wireplumber
+      ignore_errors: true
+
+- name: Configure Blueman for Bluetooth
+  block:
+    - name: Install Blueman
+      ansible.builtin.package:
+        name: blueman
+        state: present
+
+    - name: Enable Blueman applet autostart
+      ansible.builtin.file:
+        src: /usr/share/applications/blueman-manager.desktop
+        dest: "{{ main_user_home }}/.config/autostart/blueman-manager.desktop"
+        state: link
+        owner: "{{ main_user }}"
+        group: "{{ main_user }}"
+      ignore_errors: true
+
+- name: Install XDG Portal for Hyprland
+  ansible.builtin.package:
+    name: "{{ xdg_portal_hyprland }}"
+    state: present
+  ignore_errors: true
+
+- name: Set Wayland environment variables
+  ansible.builtin.copy:
+    dest: /etc/profile.d/wayland.sh
+    content: |
+      # Wayland/Hyprland environment variables
+      export XDG_SESSION_TYPE=wayland
+      export XDG_CURRENT_DESKTOP=Hyprland
+      export NIXOS_OZONE_WL=1
+      export NMD_MENU=rofi
+    mode: '0644'
+
+- name: Enable GDM Wayland
+  ansible.builtin.lineinfile:
+    path: /etc/gdm/custom.conf
+    regexp: "^#?WaylandEnable="
+    line: "WaylandEnable=true"
+    insertafter: '^\[daemon\]'
+    create: true
+    mode: '0644'
+  ignore_errors: true
