@@ -170,16 +170,55 @@
   # Sanfter Governor (optional)
   powerManagement.cpuFreqGovernor = "schedutil";
 
-  # AMD GPU Reset nach Suspend (falls Kernel-Params nicht reichen)
-  systemd.services.amdgpu-resume-fix = {
-    description = "Reset AMD GPU nach Suspend";
+  ############################################################################
+  # Suspend/Resume Fixes für MT7925 WiFi + AMDGPU VPE
+  ############################################################################
+  # Problem (2025-12-10): Bildschirm bleibt schwarz nach Suspend, System hängt
+  # Ursache 1: mt7925e-Treiber timeout beim Suspend (error -110)
+  # Ursache 2: AMDGPU VPE queue reset schlägt fehl
+  # Lösung: WiFi-Modul vor Suspend entladen, nach Resume neu laden
+
+  # Service: WiFi-Treiber VOR dem Suspend entladen
+  systemd.services.wifi-suspend-unload = {
+    description = "Unload MT7925 WiFi driver before suspend";
+    before = [ "sleep.target" ];
+    wantedBy = [ "sleep.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.kmod}/bin/modprobe -r mt7925e mt7925_common mt792x_lib mt76_connac_lib mt76 || true";
+    };
+  };
+
+  # Service: WiFi-Treiber NACH dem Resume laden
+  systemd.services.wifi-resume-reload = {
+    description = "Reload MT7925 WiFi driver after resume";
     after = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" ];
     wantedBy = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.kmod}/bin/modprobe -r amdgpu && ${pkgs.kmod}/bin/modprobe amdgpu";
+      ExecStart = pkgs.writeShellScript "wifi-resume" ''
+        # Warte kurz bis Hardware bereit
+        sleep 1
+        # Lade WiFi-Module neu
+        ${pkgs.kmod}/bin/modprobe mt7925e || true
+        # Warte auf Interface
+        sleep 2
+        # Deaktiviere Power-Save
+        for iface in /sys/class/net/wl*; do
+          if [ -d "$iface" ]; then
+            ifname=$(basename "$iface")
+            ${pkgs.iw}/bin/iw dev "$ifname" set power_save off 2>/dev/null || true
+          fi
+        done
+      '';
     };
   };
+
+  # AMDGPU: VPE (Video Processing Engine) deaktivieren - verhindert den Suspend-Bug
+  # Der VPE queue reset schlägt auf diesem Gerät fehl
+  boot.extraModprobeConfig = ''
+    options amdgpu vpe=0
+  '';
 
   # NetworkManager: USB-C Dock/Ethernet Fallback auf WiFi
   # Problem: Beim Abziehen des USB-C Docks (mit Ethernet) fehlte die Netzwerkverbindung,

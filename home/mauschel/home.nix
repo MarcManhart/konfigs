@@ -415,6 +415,8 @@ in
       # hier mit file:// Prefix!
       picture-uri = "file://${styles}/Wallpapers/stairs.png";
       picture-uri-dark = "file://${styles}/Wallpapers/stairs.png";
+      # picture-uri = "file://${styles}/Wallpapers/grau_100x100.png";
+      # picture-uri-dark = "file://${styles}/Wallpapers/grau_100x100.png";
       picture-options = "zoom"; # oder "scaled", "centered", "stretched"
     };
 
