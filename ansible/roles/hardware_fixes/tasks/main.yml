@@ -1,0 +1,184 @@
+---
+# Hardware Fixes Role - MT7925 WiFi und AMDGPU Suspend/Resume Fixes
+# Entspricht den Fixes aus hosts/BLX-INV-28/default.nix
+
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "default.yml"
+
+############################################################################
+# MT7925 WiFi Stabilität
+############################################################################
+
+- name: Check if MT7925 WiFi is present
+  ansible.builtin.shell: |
+    lspci -n | grep -q "14c3:7925" && echo "present" || echo "absent"
+  register: mt7925_check
+  changed_when: false
+  failed_when: false
+
+- name: MT7925 WiFi fixes
+  when: mt7925_check.stdout == "present" or force_wifi_fixes | default(false)
+  block:
+    - name: Install WiFi tools
+      ansible.builtin.package:
+        name: "{{ wifi_tools_packages }}"
+        state: present
+
+    - name: Configure NetworkManager WiFi power-save off
+      ansible.builtin.copy:
+        dest: /etc/NetworkManager/conf.d/99-wifi-powersave.conf
+        content: |
+          # MT7925 WiFi Stabilität: Power-Save deaktivieren
+          # Verhindert Treiber-Deadlocks bei Suspend/Resume
+          [connection]
+          wifi.powersave = 2
+
+          [device]
+          # Kein MAC-Randomisierung beim Scannen
+          wifi.scan-rand-mac-address=no
+        mode: '0644'
+      notify: Reload NetworkManager
+
+    - name: Create udev rule for MT7925 power management
+      ansible.builtin.copy:
+        dest: /etc/udev/rules.d/99-mt7925-powersave.rules
+        content: |
+          # MediaTek MT7925 WiFi: PCI Power-Management deaktivieren
+          ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x14c3", ATTR{device}=="0x7925", ATTR{power/control}="on"
+          # WiFi-Interface: Power-Save via iw deaktivieren
+          ACTION=="add", SUBSYSTEM=="net", KERNEL=="wl*", RUN+="/usr/bin/iw dev %k set power_save off"
+        mode: '0644'
+      notify: Reload udev rules
+
+    - name: Create systemd service to unload WiFi before suspend
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/wifi-suspend-unload.service
+        content: |
+          # MT7925 Suspend Fix: WiFi-Treiber vor Suspend entladen
+          # Verhindert Timeout-Fehler (-110) beim Suspend
+          [Unit]
+          Description=Unload MT7925 WiFi driver before suspend
+          Before=sleep.target
+
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/sbin/modprobe -r mt7925e mt7925_common mt792x_lib mt76_connac_lib mt76
+          ExecStart=-/bin/true
+
+          [Install]
+          WantedBy=sleep.target
+        mode: '0644'
+      notify: Reload systemd
+
+    - name: Create systemd service to reload WiFi after resume
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/wifi-resume-reload.service
+        content: |
+          # MT7925 Resume Fix: WiFi-Treiber nach Resume laden
+          [Unit]
+          Description=Reload MT7925 WiFi driver after resume
+          After=suspend.target hibernate.target hybrid-sleep.target
+
+          [Service]
+          Type=oneshot
+          ExecStart=/bin/sleep 1
+          ExecStart=/usr/sbin/modprobe mt7925e
+          ExecStart=/bin/sleep 2
+          ExecStart=/bin/sh -c 'for iface in /sys/class/net/wl*; do [ -d "$iface" ] && /usr/bin/iw dev $(basename "$iface") set power_save off 2>/dev/null || true; done'
+
+          [Install]
+          WantedBy=suspend.target hibernate.target hybrid-sleep.target
+        mode: '0644'
+      notify: Reload systemd
+
+    - name: Enable WiFi suspend/resume services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: true
+        daemon_reload: true
+      loop:
+        - wifi-suspend-unload.service
+        - wifi-resume-reload.service
+
+    - name: Create NetworkManager dispatcher script for WiFi power-save
+      ansible.builtin.copy:
+        dest: /etc/NetworkManager/dispatcher.d/99-wifi-powersave
+        content: |
+          #!/bin/sh
+          # MT7925: Power-Save nach Verbindungsänderung deaktivieren
+          INTERFACE="$1"
+          ACTION="$2"
+          case "$INTERFACE" in
+            wl*)
+              case "$ACTION" in
+                up|dhcp4-change|dhcp6-change|connectivity-change)
+                  logger "MT7925-stability: Disabling power save for $INTERFACE after $ACTION"
+                  /usr/bin/iw dev "$INTERFACE" set power_save off 2>/dev/null || true
+                  ;;
+              esac
+              ;;
+          esac
+        mode: '0755'
+
+############################################################################
+# AMDGPU Suspend Fixes
+############################################################################
+
+- name: Check if AMD GPU is present
+  ansible.builtin.shell: |
+    lspci | grep -qi "amd.*vga\|radeon\|amdgpu" && echo "present" || echo "absent"
+  register: amdgpu_check
+  changed_when: false
+  failed_when: false
+
+- name: AMDGPU fixes
+  when: amdgpu_check.stdout == "present" or force_amdgpu_fixes | default(false)
+  block:
+    - name: Create modprobe config for AMDGPU VPE fix
+      ansible.builtin.copy:
+        dest: /etc/modprobe.d/amdgpu-vpe-fix.conf
+        content: |
+          # AMDGPU Suspend Fix: VPE (Video Processing Engine) deaktivieren
+          # Verhindert "VPE queue reset failed" Fehler beim Suspend/Resume
+          # Problem: IB test failed on vpe (-110) nach Resume
+          options amdgpu vpe=0
+        mode: '0644'
+      notify: Update initramfs
+
+    - name: Add AMDGPU kernel parameters to GRUB
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash amdgpu.dc=1 amdgpu.dpm=1 amdgpu.gpu_recovery=1"'
+        backup: true
+      when: ansible_os_family != 'Archlinux'
+      notify: Update GRUB
+
+    - name: Add AMDGPU kernel parameters (Arch - systemd-boot)
+      ansible.builtin.lineinfile:
+        path: /boot/loader/entries/arch.conf
+        regexp: '^options'
+        line: 'options root=PARTUUID={{ ansible_cmdline.root | default("") }} rw quiet splash amdgpu.dc=1 amdgpu.dpm=1 amdgpu.gpu_recovery=1'
+        backup: true
+      when: ansible_os_family == 'Archlinux'
+      ignore_errors: true
+
+############################################################################
+# Sysctl Optimierungen für Netzwerk-Stabilität
+############################################################################
+
+- name: Configure TCP keepalive for network stability
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: true
+  loop:
+    - { name: 'net.ipv4.tcp_keepalive_time', value: '60' }
+    - { name: 'net.ipv4.tcp_keepalive_intvl', value: '10' }
+    - { name: 'net.ipv4.tcp_keepalive_probes', value: '6' }
+    - { name: 'net.ipv4.tcp_fin_timeout', value: '15' }

@@ -1,0 +1,10 @@
+---
+# Fedora/RHEL Variablen für hardware_fixes Rolle
+
+wifi_tools_packages:
+  - iw
+  - wireless-tools
+  - wavemon
+
+initramfs_update_cmd: "dracut --force"
+grub_update_cmd: "grub2-mkconfig -o /boot/grub2/grub.cfg"

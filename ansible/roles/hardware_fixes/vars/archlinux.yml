@@ -1,0 +1,10 @@
+---
+# Arch Linux Variablen für hardware_fixes Rolle
+
+wifi_tools_packages:
+  - iw
+  - wireless_tools
+  - wavemon
+
+initramfs_update_cmd: "mkinitcpio -P"
+grub_update_cmd: "grub-mkconfig -o /boot/grub/grub.cfg"

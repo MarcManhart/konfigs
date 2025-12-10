@@ -1,0 +1,10 @@
+---
+# Debian/Ubuntu Variablen für hardware_fixes Rolle
+
+wifi_tools_packages:
+  - iw
+  - wireless-tools
+  - wavemon
+
+initramfs_update_cmd: "update-initramfs -u -k all"
+grub_update_cmd: "update-grub"

@@ -1,0 +1,9 @@
+---
+# Default Variablen für hardware_fixes Rolle
+
+wifi_tools_packages:
+  - iw
+  - wireless-tools
+
+initramfs_update_cmd: "update-initramfs -u"
+grub_update_cmd: "update-grub"

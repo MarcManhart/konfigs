@@ -37,6 +37,8 @@
   roles:
     - role: base
       tags: [base, always]
+    - role: hardware_fixes
+      tags: [hardware, suspend, wifi, amdgpu]
     - role: desktop
       tags: [desktop]
     - role: hyprland
