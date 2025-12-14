@@ -38,6 +38,9 @@ in
 
   # NVIDIA: Grafiktreiber
   services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.deviceSection = ''
+    Option "Coolbits" "4"
+  '';
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = true; # Aktiviert NVIDIA Power Management für Suspend/Resume
