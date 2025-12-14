@@ -476,22 +476,23 @@ in
     };
   };
 
-  systemd.user.services.megasync = {
-    Unit = {
-      Description = "MEGAsync automatic sync client";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${pkgs.megasync}/bin/megasync";
-      Restart = "on-failure";
-      RestartSec = 3;
-      TimeoutStopSec = 10;
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
+  # megasync service temporarily disabled - upstream patch server blocking automated downloads
+  # systemd.user.services.megasync = {
+  #   Unit = {
+  #     Description = "MEGAsync automatic sync client";
+  #     After = [ "graphical-session-pre.target" ];
+  #     PartOf = [ "graphical-session.target" ];
+  #   };
+  #   Service = {
+  #     ExecStart = "${pkgs.megasync}/bin/megasync";
+  #     Restart = "on-failure";
+  #     RestartSec = 3;
+  #     TimeoutStopSec = 10;
+  #   };
+  #   Install = {
+  #     WantedBy = [ "graphical-session.target" ];
+  #   };
+  # };
 
   # WICHTIG: zur Systemversion passend
   home.stateVersion = "25.05";
