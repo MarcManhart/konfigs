@@ -38,38 +38,6 @@
     in
     {
       nixosConfigurations = {
-        BLX-INV-28 = lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
-          modules = [
-            ./modules/base.nix
-            ./modules/desktop.nix
-            ./modules/hyprland.nix
-            ./modules/gnome.nix
-            ./modules/container.nix
-            ./modules/blx.nix
-            ./modules/godot-mcp.nix
-            ./modules/gaming.nix
-            ./modules/users/mauschel.nix
-            ./hosts/BLX-INV-28/hardware-configuration.nix
-            ./hosts/BLX-INV-28/default.nix
-
-            # sinnvolle HW-Profile
-            nixos-hardware.nixosModules.common-cpu-amd
-            nixos-hardware.nixosModules.common-pc-ssd
-            nixos-hardware.nixosModules.common-pc-laptop
-
-            # Home-Manager als NixOS-Modul; User-Config folgt später
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "backup";
-              # Platzhalter – wir legen die Datei im nächsten Schritt an:
-              home-manager.users.mauschel = import ./home/mauschel/home.nix;
-            }
-          ];
-        };
         schwerer = lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = { inherit inputs; };
