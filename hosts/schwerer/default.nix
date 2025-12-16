@@ -67,6 +67,11 @@ in
     nvidiaSupport = true;
   };
 
+  # coolercontrold braucht Zugriff auf X11/XWayland für nvidia-settings
+  systemd.services.coolercontrold.environment = {
+    DISPLAY = ":0";
+  };
+
   # VA-API/GLX/GBM auf NVIDIA zeigen lassen
   environment.variables = {
     LIBVA_DRIVER_NAME = "nvidia"; # VA-API via nvidia-vaapi-driver

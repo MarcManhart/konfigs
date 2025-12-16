@@ -41,7 +41,7 @@
       obs-studio
       obs-studio-plugins.obs-vkcapture  # Vulkan/OpenGL game capture
       obs-studio-plugins.obs-pipewire-audio-capture  # PipeWire audio capture
-      # megasync  # temporarily disabled - upstream patch server blocking automated downloads
+      megasync  # temporarily disabled - upstream patch server blocking automated downloads
       tor-browser
       openvpn # Alternative für VPN-Verbindungen
       _1password-gui

@@ -476,23 +476,39 @@ in
     };
   };
 
-  # megasync service temporarily disabled - upstream patch server blocking automated downloads
-  # systemd.user.services.megasync = {
-  #   Unit = {
-  #     Description = "MEGAsync automatic sync client";
-  #     After = [ "graphical-session-pre.target" ];
-  #     PartOf = [ "graphical-session.target" ];
-  #   };
-  #   Service = {
-  #     ExecStart = "${pkgs.megasync}/bin/megasync";
-  #     Restart = "on-failure";
-  #     RestartSec = 3;
-  #     TimeoutStopSec = 10;
-  #   };
-  #   Install = {
-  #     WantedBy = [ "graphical-session.target" ];
-  #   };
-  # };
+  systemd.user.services.megasync = {
+    Unit = {
+      Description = "MEGAsync automatic sync client";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.megasync}/bin/megasync";
+      Restart = "on-failure";
+      RestartSec = 3;
+      TimeoutStopSec = 10;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
+  # xhost für coolercontrold NVIDIA-Zugriff (erlaubt root auf X11)
+  systemd.user.services.xhost-root = {
+    Unit = {
+      Description = "Allow root access to X11 display for coolercontrol";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.xorg.xhost}/bin/xhost +local:root";
+      RemainAfterExit = true;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
 
   # WICHTIG: zur Systemversion passend
   home.stateVersion = "25.05";
