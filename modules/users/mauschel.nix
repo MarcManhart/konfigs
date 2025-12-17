@@ -42,6 +42,7 @@
       obs-studio-plugins.obs-vkcapture  # Vulkan/OpenGL game capture
       obs-studio-plugins.obs-pipewire-audio-capture  # PipeWire audio capture
       megasync  # temporarily disabled - upstream patch server blocking automated downloads
+      ausweisapp
       tor-browser
       openvpn # Alternative für VPN-Verbindungen
       _1password-gui
@@ -85,9 +86,9 @@
     ];
   };
 
-  # Für Spotify Local discovery
-  networking.firewall.allowedTCPPorts = [ 57621 ];
-  networking.firewall.allowedUDPPorts = [ 5353 ];
+  # Firewall: 57621 = Spotify, 24727 = AusweisApp, 53317 = LocalSend, 5353 = mDNS
+  networking.firewall.allowedTCPPorts = [ 57621 24727 53317 ];
+  networking.firewall.allowedUDPPorts = [ 5353 24727 53317 ];
 
   ######################################################
   # ClamAV Antivirus Scanner
