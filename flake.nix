@@ -70,6 +70,40 @@
             }
           ];
         };
+
+        FlotteBunte = lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./modules/base.nix
+            ./modules/desktop.nix
+            ./modules/hyprland.nix
+            ./modules/gnome.nix
+            ./modules/container.nix
+            ./modules/blx.nix
+            ./modules/godot-mcp.nix
+            ./modules/gaming.nix
+            ./modules/i2p.nix
+            ./modules/users/mauschel.nix
+            ./hosts/FlotteBunte/hardware-configuration.nix
+            ./hosts/FlotteBunte/default.nix
+
+            # HW-Profile für ROG Zephyrus G16 2025
+            nixos-hardware.nixosModules.common-cpu-intel
+            nixos-hardware.nixosModules.common-pc-laptop
+            nixos-hardware.nixosModules.common-pc-ssd
+            nixos-hardware.nixosModules.asus-battery
+
+            # Home-Manager als NixOS-Modul
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.mauschel = import ./home/mauschel/home.nix;
+            }
+          ];
+        };
       };
     };
 }
