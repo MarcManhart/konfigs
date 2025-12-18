@@ -54,11 +54,8 @@
       nvidiaBusId = "PCI:1:0:0";
     };
 
-    # Preserve video memory nach Suspend
-    nvidiaPersistenced = true;
-
-    # Dynamic Boost für bessere Performance
-    dynamicBoost.enable = true;
+    # nvidiaPersistenced und dynamicBoost nicht kompatibel mit Prime Offload
+    nvidiaPersistenced = false;
   };
 
   # ══════════════════════════════════════════════════════════════════
