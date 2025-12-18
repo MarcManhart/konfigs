@@ -14,8 +14,9 @@
 
   networking.hostName = "FlotteBunte";
 
-  # Aktuellster Kernel für Arrow Lake + Blackwell Support
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Kernel 6.12 - stabil und kompatibel mit allen Modulen (v4l2loopback etc.)
+  # linuxPackages_latest (6.18) hat noch Kompatibilitätsprobleme
+  boot.kernelPackages = pkgs.linuxPackages_6_12;
 
   # Kernel-Parameter für NVIDIA Suspend/Resume mit Wayland
   boot.kernelParams = [
