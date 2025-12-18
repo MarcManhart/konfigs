@@ -1,4 +1,4 @@
-# `home/mauschel/home.nix` – Home‑Manager für den User
+# `nixos/home/mauschel/home.nix` – Home‑Manager für den User
 #
 # Wofür diese Datei da ist:
 #
@@ -17,8 +17,8 @@
   ...
 }:
 let
-  dot = "/home/mauschel/konfigs/home/mauschel/dotfiles";
-  styles = "/home/mauschel/konfigs/styling";
+  dot = "/home/mauschel/konfigs/dotfiles";
+  styles = "/home/mauschel/konfigs/resources/styling";
   blenderVersion = "4.4";
 in
 {
@@ -185,7 +185,7 @@ in
     force = true;
   };
   home.file.".config/blender/${blenderVersion}/scripts/addons/quick_mesh_rename.py" = {
-    source = config.lib.file.mkOutOfStoreSymlink "/home/mauschel/konfigs/res/blender_extentions/quick_mesh_rename.py";
+    source = config.lib.file.mkOutOfStoreSymlink "/home/mauschel/konfigs/resources/blender_extensions/quick_mesh_rename.py";
     force = true;
   };
 
