@@ -47,7 +47,6 @@
             ./modules/hyprland.nix
             ./modules/gnome.nix
             ./modules/container.nix
-            ./modules/blx.nix
             ./modules/godot-mcp.nix
             ./modules/gaming.nix
             ./modules/i2p.nix
@@ -80,7 +79,6 @@
             ./modules/hyprland.nix
             ./modules/gnome.nix
             ./modules/container.nix
-            ./modules/blx.nix
             ./modules/godot-mcp.nix
             ./modules/gaming.nix
             ./modules/i2p.nix
