@@ -1,0 +1,44 @@
+[mauschel@nixos:~/konfigs]$ sudo nixos-rebuild switch --flake .#FlotteBunte
+[sudo] Passwort für mauschel: 
+building the system configuration...
+error: Cannot build '/nix/store/67pa1syx9c7vg9d4rpir18449v8a6x85-v4l2loopback-0.15.1-6.18.1.drv'.
+       Reason: builder failed with exit code 2.
+       Output paths:
+         /nix/store/9ls2dmkpmjhsqrj8w7i2hkdlgqgz091c-v4l2loopback-0.15.1-6.18.1
+         /nix/store/fyjygni7bl6110akzdsi8kb1qkzfi81x-v4l2loopback-0.15.1-6.18.1-bin
+       Last 25 log lines:
+       >   CC [M]  v4l2loopback.o
+       > v4l2loopback.c: In function 'v4l2_loopback_open':
+       > v4l2loopback.c:2337:9: error: too few arguments to function 'v4l2_fh_add'
+       >  2337 |         v4l2_fh_add(&opener->fh);
+       >       |         ^~~~~~~~~~~
+       > In file included from /nix/store/1lmsy8lyw00w0ih2z8wn3vx9mdci1hr7-linux-6.18.1-dev/lib/modules/6.18.1/source/include/media/v4l2-subdev.h:17,
+       >                  from /nix/store/1lmsy8lyw00w0ih2z8wn3vx9mdci1hr7-linux-6.18.1-dev/lib/modules/6.18.1/source/include/media/v4l2-device.h:13,
+       >                  from v4l2loopback.c:29:
+       > /nix/store/1lmsy8lyw00w0ih2z8wn3vx9mdci1hr7-linux-6.18.1-dev/lib/modules/6.18.1/source/include/media/v4l2-fh.h:97:6: note: declared here
+       >    97 | void v4l2_fh_add(struct v4l2_fh *fh, struct file *filp);
+       >       |      ^~~~~~~~~~~
+       > v4l2loopback.c: In function 'v4l2_loopback_close':
+       > v4l2loopback.c:2386:9: error: too few arguments to function 'v4l2_fh_del'
+       >  2386 |         v4l2_fh_del(&opener->fh);
+       >       |         ^~~~~~~~~~~
+       > /nix/store/1lmsy8lyw00w0ih2z8wn3vx9mdci1hr7-linux-6.18.1-dev/lib/modules/6.18.1/source/include/media/v4l2-fh.h:125:6: note: declared here
+       >   125 | void v4l2_fh_del(struct v4l2_fh *fh, struct file *filp);
+       >       |      ^~~~~~~~~~~
+       > make[4]: *** [/nix/store/1lmsy8lyw00w0ih2z8wn3vx9mdci1hr7-linux-6.18.1-dev/lib/modules/6.18.1/source/scripts/Makefile.build:287: v4l2loopback.o] Error 1
+       > make[3]: *** [/nix/store/1lmsy8lyw00w0ih2z8wn3vx9mdci1hr7-linux-6.18.1-dev/lib/modules/6.18.1/source/Makefile:2010: .] Error 2
+       > make[2]: *** [/nix/store/1lmsy8lyw00w0ih2z8wn3vx9mdci1hr7-linux-6.18.1-dev/lib/modules/6.18.1/source/Makefile:248: __sub-make] Error 2
+       > make[2]: Leaving directory '/build/source'
+       > make[1]: *** [/nix/store/1lmsy8lyw00w0ih2z8wn3vx9mdci1hr7-linux-6.18.1-dev/lib/modules/6.18.1/source/Makefile:248: __sub-make] Error 2
+       > make[1]: Leaving directory '/nix/store/1lmsy8lyw00w0ih2z8wn3vx9mdci1hr7-linux-6.18.1-dev/lib/modules/6.18.1/build'
+       > make: *** [Makefile:53: v4l2loopback.ko] Error 2
+       For full logs, run:
+         nix log /nix/store/67pa1syx9c7vg9d4rpir18449v8a6x85-v4l2loopback-0.15.1-6.18.1.drv
+error: Cannot build '/nix/store/b1wnl5hvz1ks5hll5n61hc3zrifhcb4c-linux-6.18.1-modules.drv'.
+       Reason: 1 dependency failed.
+       Output paths:
+         /nix/store/fyq04nfl52p8zg72j97gfqgy7y1dmnfw-linux-6.18.1-modules
+error: Cannot build '/nix/store/llxkq8q4wgimin6pqad3kxpjzabrj1fr-nixos-system-FlotteBunte-25.05.20251214.d02bcc3.drv'.
+       Reason: 1 dependency failed.
+       Output paths:
+         /nix/store/6f28h6y41n42n5hm2w7j25wi0wqhghil-nixos-system-FlotteBunte-25.05.20251214.d02bcc3
