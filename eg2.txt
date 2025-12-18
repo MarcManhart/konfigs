@@ -1,0 +1,78 @@
+sudo nixos-rebuild switch --flake .#FlotteBunte
+[sudo] Passwort für mauschel: 
+building the system configuration...
+warning: download buffer is full; consider increasing the 'download-buffer-size' setting
+stopping the following units: accounts-daemon.service, avahi-daemon.service, avahi-daemon.socket, bolt.service, colord.service, cups-browsed.service, cups.service, cups.socket, kmod-static-nodes.service, lastlog2-import.service, logrotate-checkconf.service, ModemManager.service, network-setup.service, NetworkManager-wait-online.service, NetworkManager.service, nscd.service, power-profiles-daemon.service, resolvconf.service, rtkit-daemon.service, systemd-machined.service, systemd-modules-load.service, systemd-oomd.service, systemd-oomd.socket, systemd-sysctl.service, systemd-timesyncd.service, systemd-udev-trigger.service, systemd-update-done.service, systemd-vconsole-setup.service, udisks2.service, upower.service, wpa_supplicant.service
+NOT restarting the following changed units: bluetooth.service, display-manager.service, systemd-backlight@backlight:intel_backlight.service, systemd-backlight@leds:asus::kbd_backlight.service, systemd-fsck@dev-disk-by\x2duuid-B54B\x2d6A5A.service, systemd-journal-flush.service, systemd-logind.service, systemd-random-seed.service, systemd-remount-fs.service, systemd-tmpfiles-setup.service, systemd-update-utmp.service, systemd-user-sessions.service, user-runtime-dir@1000.service, user@1000.service
+activating the configuration...
+removing group ‘clock’
+removing group ‘lpadmin’
+removing group ‘gnome-initial-setup’
+removing user ‘gdm-greeter-2’
+removing user ‘gdm-greeter-4’
+removing user ‘gdm-greeter-3’
+removing user ‘gdm-greeter-1’
+removing user ‘gdm-greeter’
+setting up /etc...
+removing obsolete symlink ‘/etc/gai.conf’...
+removing obsolete symlink ‘/etc/tmpfiles.d/lastlog2-tmpfiles.conf’...
+removing obsolete symlink ‘/etc/firefox/policies/policies.json’...
+restarting systemd...
+reloading user units for mauschel...
+restarting sysinit-reactivation.target
+reloading the following units: dbus.service, firewall.service, reload-systemd-vconsole-setup.service
+restarting the following units: nix-daemon.service, polkit.service, systemd-journald.service, systemd-udevd.service
+starting the following units: accounts-daemon.service, avahi-daemon.socket, bolt.service, colord.service, cups-browsed.service, cups.socket, kmod-static-nodes.service, lastlog2-import.service, logrotate-checkconf.service, ModemManager.service, network-setup.service, NetworkManager-wait-online.service, NetworkManager.service, nscd.service, power-profiles-daemon.service, resolvconf.service, rtkit-daemon.service, systemd-machined.service, systemd-modules-load.service, systemd-oomd.socket, systemd-sysctl.service, systemd-timesyncd.service, systemd-udev-trigger.service, systemd-update-done.service, systemd-vconsole-setup.service, udisks2.service, upower.service, wpa_supplicant.service
+the following new units were started: acpid.service, asusd.service, audit.service, clamav-daemon.service, clamav-freshclam.timer, clamav-scan.timer, cpufreq.service, docker-prune.timer, docker.service, docker.socket, getty@tty1.service, i2pd.service, libvirt-guests.service, libvirtd-admin.socket, libvirtd-ro.socket, libvirtd.service, libvirtd.socket, mount-pstore.service, NetworkManager-dispatcher.service, nix-gc.timer, sshd-unix-local.socket, sshd.service, supergfxd.service, syncthing-init.service, syncthing.service, sys-devices-platform-asus\x2dnb\x2dwmi.device, sys-devices-virtual-misc-tun.device, sys-devices-virtual-net-docker0.device, sys-module-tun.device, sys-subsystem-net-devices-docker0.device, sysinit-reactivation.target, system-clamav.slice, system-getty.slice, system-systemd\x2dcoredump.slice, systemd-hostnamed.service, systemd-tmpfiles-resetup.service, thermald.service, virt-guest-shutdown.target, virtlockd.socket, virtlogd.socket
+warning: the following units failed: godot-mcp-setup.service, nvidia-persistenced.service, nvidia-powerd.service
+× godot-mcp-setup.service - Clone and build godot-mcp repository
+     Loaded: loaded (/etc/systemd/system/godot-mcp-setup.service; enabled; preset: ignored)
+     Active: failed (Result: exit-code) since Thu 2025-12-18 03:27:47 CET; 12s ago
+ Invocation: 1cd0f06732d64adc81c6c6f5e0eecc7e
+    Process: 89314 ExecStart=/nix/store/d36sl8pmjnhwhw8r1xm3ankvfj71m0q8-unit-script-godot-mcp-setup-start/bin/godot-mcp-setup-start (code=exited, status=128)
+   Main PID: 89314 (code=exited, status=128)
+         IP: 0B in, 0B out
+         IO: 15.8M read, 20K written
+   Mem peak: 11.2M
+        CPU: 20ms
+
+Dez 18 03:27:47 nixos systemd[1]: Starting Clone and build godot-mcp repository...
+Dez 18 03:27:47 nixos godot-mcp-setup-start[89314]: Cloning godot-mcp repository...
+Dez 18 03:27:47 nixos godot-mcp-setup-start[89328]: Klone nach '/var/opt/godot-mcp'...
+Dez 18 03:27:47 nixos godot-mcp-setup-start[89392]: Schwerwiegend: konnte nicht auf 'https://github.com/Coding-Solo/godot-mcp/' zugreifen: Could not resolve host: github.com
+Dez 18 03:27:47 nixos systemd[1]: godot-mcp-setup.service: Main process exited, code=exited, status=128/n/a
+Dez 18 03:27:47 nixos systemd[1]: godot-mcp-setup.service: Failed with result 'exit-code'.
+Dez 18 03:27:47 nixos systemd[1]: Failed to start Clone and build godot-mcp repository.
+Dez 18 03:27:47 nixos systemd[1]: godot-mcp-setup.service: Consumed 20ms CPU time, 11.2M memory peak, 15.8M read from disk, 20K written to disk.
+
+× nvidia-persistenced.service - NVIDIA Persistence Daemon
+     Loaded: loaded (/etc/systemd/system/nvidia-persistenced.service; enabled; preset: ignored)
+     Active: failed (Result: exit-code) since Thu 2025-12-18 03:27:48 CET; 11s ago
+ Invocation: f4be2cc7cedc4282bb89416191822515
+    Process: 90330 ExecStart=/nix/store/v9ka8kwf2gvdbla2k3qacv7zzdj5ljn1-nvidia-persistenced-570.195.03/bin/nvidia-persistenced --verbose (code=exited, status=1/FAILURE)
+    Process: 90347 ExecStopPost=/nix/store/zwplch93wbpj82bp7riwaixmdx2xi0ah-coreutils-9.7/bin/rm -rf /var/run/nvidia-persistenced (code=exited, status=0/SUCCESS)
+
+Dez 18 03:27:48 FlotteBunte systemd[1]: nvidia-persistenced.service: Scheduled restart job, restart counter is at 5.
+Dez 18 03:27:48 FlotteBunte systemd[1]: nvidia-persistenced.service: Start request repeated too quickly.
+Dez 18 03:27:48 FlotteBunte systemd[1]: nvidia-persistenced.service: Failed with result 'exit-code'.
+Dez 18 03:27:48 FlotteBunte systemd[1]: Failed to start NVIDIA Persistence Daemon.
+
+× nvidia-powerd.service - nvidia-powerd service
+     Loaded: loaded (/etc/systemd/system/nvidia-powerd.service; enabled; preset: ignored)
+     Active: failed (Result: exit-code) since Thu 2025-12-18 03:27:56 CET; 3s ago
+ Invocation: c5e24aef26ec430fa7b108fac0f3e421
+    Process: 91205 ExecStart=/nix/store/arl8jq6x3pv755sn45kpp2wnkpy351c4-nvidia-x11-570.195.03-6.12.62-bin/bin/nvidia-powerd (code=exited, status=1/FAILURE)
+   Main PID: 91205 (code=exited, status=1/FAILURE)
+         IP: 0B in, 0B out
+         IO: 0B read, 0B written
+   Mem peak: 1.6M
+        CPU: 7ms
+
+Dez 18 03:27:56 FlotteBunte systemd[1]: Starting nvidia-powerd service...
+Dez 18 03:27:56 FlotteBunte /nix/store/arl8jq6x3pv755sn45kpp2wnkpy351c4-nvidia-x11-570.195.03-6.12.62-bin/bin/nvidia-powerd[91205]: nvidia-powerd version:1.0(build 1)
+Dez 18 03:27:56 FlotteBunte /nix/store/arl8jq6x3pv755sn45kpp2wnkpy351c4-nvidia-x11-570.195.03-6.12.62-bin/bin/nvidia-powerd[91205]: Allocate client failed 38
+Dez 18 03:27:56 FlotteBunte /nix/store/arl8jq6x3pv755sn45kpp2wnkpy351c4-nvidia-x11-570.195.03-6.12.62-bin/bin/nvidia-powerd[91205]: Failed to initialize RM Client
+Dez 18 03:27:56 FlotteBunte systemd[1]: nvidia-powerd.service: Main process exited, code=exited, status=1/FAILURE
+Dez 18 03:27:56 FlotteBunte systemd[1]: nvidia-powerd.service: Failed with result 'exit-code'.
+Dez 18 03:27:56 FlotteBunte systemd[1]: Failed to start nvidia-powerd service.
+warning: error(s) occurred while switching to the new configuration
