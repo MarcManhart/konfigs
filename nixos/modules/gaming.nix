@@ -33,8 +33,8 @@
     };
 
     # Controller-Unterst�tzung
-    xone.enable = true; # Xbox One Controller
-    xpadneo.enable = true; # Xbox Controller �ber Bluetooth
+    # xone.enable = true; # Xbox One Controller - nicht kompatibel mit Kernel 6.18+
+    # xpadneo.enable = true; # nicht kompatibel mit Kernel 6.18+ # Xbox Controller �ber Bluetooth
   };
 
   # Gaming-Pakete

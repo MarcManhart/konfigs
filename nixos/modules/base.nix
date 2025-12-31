@@ -13,7 +13,8 @@
   i18n.defaultLocale = "de_DE.UTF-8";
   time.timeZone = "Europe/Berlin";
 
-  # NetworkManager aktivieren
+  # NetworkManager mit wpa_supplicant (Standard)
+  # IWD hat Scan-Probleme mit Wi-Fi 7 BE201 (CMD_TRIGGER_SCAN: Invalid argument)
   networking.networkmanager.enable = true;
   networking.useDHCP = lib.mkDefault true;
   networking.firewall.enable = true;

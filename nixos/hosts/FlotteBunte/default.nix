@@ -14,9 +14,8 @@
 
   networking.hostName = "FlotteBunte";
 
-  # Kernel 6.12 - stabil und kompatibel mit allen Modulen (v4l2loopback etc.)
-  # linuxPackages_latest (6.18) hat noch Kompatibilitätsprobleme
-  boot.kernelPackages = pkgs.linuxPackages_6_12;
+  # Kernel 6.18 - enthält WiFi 7 BE201 Fix (Scan-Bug behoben in 6.16.6)
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Kernel-Parameter für NVIDIA Suspend/Resume mit Wayland
   boot.kernelParams = [
@@ -88,6 +87,17 @@
       KEYBOARD_KEY_c7=home
       KEYBOARD_KEY_c8=end
   '';
+
+  # ══════════════════════════════════════════════════════════════════
+  # Backlight (Berechtigungen für video-Gruppe)
+  # ══════════════════════════════════════════════════════════════════
+  programs.light.enable = true;
+
+  # tmpfiles-Regel für Backlight-Berechtigungen
+  # Robuster als udev-Regeln für DRM-basierte Backlights
+  systemd.tmpfiles.rules = [
+    "z /sys/class/backlight/intel_backlight/brightness 0664 root video -"
+  ];
 
   # ══════════════════════════════════════════════════════════════════
   # Power Management
