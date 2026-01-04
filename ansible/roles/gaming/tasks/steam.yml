@@ -1,0 +1,85 @@
+---
+# Steam Installation
+
+- name: Install Steam (Arch)
+  when: ansible_distribution == "Archlinux"
+  block:
+    - name: Enable multilib repository
+      ansible.builtin.blockinfile:
+        path: /etc/pacman.conf
+        block: |
+          [multilib]
+          Include = /etc/pacman.d/mirrorlist
+        marker: "# {mark} ANSIBLE MULTILIB BLOCK"
+
+    - name: Update pacman cache
+      community.general.pacman:
+        update_cache: true
+
+    - name: Install Steam
+      community.general.pacman:
+        name:
+          - steam
+          - steam-native-runtime
+        state: present
+
+- name: Install Steam (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Enable i386 architecture
+      ansible.builtin.command:
+        cmd: dpkg --add-architecture i386
+      changed_when: true
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Steam
+      ansible.builtin.apt:
+        name: steam-installer
+        state: present
+
+- name: Install Steam (Fedora)
+  when: ansible_distribution == "Fedora"
+  block:
+    - name: Enable RPM Fusion for Steam
+      ansible.builtin.dnf:
+        name:
+          - "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+        state: present
+        disable_gpg_check: true
+
+    - name: Install Steam
+      ansible.builtin.dnf:
+        name: steam
+        state: present
+
+# ProtonUp für Proton GE
+- name: Install ProtonUp-Qt (Arch)
+  when: ansible_distribution == "Archlinux"
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.command:
+    cmd: yay -S --noconfirm protonup-qt
+  changed_when: true
+  failed_when: false
+
+- name: Install ProtonUp-Qt (Flatpak)
+  when: ansible_os_family != "Archlinux"
+  block:
+    - name: Install Flatpak
+      ansible.builtin.package:
+        name: flatpak
+        state: present
+
+    - name: Add Flathub repository
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+        state: present
+
+    - name: Install ProtonUp-Qt via Flatpak
+      community.general.flatpak:
+        name: net.davidotek.pupgui2
+        state: present

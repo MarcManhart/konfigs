@@ -1,0 +1,58 @@
+---
+# Link a single dotfile
+
+- name: "Check if source exists: {{ dotfile.src }}"
+  ansible.builtin.stat:
+    path: "{{ src_base }}/{{ dotfile.src }}"
+  register: src_stat
+
+- name: "Check if destination exists: {{ dotfile.dest }}"
+  ansible.builtin.stat:
+    path: "{{ target_home }}/{{ dotfile.dest }}"
+  register: dest_stat
+  when: src_stat.stat.exists
+
+- name: "Backup existing file: {{ dotfile.dest }}"
+  ansible.builtin.copy:
+    src: "{{ target_home }}/{{ dotfile.dest }}"
+    dest: "{{ target_home }}/{{ dotfile.dest }}.backup.{{ ansible_date_time.epoch }}"
+    remote_src: true
+    owner: "{{ dotfiles_user }}"
+    group: "{{ dotfiles_user }}"
+  when:
+    - src_stat.stat.exists
+    - dest_stat.stat.exists
+    - not dest_stat.stat.islnk
+    - dotfiles_backup | default(true)
+
+- name: "Remove existing file/link: {{ dotfile.dest }}"
+  ansible.builtin.file:
+    path: "{{ target_home }}/{{ dotfile.dest }}"
+    state: absent
+  when:
+    - src_stat.stat.exists
+    - dest_stat.stat.exists
+
+- name: "Create parent directory for: {{ dotfile.dest }}"
+  ansible.builtin.file:
+    path: "{{ target_home }}/{{ dotfile.dest | dirname }}"
+    state: directory
+    owner: "{{ dotfiles_user }}"
+    group: "{{ dotfiles_user }}"
+    mode: '0755'
+  when: src_stat.stat.exists
+
+- name: "Create symlink: {{ dotfile.dest }}"
+  ansible.builtin.file:
+    src: "{{ src_base }}/{{ dotfile.src }}"
+    dest: "{{ target_home }}/{{ dotfile.dest }}"
+    state: link
+    force: true
+    owner: "{{ dotfiles_user }}"
+    group: "{{ dotfiles_user }}"
+  when: src_stat.stat.exists
+
+- name: "Warning: Source not found"
+  ansible.builtin.debug:
+    msg: "WARNING: Source file not found: {{ src_base }}/{{ dotfile.src }}"
+  when: not src_stat.stat.exists

@@ -1,0 +1,55 @@
+---
+# Libvirt/QEMU/KVM Setup
+
+- name: Install libvirt packages (Arch)
+  when: ansible_distribution == "Archlinux"
+  community.general.pacman:
+    name:
+      - libvirt
+      - qemu-full
+      - virt-manager
+      - virt-viewer
+      - dnsmasq
+      - bridge-utils
+      - edk2-ovmf
+    state: present
+
+- name: Install libvirt packages (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  ansible.builtin.apt:
+    name:
+      - libvirt-daemon-system
+      - libvirt-clients
+      - qemu-kvm
+      - virt-manager
+      - virt-viewer
+      - bridge-utils
+      - ovmf
+    state: present
+
+- name: Install libvirt packages (Fedora)
+  when: ansible_distribution == "Fedora"
+  ansible.builtin.dnf:
+    name:
+      - "@virtualization"
+      - virt-manager
+      - virt-viewer
+    state: present
+
+- name: Enable libvirtd service
+  ansible.builtin.systemd:
+    name: libvirtd
+    enabled: true
+    state: started
+
+- name: Add user to libvirt group
+  ansible.builtin.user:
+    name: "{{ main_user }}"
+    groups: [libvirt, kvm]
+    append: true
+
+- name: Configure libvirt network
+  ansible.builtin.command:
+    cmd: virsh net-autostart default
+  changed_when: true
+  failed_when: false

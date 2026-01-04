@@ -1,0 +1,17 @@
+---
+# Defaults für gnome Role
+
+gnome_wayland: true
+
+gnome_extensions:
+  - dash-to-dock
+  - appindicator
+  - blur-my-shell
+  - user-themes
+  - gsconnect
+
+# GSConnect/KDE Connect Ports
+gsconnect_tcp_ports:
+  - { from: 1716, to: 1764 }
+gsconnect_udp_ports:
+  - { from: 1716, to: 1764 }

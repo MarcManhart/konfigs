@@ -1,0 +1,128 @@
+---
+# Hyprland Wayland Compositor Role
+
+- name: Install Hyprland (Arch)
+  when: ansible_distribution == "Archlinux"
+  block:
+    - name: Install Hyprland from official repos
+      community.general.pacman:
+        name:
+          - hyprland
+          - hyprpaper
+          - hyprlock
+          - hypridle
+          - xdg-desktop-portal-hyprland
+          - xdg-desktop-portal-gtk
+          - waybar
+          - kitty
+          - rofi-wayland
+          - wl-clipboard
+          - grim
+          - slurp
+          - swappy
+          - wdisplays
+          - lxqt-policykit
+          - blueman
+        state: present
+
+    - name: Install AUR packages for Hyprland
+      become: true
+      become_user: "{{ main_user }}"
+      ansible.builtin.command:
+        cmd: "yay -S --noconfirm {{ item }}"
+      loop:
+        - networkmanager-dmenu-git
+      changed_when: true
+      failed_when: false
+
+- name: Install Hyprland (Fedora)
+  when: ansible_distribution == "Fedora"
+  block:
+    - name: Enable COPR for Hyprland
+      ansible.builtin.command:
+        cmd: dnf copr enable -y solopasha/hyprland
+      changed_when: true
+      failed_when: false
+
+    - name: Install Hyprland packages
+      ansible.builtin.dnf:
+        name:
+          - hyprland
+          - hyprpaper
+          - hyprlock
+          - hypridle
+          - xdg-desktop-portal-hyprland
+          - xdg-desktop-portal-gtk
+          - waybar
+          - kitty
+          - rofi-wayland
+          - wl-clipboard
+          - grim
+          - slurp
+          - lxqt-policykit
+          - blueman
+        state: present
+
+- name: Install Hyprland dependencies (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Install available packages
+      ansible.builtin.apt:
+        name:
+          - kitty
+          - waybar
+          - wl-clipboard
+          - grim
+          - slurp
+          - blueman
+          - xdg-desktop-portal-gtk
+        state: present
+
+    - name: Display Hyprland build notice
+      ansible.builtin.debug:
+        msg: |
+          NOTE: Hyprland is not available in Debian/Ubuntu repos.
+          You need to build it from source or use a PPA.
+          See: https://wiki.hyprland.org/Getting-Started/Installation/
+
+# Configure environment variables
+- name: Set Hyprland environment variables
+  ansible.builtin.blockinfile:
+    path: /etc/environment
+    block: |
+      NIXOS_OZONE_WL=1
+      NMD_MENU=rofi
+    marker: "# {mark} ANSIBLE HYPRLAND MANAGED BLOCK"
+    create: true
+    mode: '0644'
+
+# XDG Portal configuration
+- name: Create XDG portal config directory
+  ansible.builtin.file:
+    path: "/home/{{ main_user }}/.config/xdg-desktop-portal"
+    state: directory
+    owner: "{{ main_user }}"
+    group: "{{ main_user }}"
+    mode: '0755'
+
+- name: Configure XDG portals for Hyprland
+  ansible.builtin.copy:
+    content: |
+      [preferred]
+      default=hyprland;gtk
+      org.freedesktop.impl.portal.Screenshot=hyprland
+      org.freedesktop.impl.portal.ScreenCast=hyprland
+    dest: "/home/{{ main_user }}/.config/xdg-desktop-portal/hyprland-portals.conf"
+    owner: "{{ main_user }}"
+    group: "{{ main_user }}"
+    mode: '0644'
+
+# Enable Blueman service
+- name: Enable Blueman applet service
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.systemd:
+    name: blueman-applet
+    scope: user
+    enabled: true
+  ignore_errors: true

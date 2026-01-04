@@ -1,0 +1,7 @@
+---
+# Handlers für gaming Role
+
+- name: Reload udev rules
+  ansible.builtin.command:
+    cmd: udevadm control --reload-rules && udevadm trigger
+  changed_when: true
