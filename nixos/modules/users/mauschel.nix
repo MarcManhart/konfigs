@@ -9,7 +9,7 @@
 # - `extraGroups` passend zu Desktop‑/Docker‑Nutzung. Prüfe `networkmanager` vs. systemweite Netzprofile.
 # - Den öffentlichen SSH‑Key regelmäßig rotieren und ggf. zusätzlich FIDO2/ed25519‑sk nutzen.
 
-{ config, pkgs, dconf, ... }:
+{ config, pkgs, ... }:
 {
   # Kernel-Module für OBS virtuelle Webcam
   boot = {
