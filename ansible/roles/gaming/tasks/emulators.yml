@@ -1,0 +1,84 @@
+---
+# Emulators Installation
+
+- name: Install Emulators (Arch)
+  when: ansible_distribution == "Archlinux"
+  block:
+    - name: Install from official repos
+      community.general.pacman:
+        name:
+          - retroarch
+          - retroarch-assets-xmb
+          - libretro-core-info
+          - pcsx2
+          - duckstation
+          - mupen64plus
+        state: present
+
+    - name: Install from AUR
+      become: true
+      become_user: "{{ main_user }}"
+      ansible.builtin.command:
+        cmd: "yay -S --noconfirm {{ item }}"
+      loop:
+        - ryujinx-bin
+        - rpcs3-bin
+      changed_when: true
+      failed_when: false
+
+- name: Install Emulators (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Install from repos
+      ansible.builtin.apt:
+        name:
+          - retroarch
+          - mupen64plus-qt
+        state: present
+
+    - name: Install PCSX2 via Flatpak
+      community.general.flatpak:
+        name: net.pcsx2.PCSX2
+        state: present
+
+    - name: Install DuckStation via Flatpak
+      community.general.flatpak:
+        name: org.duckstation.DuckStation
+        state: present
+
+    - name: Install RPCS3 via Flatpak
+      community.general.flatpak:
+        name: net.rpcs3.RPCS3
+        state: present
+
+- name: Install Emulators (Fedora)
+  when: ansible_distribution == "Fedora"
+  block:
+    - name: Install RetroArch
+      ansible.builtin.dnf:
+        name: retroarch
+        state: present
+
+    - name: Install other emulators via Flatpak
+      community.general.flatpak:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - net.pcsx2.PCSX2
+        - org.duckstation.DuckStation
+        - net.rpcs3.RPCS3
+        - org.ryujinx.Ryujinx
+
+# Lutris - Game Manager
+- name: Install Lutris
+  ansible.builtin.package:
+    name: lutris
+    state: present
+  ignore_errors: true
+
+# Bottles - Wine Frontend
+- name: Install Bottles via Flatpak
+  community.general.flatpak:
+    name: com.usebottles.bottles
+    state: present
+  ignore_errors: true

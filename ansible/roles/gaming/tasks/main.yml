@@ -1,0 +1,113 @@
+---
+# Gaming Role - Steam, Emulators, Controllers
+
+# Steam Installation
+- name: Install Steam
+  ansible.builtin.include_tasks: steam.yml
+  when: steam_enabled
+
+# Emulators
+- name: Install Emulators
+  ansible.builtin.include_tasks: emulators.yml
+  when: emulators_enabled
+
+# Wine
+- name: Install Wine
+  ansible.builtin.include_tasks: wine.yml
+  when: wine_enabled
+
+# Gaming Tools
+- name: Install gaming tools (Arch)
+  when: ansible_distribution == "Archlinux"
+  community.general.pacman:
+    name:
+      - mangohud
+      - lib32-mangohud
+      - gamemode
+      - lib32-gamemode
+      - gamescope
+      - vulkan-tools
+      - vulkan-icd-loader
+      - lib32-vulkan-icd-loader
+    state: present
+
+- name: Install gaming tools (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  ansible.builtin.apt:
+    name:
+      - mangohud
+      - gamemode
+      - vulkan-tools
+    state: present
+  ignore_errors: true
+
+- name: Install gaming tools (Fedora)
+  when: ansible_distribution == "Fedora"
+  ansible.builtin.dnf:
+    name:
+      - mangohud
+      - gamemode
+      - gamescope
+      - vulkan-tools
+    state: present
+
+# Controller Support
+- name: Configure controllers
+  ansible.builtin.include_tasks: controllers.yml
+
+# System Limits für Gaming
+- name: Configure PAM limits for gaming
+  ansible.builtin.blockinfile:
+    path: /etc/security/limits.d/99-gaming.conf
+    block: |
+      @users soft memlock unlimited
+      @users hard memlock unlimited
+    create: true
+    mode: '0644'
+
+# Firewall für Steam
+- name: Open Steam ports (UFW)
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Allow Steam TCP ports
+      community.general.ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      loop: "{{ steam_tcp_ports }}"
+
+    - name: Allow Steam UDP ports
+      community.general.ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: udp
+      loop: "{{ steam_udp_ports }}"
+
+- name: Open Steam ports (firewalld)
+  when: ansible_distribution == "Fedora"
+  block:
+    - name: Allow Steam TCP ports
+      ansible.posix.firewalld:
+        port: "{{ item }}/tcp"
+        permanent: true
+        state: enabled
+        immediate: true
+      loop: "{{ steam_tcp_ports }}"
+
+    - name: Allow Steam UDP ports
+      ansible.posix.firewalld:
+        port: "{{ item }}/udp"
+        permanent: true
+        state: enabled
+        immediate: true
+      loop: "{{ steam_udp_ports }}"
+
+# GameMode service
+- name: Enable GameMode service
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.systemd:
+    name: gamemoded
+    scope: user
+    enabled: true
+  ignore_errors: true

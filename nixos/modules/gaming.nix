@@ -41,6 +41,7 @@
   environment.systemPackages = with pkgs; [
     # Steam-Zusatztools
     mangohud # Performance-Overlay
+    goverlay # GUI zur MangoHud-Konfiguration
     gamemode # Performance-Optimierung
     gamescope # Wayland-Compositor f�r Gaming
     protonup-qt # Proton-Version-Manager

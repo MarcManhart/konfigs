@@ -1,0 +1,56 @@
+---
+# Defaults für hyprland Role
+
+hyprland_packages_common:
+  - kitty
+  - waybar
+  - rofi-wayland
+  - wl-clipboard
+  - grim
+  - slurp
+
+hyprland_packages_arch:
+  - hyprland
+  - hyprpaper
+  - hyprlock
+  - hypridle
+  - xdg-desktop-portal-hyprland
+  - xdg-desktop-portal-gtk
+  - waybar
+  - kitty
+  - rofi-wayland
+  - wl-clipboard
+  - grim
+  - slurp
+  - swappy
+  - wdisplays
+  - networkmanager-dmenu-git  # AUR
+  - lxqt-policykit
+  - blueman
+
+hyprland_packages_debian:
+  - kitty
+  - waybar
+  - wl-clipboard
+  - grim
+  - slurp
+  # Hyprland muss evtl. aus Quellen gebaut werden
+
+hyprland_packages_fedora:
+  - hyprland
+  - hyprpaper
+  - kitty
+  - waybar
+  - rofi-wayland
+  - wl-clipboard
+  - grim
+  - slurp
+  - xdg-desktop-portal-hyprland
+  - xdg-desktop-portal-gtk
+  - lxqt-policykit
+  - blueman
+
+# Environment Variables
+hyprland_env_vars:
+  NIXOS_OZONE_WL: "1"
+  NMD_MENU: "rofi"

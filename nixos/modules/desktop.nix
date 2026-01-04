@@ -73,6 +73,7 @@
   environment.systemPackages = with pkgs; [
     nixfmt-rfc-style
     firefox
+    qpwgraph          # PipeWire Graph Manager für Audio-Routing
     direnv
     solaar
     # VSCode mit GPU-Beschleunigung deaktiviert und Desktop-Icon

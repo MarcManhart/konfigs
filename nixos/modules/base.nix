@@ -37,28 +37,13 @@
   nixpkgs.config.allowUnfree = true;
 
   ################################################
-  # Flatpack
+  # Flatpak
   ################################################
-  # services.flatpak = {
-  #   enable = true;
-
-  #   # Flathub als Quelle hinzufügen (einmalig, deklarativ)
-  #   remotes = [
-  #     {
-  #       name = "flathub";
-  #       location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-  #     }
-  #   ];
-
-  #   # Systemweit zu installierende Flatpak-Apps (per App-ID)
-  #   packages = [
-  #     "gnome-tweaks"
-  #   ];
-
-  #   # Optional, aber praktisch:
-  #   update.onActivation = true; # Aktualisiert Flatpaks bei jedem switch
-  #   uninstallUnmanaged = true; # Entfernt manuell installierte, nicht deklarierte Flatpaks
-  # };
+  services.flatpak.enable = true;
+  # Flathub manuell hinzufügen nach erstem Boot:
+  # flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+  # Soundux installieren:
+  # flatpak install flathub io.github.Soundux
 
   ################################################
   # System Packages

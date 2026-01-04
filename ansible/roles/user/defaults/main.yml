@@ -1,0 +1,23 @@
+---
+# Defaults für user Role
+
+main_user: "mauschel"
+main_user_comment: "Mauschel"
+main_user_shell: "/usr/bin/zsh"
+main_user_groups:
+  - wheel
+  - docker
+  - video
+  - audio
+  - networkmanager
+  - libvirt
+
+# SSH Keys (public keys für authorized_keys)
+main_user_ssh_keys: []
+# - "ssh-ed25519 AAAA... user@host"
+
+# User-spezifische Pakete
+user_packages_common:
+  - discord
+  - obs-studio
+  - spotify-client  # Name variiert je nach Distro

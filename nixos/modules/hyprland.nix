@@ -51,6 +51,29 @@
     alsa.enable = true;
     pulse.enable = true;
     wireplumber.enable = true;
+
+    # Virtuelles Mikrofon für Soundboard
+    # Erstellt einen Sink (Input für Sounds) und eine Source (Output als virtuelles Mic)
+    extraConfig.pipewire."91-virtual-mic" = {
+      "context.modules" = [
+        {
+          name = "libpipewire-module-loopback";
+          args = {
+            "audio.position" = [ "FL" "FR" ];
+            "capture.props" = {
+              "media.class" = "Audio/Sink";
+              "node.name" = "soundboard-sink";
+              "node.description" = "Soundboard Input";
+            };
+            "playback.props" = {
+              "media.class" = "Audio/Source";
+              "node.name" = "virtual-mic";
+              "node.description" = "Virtual Mic (Soundboard)";
+            };
+          };
+        }
+      ];
+    };
   };
 
   # Portale: ohne die zicken Browser, Flatpaks, File-Picker etc.
