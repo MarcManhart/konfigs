@@ -12,11 +12,14 @@
 { pkgs, ... }:
 let
   androidSdk = pkgs.androidenv.composeAndroidPackages {
-    platformVersions = [ "34" "35" ];
+    platformVersions = [ "31" "34" "35" ];
     buildToolsVersions = [ "34.0.0" "35.0.0" ];
     includeNDK = true;
     ndkVersions = [ "26.1.10909125" ];
-    includeEmulator = false;
+    includeEmulator = true;
+    includeSystemImages = true;
+    systemImageTypes = [ "google_apis_playstore" ];
+    abiVersions = [ "x86_64" ];
   };
 in
 {
