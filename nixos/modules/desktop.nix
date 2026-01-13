@@ -122,7 +122,7 @@ in
     obsidian
     persepolis
     uget-integrator
-    android-studio-full
+    androidSdk.androidsdk  # Android SDK mit ADB (adb devices etc.)
     mplayer
     tor-browser
     openvpn

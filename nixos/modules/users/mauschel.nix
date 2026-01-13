@@ -33,6 +33,7 @@
       "audio"
       "networkmanager"
       "libvirtd"
+      "adbusers"
     ];
     hashedPassword = "*"; # kein Login per Passwort, nur SSH-Key
     packages = with pkgs; [
@@ -126,6 +127,11 @@
   systemd.tmpfiles.rules = [
     "d /var/log/clamav 0755 clamav clamav -"
   ];
+
+  ######################################################
+  # Android ADB
+  ######################################################
+  programs.adb.enable = true;  # udev-Regeln für USB-Gerätezugriff
 
   ######################################################
   # 1Password
