@@ -35,7 +35,10 @@
     options = "--delete-older-than 14d";
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    android_sdk.accept_license = true;
+  };
 
   ################################################
   # Flatpak

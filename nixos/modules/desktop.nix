@@ -10,7 +10,21 @@
 # - `environment.systemPackages` hier nur für *Desktop-spezifische* Tools nutzen. Allgemeines besser in `base.nix`.
 
 { pkgs, ... }:
+let
+  androidSdk = pkgs.androidenv.composeAndroidPackages {
+    platformVersions = [ "34" "35" ];
+    buildToolsVersions = [ "34.0.0" "35.0.0" ];
+    includeNDK = true;
+    ndkVersions = [ "26.1.10909125" ];
+    includeEmulator = false;
+  };
+in
 {
+  # Android SDK Umgebungsvariablen
+  environment.variables = {
+    ANDROID_HOME = "${androidSdk.androidsdk}/libexec/android-sdk";
+    ANDROID_SDK_ROOT = "${androidSdk.androidsdk}/libexec/android-sdk";
+  };
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   # services.xserver.desktopManager.gnome.enable = true; # Deaktiviert für Hyprland
@@ -108,6 +122,7 @@
     obsidian
     persepolis
     uget-integrator
+    android-studio-full
     mplayer
     tor-browser
     openvpn
@@ -123,4 +138,5 @@
   # GNOME hat seinen eigenen Portal-Backend
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+
 }
