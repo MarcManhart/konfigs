@@ -33,7 +33,7 @@
     modesetting.enable = true;
     powerManagement.enable = true;
     powerManagement.finegrained = true;  # Schaltet dGPU bei Nichtgebrauch aus
-    open = false;  # Closed-source Treiber (stabiler für RTX)
+    open = true;  # Open Kernel Module (erforderlich für RTX 50-Serie/Blackwell)
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.latest;
 
