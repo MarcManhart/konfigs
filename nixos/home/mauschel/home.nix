@@ -446,6 +446,7 @@ in
   # Zusatzpakete nur für den User
   ######################################################
   home.packages = with pkgs; [
+    ffmpeg
   ];
 
   # Systemd User Services
