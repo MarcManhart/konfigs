@@ -1,0 +1,110 @@
+---
+# Base Role - Grundkonfiguration des Systems
+
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+    - "default.yml"
+  ignore_errors: true
+
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ hostname | default(inventory_hostname) }}"
+
+- name: Configure timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+- name: Configure locale (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Generate locale
+      community.general.locale_gen:
+        name: "{{ locale }}"
+        state: present
+
+    - name: Set default locale
+      ansible.builtin.copy:
+        content: |
+          LANG={{ locale }}
+          LC_ALL={{ locale }}
+        dest: /etc/default/locale
+        mode: '0644'
+
+- name: Configure locale (Arch)
+  when: ansible_distribution == "Archlinux"
+  block:
+    - name: Uncomment locale in locale.gen
+      ansible.builtin.lineinfile:
+        path: /etc/locale.gen
+        regexp: "^#{{ locale }}"
+        line: "{{ locale }} UTF-8"
+
+    - name: Generate locales
+      ansible.builtin.command: locale-gen
+      changed_when: true
+
+    - name: Set locale.conf
+      ansible.builtin.copy:
+        content: |
+          LANG={{ locale }}
+        dest: /etc/locale.conf
+        mode: '0644'
+
+- name: Configure locale (Fedora)
+  when: ansible_distribution == "Fedora"
+  ansible.builtin.command:
+    cmd: localectl set-locale LANG={{ locale }}
+  changed_when: true
+
+# Package Installation
+- name: Install base packages (Arch)
+  when: ansible_distribution == "Archlinux"
+  community.general.pacman:
+    name: "{{ base_packages_arch }}"
+    state: present
+    update_cache: true
+
+- name: Install base packages (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  ansible.builtin.apt:
+    name: "{{ base_packages_debian }}"
+    state: present
+    update_cache: true
+
+- name: Install base packages (Fedora)
+  when: ansible_distribution == "Fedora"
+  ansible.builtin.dnf:
+    name: "{{ base_packages_fedora }}"
+    state: present
+
+# SSH Configuration
+- name: Configure SSH
+  ansible.builtin.include_tasks: ssh.yml
+
+# Firewall
+- name: Configure firewall
+  ansible.builtin.include_tasks: firewall.yml
+  when: firewall_enabled
+
+# NetworkManager
+- name: Enable NetworkManager
+  ansible.builtin.systemd:
+    name: NetworkManager
+    enabled: true
+    state: started
+
+# Set default shell to zsh
+- name: Ensure zsh is available
+  ansible.builtin.shell: which zsh
+  register: zsh_path
+  changed_when: false
+  failed_when: false
+
+- name: Add zsh to /etc/shells
+  ansible.builtin.lineinfile:
+    path: /etc/shells
+    line: "{{ zsh_path.stdout }}"
+  when: zsh_path.rc == 0

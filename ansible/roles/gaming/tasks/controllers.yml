@@ -1,0 +1,67 @@
+---
+# Controller Support
+
+# Xbox Controller
+- name: Install Xbox controller support (Arch)
+  when:
+    - ansible_distribution == "Archlinux"
+    - xbox_controller
+  block:
+    - name: Install xone from AUR
+      become: true
+      become_user: "{{ main_user }}"
+      ansible.builtin.command:
+        cmd: yay -S --noconfirm xone-dkms xpadneo-dkms
+      changed_when: true
+      failed_when: false
+
+- name: Install Xbox controller support (Debian/Ubuntu)
+  when:
+    - ansible_os_family == "Debian"
+    - xbox_controller
+  ansible.builtin.apt:
+    name:
+      - xboxdrv
+    state: present
+  ignore_errors: true
+
+# Nintendo Switch Controller
+- name: Install Nintendo Switch controller support (Arch)
+  when:
+    - ansible_distribution == "Archlinux"
+    - nintendo_controller
+  become: true
+  become_user: "{{ main_user }}"
+  ansible.builtin.command:
+    cmd: yay -S --noconfirm joycond-git
+  changed_when: true
+  failed_when: false
+
+# Controller udev rules
+- name: Create controller udev rules
+  ansible.builtin.copy:
+    content: |
+      # Nintendo Switch Pro Controller
+      KERNEL=="hidraw*", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="2009", MODE="0666"
+
+      # PlayStation Controller (DualShock 4, DualSense)
+      KERNEL=="hidraw*", ATTRS{idVendor}=="054c", MODE="0666"
+
+      # 8BitDo Controller
+      KERNEL=="hidraw*", ATTRS{idVendor}=="2dc8", MODE="0666"
+
+      # Steam Controller
+      KERNEL=="hidraw*", ATTRS{idVendor}=="28de", MODE="0666"
+
+      # Xbox Controllers
+      KERNEL=="hidraw*", ATTRS{idVendor}=="045e", MODE="0666"
+    dest: /etc/udev/rules.d/99-controllers.rules
+    mode: '0644'
+  notify: Reload udev rules
+
+# AntiMicroX - Controller zu Tastatur Mapping
+- name: Install AntiMicroX
+  ansible.builtin.package:
+    name: "{{ 'antimicrox' if ansible_distribution == 'Archlinux' else 'antimicrox' }}"
+    state: present
+  ignore_errors: true

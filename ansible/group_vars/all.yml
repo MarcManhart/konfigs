@@ -1,0 +1,56 @@
+---
+# Globale Variablen für alle Hosts
+
+# System
+timezone: "Europe/Berlin"
+locale: "de_DE.UTF-8"
+keyboard_layout: "de"
+
+# User
+main_user: "mauschel"
+main_user_shell: "/usr/bin/zsh"
+main_user_groups:
+  - wheel
+  - docker
+  - video
+  - audio
+  - networkmanager
+  - libvirt
+
+# Repository Pfade (relativ zum Playbook)
+repo_root: "{{ playbook_dir }}/.."
+dotfiles_dir: "{{ repo_root }}/dotfiles"
+resources_dir: "{{ repo_root }}/resources"
+
+# Paketlisten - Distribution-unabhängig (werden in Roles gemappt)
+base_packages:
+  - vim
+  - git
+  - git-lfs
+  - htop
+  - curl
+  - wget
+  - jq
+  - tree
+  - python3
+  - zip
+  - unzip
+  - p7zip
+  - zsh
+
+desktop_packages:
+  - firefox
+  - vlc
+  - terminator
+  - blender
+  - inkscape
+  - krita
+  - libreoffice
+
+# Feature Flags
+enable_nvidia: true
+enable_gaming: true
+enable_hyprland: true
+enable_gnome: true
+enable_docker: true
+enable_flatpak: false
