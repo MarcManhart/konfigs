@@ -14,6 +14,9 @@
 
   networking.hostName = "FlotteBunte";
 
+  # Intel Microcode Updates (behebt MCE Hardware Errors)
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
   # Kernel 6.18 - enthält WiFi 7 BE201 Fix (Scan-Bug behoben in 6.16.6)
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -74,6 +77,17 @@
 
   # supergfxd braucht pciutils für GPU-Erkennung
   systemd.services.supergfxd.path = [ pkgs.pciutils ];
+
+  # nvidia-powerd Dummy-Service (verhindert udev/supergfxd Fehler)
+  # nvidia-powerd ist nicht kompatibel mit Prime Offload, wird aber von udev-Regeln erwartet
+  systemd.services.nvidia-powerd = {
+    description = "NVIDIA Power Daemon (Dummy für Prime Offload)";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.coreutils}/bin/true";
+      RemainAfterExit = true;
+    };
+  };
 
   # Keyboard-Remapping für ROG Zephyrus (Fn-Tasten)
   services.udev.extraHwdb = ''
