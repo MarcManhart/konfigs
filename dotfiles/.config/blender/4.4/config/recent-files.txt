@@ -1,5 +1,8 @@
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levels/Level_01_DerAnfang/Level_01_DerAnfang.blend
-/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/wicht.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Animations/Basic_Movement/BasicMovements.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Animations/Basic_Movement/Basic_Movements.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Animations/Basic_Movement/Basic_Movements.blend1
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/wicht.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wachmann/Wachmann.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/Wicht.blend
 /run/media/mauschel/Daten2/MEGA/Leben/Wohnen/Wohnung_Riverbank/elbstieg2_3d/elbstieg2_3d.blend
