@@ -230,6 +230,7 @@ in
     blender
     inkscape
     krita
+    penpot-desktop
     google-fonts
     scribus
     obsidian
