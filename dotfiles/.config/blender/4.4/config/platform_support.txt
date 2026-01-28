@@ -1,3 +1,5 @@
 {AMD/AMD Radeon Graphics (radeonsi, gfx1150, LLVM 19.1.7, DRM 3.61, 6.12.45)/4.6 (Core Profile) Mesa 25.0.7}=SUPPORTED
 {NVIDIA Corporation/NVIDIA GeForce RTX 3090/PCIe/SSE2/4.6.0 NVIDIA 570.153.02}=SUPPORTED
 {NVIDIA Corporation/NVIDIA GeForce RTX 3090/PCIe/SSE2/4.6.0 NVIDIA 570.195.03}=SUPPORTED
+{Intel/Mesa Intel(R) Graphics (ARL)/4.6 (Core Profile) Mesa 25.0.7}=SUPPORTED
+{NVIDIA Corporation/NVIDIA GeForce RTX 5070 Laptop GPU/NVIDIA 570.195.03}=SUPPORTED

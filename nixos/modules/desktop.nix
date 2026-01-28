@@ -32,9 +32,21 @@ in
   services.xserver.displayManager.gdm.enable = true;
   # services.xserver.desktopManager.gnome.enable = true; # Deaktiviert für Hyprland
 
-  hardware.bluetooth.enable = true;
+  hardware.bluetooth = {
+    enable = true;
+    # ISO Socket für Bluetooth LE Audio (BAP) aktivieren
+    settings = {
+      General = {
+        Experimental = true;  # Aktiviert ISO Socket und LE Audio Features
+      };
+    };
+  };
   hardware.logitech.wireless.enable = true;  # Für Solaar - Logitech Wireless-Geräte Support
   services.power-profiles-daemon.enable = true;
+
+  # GNOME Keyring für automatisches Entsperren
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.gdm.enableGnomeKeyring = true;
 
   ############################################################################
   # Audio (PipeWire)

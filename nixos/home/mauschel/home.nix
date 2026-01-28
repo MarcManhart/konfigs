@@ -453,10 +453,11 @@ in
   systemd.user.services.copyq = {
     Unit = {
       Description = "CopyQ clipboard manager";
-      After = [ "graphical-session-pre.target" ];
+      After = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 3";  # Verzögerung für Display-Init
       ExecStart = "${pkgs.writeShellScript "copyq-wayland" ''
         # Wayland-kompatible Umgebungsvariablen setzen
         export QT_QPA_PLATFORM=xcb
@@ -465,7 +466,7 @@ in
         exec ${pkgs.copyq}/bin/copyq "$@"
       ''}";
       Restart = "on-failure";
-      RestartSec = 1;
+      RestartSec = 3;
       TimeoutStopSec = 10;
       Environment = [
         "QT_QPA_PLATFORM=xcb"
@@ -495,15 +496,23 @@ in
   };
 
   # xhost für coolercontrold NVIDIA-Zugriff (erlaubt root auf X11)
+  # Unter Wayland (kein $DISPLAY) wird der Service übersprungen
   systemd.user.services.xhost-root = {
     Unit = {
       Description = "Allow root access to X11 display for coolercontrol";
-      After = [ "graphical-session-pre.target" ];
+      After = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.xorg.xhost}/bin/xhost +local:root";
+      ExecStart = "${pkgs.writeShellScript "xhost-root-conditional" ''
+        # Nur unter X11 ausführen (wenn DISPLAY gesetzt ist)
+        if [ -n "$DISPLAY" ]; then
+          ${pkgs.xorg.xhost}/bin/xhost +local:root
+        else
+          echo "Wayland-Session erkannt, xhost übersprungen"
+        fi
+      ''}";
       RemainAfterExit = true;
     };
     Install = {
