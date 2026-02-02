@@ -239,7 +239,30 @@ in
     brave
     thunderbird
     terminator
-    blender
+    # Blender mit X11/XWayland statt nativem Wayland (bessere Stabilität)
+    (pkgs.symlinkJoin {
+      name = "blender-x11";
+      paths = [
+        (pkgs.writeShellScriptBin "blender" ''
+          export WAYLAND_DISPLAY=
+          export XDG_SESSION_TYPE=x11
+          exec ${pkgs.blender}/bin/blender "$@"
+        '')
+        (pkgs.makeDesktopItem {
+          name = "blender";
+          desktopName = "Blender";
+          comment = "Free and Open Source 3D Creation Suite";
+          genericName = "3D Modeler";
+          exec = "blender %f";
+          icon = "blender";
+          startupNotify = true;
+          startupWMClass = "Blender";
+          categories = [ "Graphics" "3DGraphics" ];
+          mimeTypes = [ "application/x-blender" ];
+          keywords = [ "blender" "3d" "modeling" ];
+        })
+      ];
+    })
     inkscape
     krita
     penpot-desktop
