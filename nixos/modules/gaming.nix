@@ -48,12 +48,12 @@
     lutris # Alternative Game-Launcher
 
     # Nintendo Switch Emulator
-    ryujinx # Stabiler Switch-Emulator
+    ryubing # Switch-Emulator (Nachfolger von Ryujinx)
 
     # PlayStation Emulatoren
     pcsx2 # PlayStation 2 Emulator
     rpcs3 # PlayStation 3 Emulator
-    duckstation # PlayStation 1 Emulator (moderner als ePSXe)
+    # duckstation # PlayStation 1 Emulator - temporär deaktiviert (Hash-Mismatch in unstable)
 
     # Nintendo 64 Emulator
     mupen64plus # N64 Emulator
@@ -167,14 +167,14 @@
   # Zus�tzliche Bibliotheken f�r 32-bit Kompatibilit�t
   hardware.graphics.extraPackages32 = with pkgs.pkgsi686Linux; [
     libva
-    vaapiVdpau
+    libva-vdpau-driver
     libvdpau-va-gl
   ];
 
   # Fonts f�r Spiele
   fonts.packages = with pkgs; [
     corefonts
-    vistafonts
+    vista-fonts
   ];
 
 }

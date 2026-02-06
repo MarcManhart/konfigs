@@ -50,6 +50,7 @@
       _1password-cli
       mplayer
       uget
+      android-tools  # adb, fastboot (ersetzt programs.adb)
       godot-mono
       dotnet-sdk_8  # .NET SDK für C# Entwicklung mit Godot
       uget-integrator
@@ -129,9 +130,8 @@
   ];
 
   ######################################################
-  # Android ADB
+  # Android ADB (systemd 258+ handhabt uaccess-Regeln automatisch)
   ######################################################
-  programs.adb.enable = true;  # udev-Regeln für USB-Gerätezugriff
 
   ######################################################
   # 1Password

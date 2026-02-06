@@ -1,0 +1,538 @@
+---
+# Ansible Playbook für FlotteBunte (ASUS ROG Zephyrus G16 2025)
+# Entspricht dem NixOS-Profil: base + desktop + hyprland + gnome + container + gaming + i2p + mauschel
+#
+# Unterstützt: Arch/CachyOS, Debian/Ubuntu/Pop!_OS, Fedora
+# Ausführen mit: ansible-playbook -i inventory flottebunte.yml --ask-become-pass
+
+- name: FlotteBunte Setup
+  hosts: flottebunte
+  become: true
+  vars:
+    user: mauschel
+
+    # ══════════════════════════════════════════════════════════════
+    # Paketlisten pro OS-Familie (wo Namen abweichen)
+    # ══════════════════════════════════════════════════════════════
+
+    # Pakete mit gleichem Namen auf allen Distros
+    common_packages:
+      - vim
+      - git
+      - vlc
+      - htop
+      - curl
+      - wget
+      - jq
+      - tree
+      - python3
+      - zip
+      - unzip
+      - zsh
+      - flatpak
+      - firefox
+      - thunderbird
+      - blender
+      - inkscape
+      - krita
+      - scribus
+      - mplayer
+      - openvpn
+      - conky
+      - direnv
+      - syncthing
+      - docker
+      - docker-compose
+      - chromium
+      - parted
+      - clamav
+      - brightnessctl
+      - nvtop
+      - kitty
+      - waybar
+      - blueman
+      - grim
+      - slurp
+      - obs-studio
+
+    base_packages:
+      Archlinux:
+        - git-lfs
+        - nodejs
+        - p7zip
+        - openssh
+        - networkmanager
+        - firewalld
+        - pipewire
+        - pipewire-alsa
+        - pipewire-pulse
+        - wireplumber
+        - cups
+        - cups-filters
+        - gutenprint
+        - hplip
+        - avahi
+        - nss-mdns
+        - bluez
+        - bluez-utils
+        - solaar
+        - libvirt
+        - virt-manager
+        - qemu-desktop
+        - dnsmasq
+        - copyq
+        - terminator
+        - libreoffice-fresh
+        - tor
+        - torbrowser-launcher
+        - android-tools
+        - libratbag
+        - i2pd
+        - discord
+        - veracrypt
+        - go
+        - starship
+        - lazygit
+        - cava
+        - pnpm
+        - dotnet-sdk
+        - sassc
+        - gnome-themes-extra
+        - gtk-engine-murrine
+        - hyprland
+        - hyprpaper
+        - network-manager-applet
+        - rofi-wayland
+        - polkit-gnome
+        - xdg-desktop-portal-hyprland
+        - xdg-desktop-portal-gtk
+        - wl-clipboard
+        - hypridle
+        - hyprlock
+        - swappy
+        - wdisplays
+        - gnome
+        - gnome-tweaks
+        - gdm
+        - networkmanager-openvpn
+        - dive
+        - steam
+        - mangohud
+        - lib32-mangohud
+        - gamemode
+        - lib32-gamemode
+        - gamescope
+        - wine-staging
+        - winetricks
+        - pcsx2
+        - retroarch
+        - retroarch-assets-xmb
+        - vulkan-tools
+        - vulkan-icd-loader
+        - lib32-vulkan-icd-loader
+        - vulkan-validation-layers
+        - antimicrox
+        - v4l2loopback-dkms
+        - mesa-demos
+        - libva-utils
+        - alsa-utils
+        - ddcutil
+        - gstreamer
+        - gst-plugins-base
+        - gst-plugins-good
+        - gst-plugins-bad
+        - gst-plugins-ugly
+        - gst-libav
+        - gstreamer-vaapi
+        - nvidia-open
+        - nvidia-utils
+        - lib32-nvidia-utils
+        - nvidia-settings
+        - ttf-nerd-fonts-symbols
+        - ttf-firacode-nerd
+        - ttf-jetbrains-mono-nerd
+        - ttf-hack-nerd
+
+      Debian:
+        - git-lfs
+        - nodejs
+        - p7zip-full
+        - openssh-server
+        - network-manager
+        - ufw
+        - pipewire
+        - pipewire-alsa
+        - pipewire-pulse
+        - wireplumber
+        - cups
+        - printer-driver-gutenprint
+        - hplip
+        - avahi-daemon
+        - libnss-mdns
+        - bluetooth
+        - bluez
+        - solaar
+        - libvirt-daemon-system
+        - virt-manager
+        - qemu-system-x86
+        - dnsmasq-base
+        - copyq
+        - terminator
+        - libreoffice
+        - torbrowser-launcher
+        - adb
+        - i2pd
+        - veracrypt
+        - golang
+        - sassc
+        - gnome-themes-extra
+        - gtk2-engines-murrine
+        - hyprland
+        - hyprpaper
+        - network-manager-gnome
+        - rofi
+        - policykit-1-gnome
+        - xdg-desktop-portal-hyprland
+        - xdg-desktop-portal-gtk
+        - wl-clipboard
+        - swappy
+        - wdisplays
+        - gnome-core
+        - gnome-tweaks
+        - gdm3
+        - network-manager-openvpn-gnome
+        - steam-installer
+        - mangohud
+        - gamemode
+        - gamescope
+        - wine
+        - winetricks
+        - retroarch
+        - vulkan-tools
+        - libvulkan1
+        - vulkan-validationlayers
+        - antimicrox
+        - v4l2loopback-dkms
+        - mesa-utils
+        - vainfo
+        - alsa-utils
+        - ddcutil
+        - gstreamer1.0-plugins-base
+        - gstreamer1.0-plugins-good
+        - gstreamer1.0-plugins-bad
+        - gstreamer1.0-plugins-ugly
+        - gstreamer1.0-libav
+        - gstreamer1.0-vaapi
+        - nvidia-driver
+        - nvidia-settings
+        - fonts-firacode
+        - fonts-hack
+
+      RedHat:
+        - git-lfs
+        - nodejs
+        - p7zip
+        - openssh-server
+        - NetworkManager
+        - firewalld
+        - pipewire
+        - pipewire-alsa
+        - pipewire-pulseaudio
+        - wireplumber
+        - cups
+        - gutenprint
+        - hplip
+        - avahi
+        - nss-mdns
+        - bluez
+        - solaar
+        - libvirt
+        - virt-manager
+        - qemu-kvm
+        - dnsmasq
+        - copyq
+        - terminator
+        - libreoffice
+        - android-tools
+        - i2pd
+        - veracrypt
+        - golang
+        - sassc
+        - gnome-themes-extra
+        - gtk-murrine-engine
+        - hyprland
+        - network-manager-applet
+        - rofi-wayland
+        - polkit-gnome
+        - xdg-desktop-portal-hyprland
+        - xdg-desktop-portal-gtk
+        - wl-clipboard
+        - swappy
+        - gnome-shell
+        - gnome-tweaks
+        - gdm
+        - NetworkManager-openvpn-gnome
+        - steam
+        - mangohud
+        - gamemode
+        - gamescope
+        - wine
+        - winetricks
+        - retroarch
+        - vulkan-tools
+        - vulkan-loader
+        - vulkan-validation-layers
+        - v4l2loopback
+        - mesa-demos
+        - libva-utils
+        - alsa-utils
+        - ddcutil
+        - gstreamer1-plugins-base
+        - gstreamer1-plugins-good
+        - gstreamer1-plugins-bad-free
+        - gstreamer1-plugins-ugly-free
+        - gstreamer1-libav
+        - gstreamer1-vaapi
+        - akmod-nvidia
+        - xorg-x11-drv-nvidia
+        - nvidia-settings
+        - fira-code-fonts
+
+    # Flatpak-Apps (distro-unabhängig, für proprietäre / schwer paketierte Software)
+    flatpak_apps:
+      - com.brave.Browser
+      - com.visualstudio.code
+      - md.obsidian.Obsidian
+      - org.onlyoffice.desktopeditors
+      - com.onepassword.OnePassword
+      - com.spotify.Client
+      - nz.mega.MEGAsync
+      - com.slack.Slack
+      - org.localsend.localsend_app
+      - net.lutris.Lutris
+      - com.usebottles.bottles
+      - com.usebruno.Bruno
+      - io.github.AusweisApp.AusweisApp
+      - com.github.tchx84.Flatseal
+      - net.davidotek.pupgui2          # ProtonUp-Qt
+      - org.libretro.RetroArch
+      - net.pcsx2.PCSX2
+      - org.DolphinEmu.dolphin-emu
+      - com.discordapp.Discord
+      - org.godotengine.GodotSharp     # Godot Mono
+      - io.github.penpot.PenpotDesktop
+      - org.libreoffice.LibreOffice
+
+  tasks:
+    # ════════════════════════════════════════════════════════════════
+    # Voraussetzungen
+    # ════════════════════════════════════════════════════════════════
+    - name: Paketcache aktualisieren (Debian/Ubuntu/Pop!_OS)
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+    - name: Multilib aktivieren (Arch)
+      blockinfile:
+        path: /etc/pacman.conf
+        marker: "# {mark} ANSIBLE MANAGED - multilib"
+        block: |
+          [multilib]
+          Include = /etc/pacman.d/mirrorlist
+      when: ansible_os_family == "Archlinux"
+      register: multilib_result
+
+    - name: Paketcache aktualisieren (Arch)
+      pacman:
+        update_cache: true
+      when: ansible_os_family == "Archlinux" and multilib_result.changed
+
+    - name: RPM Fusion aktivieren (Fedora)
+      dnf:
+        name:
+          - "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+          - "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+        state: present
+        disable_gpg_check: true
+      when: ansible_os_family == "RedHat"
+
+    - name: i386-Architektur hinzufügen (Debian)
+      command: dpkg --add-architecture i386
+      changed_when: false
+      when: ansible_os_family == "Debian"
+
+    # ════════════════════════════════════════════════════════════════
+    # Pakete installieren
+    # ════════════════════════════════════════════════════════════════
+    - name: Gemeinsame Pakete installieren
+      package:
+        name: "{{ common_packages }}"
+        state: present
+
+    - name: Distro-spezifische Pakete installieren
+      package:
+        name: "{{ base_packages[ansible_os_family] }}"
+        state: present
+      when: ansible_os_family in base_packages
+
+    # ════════════════════════════════════════════════════════════════
+    # Flatpak (proprietäre / cross-distro Apps)
+    # ════════════════════════════════════════════════════════════════
+    - name: Flatpak installieren
+      package:
+        name: flatpak
+        state: present
+
+    - name: Flathub Remote hinzufügen
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        state: present
+
+    - name: Flatpak-Apps installieren
+      community.general.flatpak:
+        name: "{{ item }}"
+        state: present
+        remote: flathub
+      loop: "{{ flatpak_apps }}"
+
+    # ════════════════════════════════════════════════════════════════
+    # Benutzer & Shell
+    # ════════════════════════════════════════════════════════════════
+    - name: Zsh als Standard-Shell setzen
+      user:
+        name: "{{ user }}"
+        shell: /usr/bin/zsh
+
+    - name: User-Gruppen setzen
+      user:
+        name: "{{ user }}"
+        groups:
+          - wheel
+          - docker
+          - video
+          - audio
+          - libvirt
+        append: true
+
+    # ════════════════════════════════════════════════════════════════
+    # Services aktivieren
+    # ════════════════════════════════════════════════════════════════
+    - name: NetworkManager aktivieren
+      systemd:
+        name: NetworkManager
+        enabled: true
+        state: started
+
+    - name: SSH aktivieren
+      systemd:
+        name: "{{ (ansible_os_family == 'Debian') | ternary('ssh', 'sshd') }}"
+        enabled: true
+        state: started
+
+    - name: Firewall aktivieren (Arch/Fedora)
+      systemd:
+        name: firewalld
+        enabled: true
+        state: started
+      when: ansible_os_family != "Debian"
+
+    - name: UFW aktivieren (Debian/Ubuntu/Pop!_OS)
+      ufw:
+        state: enabled
+        policy: deny
+      when: ansible_os_family == "Debian"
+
+    - name: GDM aktivieren
+      systemd:
+        name: gdm
+        enabled: true
+
+    - name: Docker aktivieren
+      systemd:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: CUPS aktivieren
+      systemd:
+        name: cups
+        enabled: true
+        state: started
+
+    - name: Avahi aktivieren
+      systemd:
+        name: avahi-daemon
+        enabled: true
+        state: started
+
+    - name: Bluetooth aktivieren
+      systemd:
+        name: bluetooth
+        enabled: true
+        state: started
+
+    - name: Libvirtd aktivieren
+      systemd:
+        name: libvirtd
+        enabled: true
+        state: started
+
+    - name: I2P aktivieren
+      systemd:
+        name: i2pd
+        enabled: true
+        state: started
+
+    - name: ClamAV Virendefinitionen aktualisieren
+      command: freshclam
+      changed_when: false
+      ignore_errors: true
+
+    - name: ClamAV aktivieren
+      systemd:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      loop:
+        - clamav-daemon
+        - clamav-freshclam
+
+    - name: Syncthing User-Service aktivieren
+      become: false
+      systemd:
+        name: syncthing
+        enabled: true
+        scope: user
+
+    # ════════════════════════════════════════════════════════════════
+    # AUR-Pakete (nur Arch/CachyOS)
+    # ════════════════════════════════════════════════════════════════
+    - name: AUR-Pakete installieren (via yay)
+      become: false
+      command: "yay -S --noconfirm --needed {{ item }}"
+      loop:
+        - asusctl
+        - supergfxctl
+        - rog-control-center
+        - spotify-player
+        - lazydocker
+        - starship-bin
+        - cava
+        - lazygit
+        - pureref
+        - bun-bin
+        - networkmanager-dmenu-git
+      changed_when: false
+      when: ansible_os_family == "Archlinux"
+
+    - name: asusctl Services aktivieren
+      systemd:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      loop:
+        - asusd
+        - supergfxd
+      ignore_errors: true
