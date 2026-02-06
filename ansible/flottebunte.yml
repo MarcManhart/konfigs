@@ -1,21 +1,26 @@
 ---
 # Ansible Playbook für FlotteBunte (ASUS ROG Zephyrus G16 2025)
-# Entspricht dem NixOS-Profil: base + desktop + hyprland + gnome + container + gaming + i2p + mauschel
+# Entspricht dem NixOS-Profil: base + desktop + hyprland + gnome + container + gaming + i2p + mauschel + home-manager
 #
 # Unterstützt: Arch/CachyOS, Debian/Ubuntu/Pop!_OS, Fedora
 # Ausführen mit: ansible-playbook -i inventory flottebunte.yml --ask-become-pass
+#
+# Voraussetzung: Das konfigs-Repo muss unter ~/konfigs ausgecheckt sein.
 
 - name: FlotteBunte Setup
   hosts: flottebunte
   become: true
   vars:
     user: mauschel
+    user_home: "/home/{{ user }}"
+    konfigs_dir: "{{ user_home }}/konfigs"
+    dot: "{{ konfigs_dir }}/dotfiles"
+    styles: "{{ konfigs_dir }}/resources/styling"
+    blender_version: "4.4"
 
     # ══════════════════════════════════════════════════════════════
-    # Paketlisten pro OS-Familie (wo Namen abweichen)
-    # ══════════════════════════════════════════════════════════════
-
     # Pakete mit gleichem Namen auf allen Distros
+    # ══════════════════════════════════════════════════════════════
     common_packages:
       - vim
       - git
@@ -54,7 +59,14 @@
       - grim
       - slurp
       - obs-studio
+      - ffmpeg
+      - ripgrep
+      - xclip
+      - neovim
 
+    # ══════════════════════════════════════════════════════════════
+    # Distro-spezifische Paketnamen
+    # ══════════════════════════════════════════════════════════════
     base_packages:
       Archlinux:
         - git-lfs
@@ -122,9 +134,11 @@
         - gamemode
         - lib32-gamemode
         - gamescope
+        - goverlay
         - wine-staging
         - winetricks
         - pcsx2
+        - mupen64plus
         - retroarch
         - retroarch-assets-xmb
         - vulkan-tools
@@ -152,6 +166,12 @@
         - ttf-firacode-nerd
         - ttf-jetbrains-mono-nerd
         - ttf-hack-nerd
+        - thermald
+        - ttf-ms-fonts
+        # GNOME Extensions
+        - gnome-shell-extension-appindicator
+        - gnome-shell-extension-dash-to-dock
+        - gnome-shell-extension-gsconnect
 
       Debian:
         - git-lfs
@@ -227,6 +247,12 @@
         - nvidia-settings
         - fonts-firacode
         - fonts-hack
+        - thermald
+        - ttf-mscorefonts-installer
+        # GNOME Extensions
+        - gnome-shell-extension-appindicator
+        - gnome-shell-extension-dash-to-dock
+        - gnome-shell-extension-gsconnect
 
       RedHat:
         - git-lfs
@@ -297,8 +323,15 @@
         - xorg-x11-drv-nvidia
         - nvidia-settings
         - fira-code-fonts
+        - thermald
+        # GNOME Extensions
+        - gnome-shell-extension-appindicator
+        - gnome-shell-extension-dash-to-dock
+        - gnome-shell-extension-gsconnect
 
-    # Flatpak-Apps (distro-unabhängig, für proprietäre / schwer paketierte Software)
+    # ══════════════════════════════════════════════════════════════
+    # Flatpak-Apps (distro-unabhängig)
+    # ══════════════════════════════════════════════════════════════
     flatpak_apps:
       - com.brave.Browser
       - com.visualstudio.code
@@ -317,17 +350,76 @@
       - net.davidotek.pupgui2          # ProtonUp-Qt
       - org.libretro.RetroArch
       - net.pcsx2.PCSX2
-      - org.DolphinEmu.dolphin-emu
       - com.discordapp.Discord
       - org.godotengine.GodotSharp     # Godot Mono
       - io.github.penpot.PenpotDesktop
       - org.libreoffice.LibreOffice
+      - com.persepolis.Persepolis
+      - com.github.ADBeveridge.Raider  # Tor Browser
+
+    # ══════════════════════════════════════════════════════════════
+    # Dotfiles Symlinks (aus home.nix home.file.*)
+    # ══════════════════════════════════════════════════════════════
+    dotfile_links:
+      - { src: ".config/terminator/config",  dest: ".config/terminator/config" }
+      - { src: ".vimrc",                     dest: ".vimrc" }
+      - { src: ".zshrc",                     dest: ".zshrc" }
+      - { src: ".mplayer/config",            dest: ".mplayer/config" }
+      - { src: ".config/nvim/init.lua",      dest: ".config/nvim/init.lua" }
+      - { src: ".config/hypr/hyprland.conf", dest: ".config/hypr/hyprland.conf" }
+      - { src: ".config/hypr/hyprpaper.conf", dest: ".config/hypr/hyprpaper.conf" }
+      - { src: ".config/waybar/power_menu.xml", dest: ".config/waybar/power_menu.xml" }
+      - { src: ".config/waybar/config.jsonc", dest: ".config/waybar/config.jsonc" }
+      - { src: ".config/waybar/style.css",   dest: ".config/waybar/style.css" }
+      - { src: ".config/starship.toml",      dest: ".config/starship.toml" }
+      - { src: ".config/conky/conky.conf",   dest: ".config/conky/conky.conf" }
+      - { src: ".config/copyq/copyq.conf",   dest: ".config/copyq/copyq.conf" }
+      - { src: ".config/copyq/copyq-commands.ini", dest: ".config/copyq/copyq-commands.ini" }
+      - { src: ".config/copyq/copyq_tabs.ini", dest: ".config/copyq/copyq_tabs.ini" }
+      - { src: ".claude/settings.json",      dest: ".claude/settings.json" }
+      - { src: ".config/kritarc",            dest: ".config/kritarc" }
+      - { src: ".config/godot/editor_settings-4.4.tres", dest: ".config/godot/editor_settings-4.4.tres" }
+
+    # Blender Dotfiles (mit Version-Variable)
+    blender_dotfile_links:
+      - { src: ".config/blender/{{ blender_version }}/config", dest: ".config/blender/{{ blender_version }}/config" }
+
+    # Styling/Theme Symlinks (aus resources/styling)
+    styling_links:
+      - src: "Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark"
+        dest: ".themes/Gruvbox-Dark"
+      - src: "Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/assets"
+        dest: ".config/gtk-4.0/assets"
+      - src: "Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/gtk.css"
+        dest: ".config/gtk-4.0/gtk.css"
+      - src: "Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/gtk-dark.css"
+        dest: ".config/gtk-4.0/gtk-dark.css"
+
+    # Blender Theme + Addon aus resources
+    blender_extra_links:
+      - src: "{{ styles }}/Themes/Blender/theme-gruvbox-dark-v1.5.0/Gruvbox_Dark.xml"
+        dest: ".config/blender/{{ blender_version }}/scripts/presets/interface_theme/Gruvbox_Dark.xml"
+      - src: "{{ konfigs_dir }}/resources/blender_extensions/quick_mesh_rename.py"
+        dest: ".config/blender/{{ blender_version }}/scripts/addons/quick_mesh_rename.py"
 
   tasks:
-    # ════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
+    # Locale & Timezone (base.nix)
+    # ══════════════════════════════════════════════════════════════
+    - name: Locale auf de_DE.UTF-8 setzen
+      locale_gen:
+        name: de_DE.UTF-8
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Timezone auf Europe/Berlin setzen
+      timezone:
+        name: Europe/Berlin
+
+    # ══════════════════════════════════════════════════════════════
     # Voraussetzungen
-    # ════════════════════════════════════════════════════════════════
-    - name: Paketcache aktualisieren (Debian/Ubuntu/Pop!_OS)
+    # ══════════════════════════════════════════════════════════════
+    - name: Paketcache aktualisieren (Debian)
       apt:
         update_cache: true
         cache_valid_time: 3600
@@ -362,9 +454,9 @@
       changed_when: false
       when: ansible_os_family == "Debian"
 
-    # ════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # Pakete installieren
-    # ════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     - name: Gemeinsame Pakete installieren
       package:
         name: "{{ common_packages }}"
@@ -376,9 +468,9 @@
         state: present
       when: ansible_os_family in base_packages
 
-    # ════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     # Flatpak (proprietäre / cross-distro Apps)
-    # ════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     - name: Flatpak installieren
       package:
         name: flatpak
@@ -397,9 +489,9 @@
         remote: flathub
       loop: "{{ flatpak_apps }}"
 
-    # ════════════════════════════════════════════════════════════════
-    # Benutzer & Shell
-    # ════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
+    # Benutzer & Shell (base.nix + home.nix)
+    # ══════════════════════════════════════════════════════════════
     - name: Zsh als Standard-Shell setzen
       user:
         name: "{{ user }}"
@@ -416,9 +508,291 @@
           - libvirt
         append: true
 
-    # ════════════════════════════════════════════════════════════════
+    - name: Oh-My-Zsh installieren
+      become: true
+      become_user: "{{ user }}"
+      shell: |
+        if [ ! -d "{{ user_home }}/.oh-my-zsh" ]; then
+          sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        fi
+      args:
+        creates: "{{ user_home }}/.oh-my-zsh"
+
+    # ══════════════════════════════════════════════════════════════
+    # SSH-Härtung (base.nix)
+    # ══════════════════════════════════════════════════════════════
+    - name: SSH PasswordAuthentication deaktivieren
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?PasswordAuthentication"
+        line: "PasswordAuthentication no"
+      notify: restart-sshd
+
+    # ══════════════════════════════════════════════════════════════
+    # Dotfiles Symlinks (home.nix home.file.*)
+    # ══════════════════════════════════════════════════════════════
+    - name: Dotfile-Verzeichnisse anlegen
+      become: true
+      become_user: "{{ user }}"
+      file:
+        path: "{{ user_home }}/{{ item.dest | dirname }}"
+        state: directory
+      loop: "{{ dotfile_links + blender_dotfile_links + styling_links + blender_extra_links }}"
+
+    - name: Dotfiles symlinken
+      become: true
+      become_user: "{{ user }}"
+      file:
+        src: "{{ dot }}/{{ item.src }}"
+        dest: "{{ user_home }}/{{ item.dest }}"
+        state: link
+        force: true
+      loop: "{{ dotfile_links }}"
+
+    - name: Blender-Dotfiles symlinken
+      become: true
+      become_user: "{{ user }}"
+      file:
+        src: "{{ dot }}/{{ item.src }}"
+        dest: "{{ user_home }}/{{ item.dest }}"
+        state: link
+        force: true
+      loop: "{{ blender_dotfile_links }}"
+
+    - name: Styling/Theme-Dateien symlinken
+      become: true
+      become_user: "{{ user }}"
+      file:
+        src: "{{ styles }}/{{ item.src }}"
+        dest: "{{ user_home }}/{{ item.dest }}"
+        state: link
+        force: true
+      loop: "{{ styling_links }}"
+
+    - name: Blender Theme + Addon symlinken
+      become: true
+      become_user: "{{ user }}"
+      file:
+        src: "{{ item.src }}"
+        dest: "{{ user_home }}/{{ item.dest }}"
+        state: link
+        force: true
+      loop: "{{ blender_extra_links }}"
+
+    # ══════════════════════════════════════════════════════════════
+    # Cursor-Theme (home.nix)
+    # ══════════════════════════════════════════════════════════════
+    - name: Adwaita Cursor-Theme setzen
+      become: true
+      become_user: "{{ user }}"
+      copy:
+        dest: "{{ user_home }}/.icons/default/index.theme"
+        content: |
+          [Icon Theme]
+          Inherits=Adwaita
+        force: true
+
+    # ══════════════════════════════════════════════════════════════
+    # GNOME dconf Settings (home.nix dconf.settings)
+    # ══════════════════════════════════════════════════════════════
+    - name: GNOME Interface-Einstellungen setzen
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop:
+        - { key: "/org/gnome/desktop/interface/gtk-theme", value: "'Gruvbox-Dark'" }
+        - { key: "/org/gnome/desktop/interface/cursor-theme", value: "'Adwaita'" }
+        - { key: "/org/gnome/desktop/interface/cursor-size", value: "24" }
+        - { key: "/org/gnome/desktop/interface/text-scaling-factor", value: "1.0" }
+        - { key: "/org/gnome/desktop/interface/enable-hot-corners", value: "true" }
+
+    - name: GNOME Shell Extensions aktivieren
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "/org/gnome/shell/enabled-extensions"
+        value: "['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-dock@micxgx.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com', 'mock-tray@kramo.page', 'gsconnect@andyholmes.github.io']"
+
+    - name: GNOME Shell User-Theme setzen
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "/org/gnome/shell/extensions/user-theme/name"
+        value: "'Gruvbox-Dark'"
+
+    - name: GNOME Favorite Apps setzen
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "/org/gnome/shell/favorite-apps"
+        value: "['brave-browser.desktop', 'firefox.desktop', 'thunderbird.desktop', 'slack.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'org.gnome.tweaks.desktop', 'obsidian.desktop', 'spotify.desktop', 'discord.desktop', 'pureref.desktop', 'org.godotengine.Godot4.4-mono.desktop', 'virt-manager.desktop', 'blender_blender.desktop', 'terminator.desktop', 'bruno.desktop', 'code.desktop', '1password.desktop']"
+
+    - name: GNOME Fenster-Buttons (minimize, maximize, close)
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop:
+        - { key: "/org/gnome/desktop/wm/preferences/button-layout", value: "'appmenu:minimize,maximize,close'" }
+        - { key: "/org/gnome/desktop/wm/preferences/action-double-click-titlebar", value: "'toggle-maximize'" }
+        - { key: "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar", value: "'minimize'" }
+        - { key: "/org/gnome/desktop/wm/preferences/mouse-button-modifier", value: "'<Super>'" }
+        - { key: "/org/gnome/desktop/wm/preferences/resize-with-right-button", value: "true" }
+
+    - name: GNOME Keybindings (Alt+Tab Fensterwechsel)
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop:
+        - { key: "/org/gnome/desktop/wm/keybindings/switch-applications", value: "@as []" }
+        - { key: "/org/gnome/desktop/wm/keybindings/switch-applications-backward", value: "@as []" }
+        - { key: "/org/gnome/desktop/wm/keybindings/switch-windows", value: "['<Alt>Tab', '<Super>Tab']" }
+        - { key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward", value: "['<Shift><Alt>Tab', '<Shift><Super>Tab']" }
+
+    - name: GNOME Shell Keybindings (Screenshot, Message-Tray)
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop:
+        - { key: "/org/gnome/shell/keybindings/show-screenshot-ui", value: "['<Super><Shift>s']" }
+        - { key: "/org/gnome/shell/keybindings/toggle-message-tray", value: "['<Super>m']" }
+
+    - name: GNOME Custom Keybinding (Super+V für CopyQ)
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop:
+        - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings", value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']" }
+        - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding", value: "'<Super>v'" }
+        - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command", value: "'env QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 copyq show'" }
+        - { key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name", value: "'CopyQ - Clipboard Manager'" }
+
+    - name: GNOME Wallpaper setzen
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop:
+        - { key: "/org/gnome/desktop/background/picture-uri", value: "'file://{{ styles }}/Wallpapers/stairs.png'" }
+        - { key: "/org/gnome/desktop/background/picture-uri-dark", value: "'file://{{ styles }}/Wallpapers/stairs.png'" }
+        - { key: "/org/gnome/desktop/background/picture-options", value: "'zoom'" }
+
+    - name: GNOME Mutter Einstellungen
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "/org/gnome/mutter/experimental-features"
+        value: "['scale-monitor-framebuffer']"
+
+    - name: Dash-to-Dock Konfiguration
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop:
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/transparency-mode", value: "'FIXED'" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/custom-background-color", value: "true" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/background-color", value: "'#1d2021'" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/background-opacity", value: "1.0" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed", value: "false" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/autohide", value: "true" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/autohide-in-fullscreen", value: "true" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/intellihide", value: "false" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/hide-delay", value: "0.2" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/show-delay", value: "0.1" }
+        - { key: "/org/gnome/shell/extensions/dash-to-dock/pressure-threshold", value: "100.0" }
+
+    # ══════════════════════════════════════════════════════════════
+    # Systemd User-Services (home.nix)
+    # ══════════════════════════════════════════════════════════════
+    - name: Systemd User-Service-Verzeichnis anlegen
+      become: true
+      become_user: "{{ user }}"
+      file:
+        path: "{{ user_home }}/.config/systemd/user"
+        state: directory
+
+    - name: CopyQ Autostart-Service erstellen
+      become: true
+      become_user: "{{ user }}"
+      copy:
+        dest: "{{ user_home }}/.config/systemd/user/copyq.service"
+        content: |
+          [Unit]
+          Description=CopyQ clipboard manager
+          After=graphical-session.target
+          PartOf=graphical-session.target
+
+          [Service]
+          ExecStartPre=/usr/bin/sleep 3
+          ExecStart=/usr/bin/env QT_QPA_PLATFORM=xcb GDK_BACKEND=x11 copyq
+          Restart=on-failure
+          RestartSec=3
+          Environment=QT_QPA_PLATFORM=xcb
+          Environment=GDK_BACKEND=x11
+
+          [Install]
+          WantedBy=graphical-session.target
+
+    - name: MEGAsync Autostart-Service erstellen
+      become: true
+      become_user: "{{ user }}"
+      copy:
+        dest: "{{ user_home }}/.config/systemd/user/megasync.service"
+        content: |
+          [Unit]
+          Description=MEGAsync automatic sync client
+          After=graphical-session-pre.target
+          PartOf=graphical-session.target
+
+          [Service]
+          ExecStart=/usr/bin/megasync
+          Restart=on-failure
+          RestartSec=3
+
+          [Install]
+          WantedBy=graphical-session.target
+
+    - name: User-Services aktivieren
+      become: true
+      become_user: "{{ user }}"
+      systemd:
+        name: "{{ item }}"
+        enabled: true
+        scope: user
+        daemon_reload: true
+      loop:
+        - copyq
+        - megasync
+
+    # ══════════════════════════════════════════════════════════════
+    # PipeWire Low-Latency (desktop.nix)
+    # ══════════════════════════════════════════════════════════════
+    - name: PipeWire Low-Latency Config erstellen
+      copy:
+        dest: /etc/pipewire/pipewire.conf.d/92-low-latency.conf
+        content: |
+          context.properties = {
+              default.clock.rate          = 48000
+              default.clock.quantum       = 512
+              default.clock.min-quantum   = 512
+              default.clock.max-quantum   = 512
+          }
+
+    # ══════════════════════════════════════════════════════════════
     # Services aktivieren
-    # ════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     - name: NetworkManager aktivieren
       systemd:
         name: NetworkManager
@@ -438,7 +812,7 @@
         state: started
       when: ansible_os_family != "Debian"
 
-    - name: UFW aktivieren (Debian/Ubuntu/Pop!_OS)
+    - name: UFW aktivieren (Debian)
       ufw:
         state: enabled
         policy: deny
@@ -454,6 +828,13 @@
         name: docker
         enabled: true
         state: started
+
+    - name: Docker Auto-Prune konfigurieren (wöchentlich)
+      cron:
+        name: "Docker weekly prune"
+        job: "docker system prune --all --force"
+        special_time: weekly
+        user: root
 
     - name: CUPS aktivieren
       systemd:
@@ -485,6 +866,13 @@
         enabled: true
         state: started
 
+    - name: Thermald aktivieren
+      systemd:
+        name: thermald
+        enabled: true
+        state: started
+      ignore_errors: true
+
     - name: ClamAV Virendefinitionen aktualisieren
       command: freshclam
       changed_when: false
@@ -500,17 +888,92 @@
         - clamav-freshclam
 
     - name: Syncthing User-Service aktivieren
-      become: false
+      become: true
+      become_user: "{{ user }}"
       systemd:
         name: syncthing
         enabled: true
         scope: user
 
-    # ════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
+    # Firewall-Ports (gnome.nix + gaming.nix + users/mauschel.nix)
+    # ══════════════════════════════════════════════════════════════
+    - name: Firewall-Ports öffnen (firewalld)
+      firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+      loop:
+        # GSConnect (gnome.nix)
+        - 1716-1764/tcp
+        - 1716-1764/udp
+        # Steam (gaming.nix)
+        - 27015-27030/tcp
+        - 27000-27100/udp
+        - 27036-27037/tcp
+        - 4380/udp
+        # Spotify (users/mauschel.nix)
+        - 57621/tcp
+        # AusweisApp
+        - 24727/tcp
+        - 24727/udp
+        # LocalSend
+        - 53317/tcp
+        - 53317/udp
+        # mDNS
+        - 5353/udp
+      when: ansible_os_family != "Debian"
+      notify: reload-firewalld
+
+    - name: UFW-Ports öffnen (Debian)
+      ufw:
+        rule: allow
+        port: "{{ item.port }}"
+        proto: "{{ item.proto }}"
+      loop:
+        - { port: "1716:1764", proto: tcp }
+        - { port: "1716:1764", proto: udp }
+        - { port: "27015:27037", proto: tcp }
+        - { port: "27000:27100", proto: udp }
+        - { port: "4380", proto: udp }
+        - { port: "57621", proto: tcp }
+        - { port: "24727", proto: tcp }
+        - { port: "24727", proto: udp }
+        - { port: "53317", proto: tcp }
+        - { port: "53317", proto: udp }
+        - { port: "5353", proto: udp }
+      when: ansible_os_family == "Debian"
+
+    # ══════════════════════════════════════════════════════════════
+    # Gaming-Tweaks (gaming.nix)
+    # ══════════════════════════════════════════════════════════════
+    - name: Controller udev-Regeln erstellen
+      copy:
+        dest: /etc/udev/rules.d/99-gaming-controllers.rules
+        content: |
+          # Nintendo Switch Pro Controller
+          KERNEL=="hidraw*", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="2009", MODE="0666"
+          # PlayStation Controller
+          KERNEL=="hidraw*", ATTRS{idVendor}=="054c", MODE="0666"
+          # 8BitDo Controller
+          KERNEL=="hidraw*", ATTRS{idVendor}=="2dc8", MODE="0666"
+          # Steam Controller
+          KERNEL=="hidraw*", ATTRS{idVendor}=="28de", MODE="0666"
+      notify: reload-udev
+
+    - name: memlock-Limits für Gaming erhöhen
+      copy:
+        dest: /etc/security/limits.d/99-gaming.conf
+        content: |
+          @users soft memlock unlimited
+          @users hard memlock unlimited
+
+    # ══════════════════════════════════════════════════════════════
     # AUR-Pakete (nur Arch/CachyOS)
-    # ════════════════════════════════════════════════════════════════
+    # ══════════════════════════════════════════════════════════════
     - name: AUR-Pakete installieren (via yay)
-      become: false
+      become: true
+      become_user: "{{ user }}"
       command: "yay -S --noconfirm --needed {{ item }}"
       loop:
         - asusctl
@@ -518,12 +981,11 @@
         - rog-control-center
         - spotify-player
         - lazydocker
-        - starship-bin
-        - cava
-        - lazygit
         - pureref
         - bun-bin
         - networkmanager-dmenu-git
+        - gnome-shell-extension-blur-my-shell
+        - gnome-shell-extension-mock-tray
       changed_when: false
       when: ansible_os_family == "Archlinux"
 
@@ -536,3 +998,19 @@
         - asusd
         - supergfxd
       ignore_errors: true
+
+  # ══════════════════════════════════════════════════════════════
+  # Handlers
+  # ══════════════════════════════════════════════════════════════
+  handlers:
+    - name: restart-sshd
+      systemd:
+        name: "{{ (ansible_os_family == 'Debian') | ternary('ssh', 'sshd') }}"
+        state: restarted
+
+    - name: reload-firewalld
+      command: firewall-cmd --reload
+      when: ansible_os_family != "Debian"
+
+    - name: reload-udev
+      command: udevadm control --reload-rules && udevadm trigger
