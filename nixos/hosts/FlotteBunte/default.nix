@@ -196,7 +196,7 @@
   # Power Management
   # ══════════════════════════════════════════════════════════════════
   powerManagement.enable = true;
-  powerManagement.cpuFreqGovernor = "powersave";
+  powerManagement.cpuFreqGovernor = "performance";
 
   # power-profiles-daemon für Performance-Profile (via asusd)
   services.power-profiles-daemon.enable = true;
