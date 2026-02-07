@@ -1,5 +1,5 @@
 ---
-# Ansible Playbook für FlotteBunte (ASUS ROG Zephyrus G16 2025)
+# Ansible Playbook für Bunte (ASUS ROG Zephyrus G16 2025)
 # Entspricht dem NixOS-Profil: base + desktop + hyprland + gnome + container + gaming + i2p + mauschel + home-manager
 #
 # Unterstützt: Arch/CachyOS, Debian/Ubuntu/Pop!_OS, Fedora
@@ -7,8 +7,8 @@
 #
 # Voraussetzung: Das konfigs-Repo muss unter ~/konfigs ausgecheckt sein.
 
-- name: FlotteBunte Setup
-  hosts: flottebunte
+- name: Bunte Setup
+  hosts: Bunte
   become: true
   vars:
     user: mauschel
