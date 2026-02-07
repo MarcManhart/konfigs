@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 {
   # GDM wird bereits in desktop.nix konfiguriert
-  services.xserver.displayManager.gdm.wayland = true;
+  services.displayManager.gdm.wayland = true;
 
   programs.hyprland.enable = true;
 
@@ -12,7 +12,7 @@
     hyprpaper # Wallpaper-Setter
     networkmanagerapplet # bringt auch nm-connection-editor mit
     networkmanager_dmenu # schlankes TUI für Verbindungen
-    rofi-wayland # <- wichtig für networkmanager_dmenu
+    rofi # <- wichtig für networkmanager_dmenu
     lxqt.lxqt-policykit # Polkit-Agent
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk

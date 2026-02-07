@@ -23,7 +23,8 @@
     enable = true;
     settings.PasswordAuthentication = false;
   };
-  programs.ssh.startAgent = true;
+  # SSH-Agent wird von GNOME's gcr-ssh-agent bereitgestellt
+  programs.ssh.startAgent = false;
 
   nix.settings.experimental-features = [
     "nix-command"

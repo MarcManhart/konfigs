@@ -36,7 +36,7 @@ in
     ANDROID_SDK_ROOT = "${androidSdk.androidsdk}/libexec/android-sdk";
   };
   services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
+  services.displayManager.gdm.enable = true;
   # services.xserver.desktopManager.gnome.enable = true; # Deaktiviert für Hyprland
 
   hardware.bluetooth = {
@@ -214,7 +214,7 @@ in
   programs.virt-manager.enable = true;
 
   environment.systemPackages = with pkgs; [
-    nixfmt-rfc-style
+    nixfmt
     firefox
     # qpwgraph          # PipeWire Graph Manager für Audio-Routing (deaktiviert)
     # audacity          # Audio-Editor zum Testen (deaktiviert)
@@ -282,7 +282,7 @@ in
     tor-browser
     openvpn
     libreoffice
-    onlyoffice-bin
+    onlyoffice-desktopeditors
     # CopyQ mit XWayland-Wrapper für Wayland-Kompatibilität
     (pkgs.writeShellScriptBin "copyq" ''
       exec env QT_QPA_PLATFORM=xcb ${pkgs.copyq}/bin/copyq "$@"
