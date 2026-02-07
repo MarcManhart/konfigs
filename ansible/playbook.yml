@@ -420,6 +420,13 @@
         cache_valid_time: 3600
       when: ansible_os_family == "Debian"
 
+    - name: Prüfen ob Multilib bereits aktiv ist (Arch)
+      command: grep -q '^\[multilib\]' /etc/pacman.conf
+      register: multilib_check
+      changed_when: false
+      failed_when: false
+      when: ansible_os_family == "Archlinux"
+
     - name: Multilib aktivieren (Arch)
       blockinfile:
         path: /etc/pacman.conf
@@ -427,13 +434,13 @@
         block: |
           [multilib]
           Include = /etc/pacman.d/mirrorlist
-      when: ansible_os_family == "Archlinux"
+      when: ansible_os_family == "Archlinux" and multilib_check.rc != 0
       register: multilib_result
 
     - name: Paketcache aktualisieren (Arch)
       pacman:
         update_cache: true
-      when: ansible_os_family == "Archlinux" and multilib_result.changed
+      when: ansible_os_family == "Archlinux" and multilib_result is changed
 
     - name: RPM Fusion aktivieren (Fedora)
       dnf:
