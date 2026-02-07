@@ -12,8 +12,15 @@
 { pkgs, ... }:
 let
   androidSdk = pkgs.androidenv.composeAndroidPackages {
-    platformVersions = [ "31" "34" "35" ];
-    buildToolsVersions = [ "34.0.0" "35.0.0" ];
+    platformVersions = [
+      "31"
+      "34"
+      "35"
+    ];
+    buildToolsVersions = [
+      "34.0.0"
+      "35.0.0"
+    ];
     includeNDK = true;
     ndkVersions = [ "26.1.10909125" ];
     includeEmulator = true;
@@ -37,11 +44,11 @@ in
     # ISO Socket für Bluetooth LE Audio (BAP) aktivieren
     settings = {
       General = {
-        Experimental = true;  # Aktiviert ISO Socket und LE Audio Features
+        Experimental = true; # Aktiviert ISO Socket und LE Audio Features
       };
     };
   };
-  hardware.logitech.wireless.enable = true;  # Für Solaar - Logitech Wireless-Geräte Support
+  hardware.logitech.wireless.enable = true; # Für Solaar - Logitech Wireless-Geräte Support
   services.power-profiles-daemon.enable = true;
 
   # GNOME Keyring für automatisches Entsperren
@@ -164,30 +171,30 @@ in
     enable = true;
     # Automatische Treiber-Erkennung für gängige Drucker
     drivers = with pkgs; [
-      gutenprint          # Viele Drucker (Canon, Epson, HP, etc.)
-      hplip               # HP Drucker (inkl. Scanner-Support)
-      brlaser             # Brother Laser-Drucker
+      gutenprint # Viele Drucker (Canon, Epson, HP, etc.)
+      hplip # HP Drucker (inkl. Scanner-Support)
+      brlaser # Brother Laser-Drucker
     ];
     # Netzwerkdrucker automatisch erkennen (Bonjour/mDNS)
     browsing = true;
-    defaultShared = false;  # Drucker nicht standardmäßig teilen
+    defaultShared = false; # Drucker nicht standardmäßig teilen
   };
 
   # Avahi für Netzwerkdrucker-Erkennung (mDNS/DNS-SD)
   # Ermöglicht automatische Erkennung von Druckern im lokalen Netzwerk
   services.avahi = {
     enable = true;
-    nssmdns4 = true;      # .local Hostnamen auflösen (IPv4)
-    openFirewall = true;  # mDNS Port 5353 öffnen
+    nssmdns4 = true; # .local Hostnamen auflösen (IPv4)
+    openFirewall = true; # mDNS Port 5353 öffnen
   };
 
   # Syncthing - Datei-Synchronisation
   services.syncthing = {
     enable = true;
     user = "mauschel";
-    dataDir = "/home/mauschel/Documents";    # Standardverzeichnis für Syncthing-Daten
-    configDir = "/home/mauschel/.config/syncthing";   # Konfigurationsverzeichnis
-    openDefaultPorts = true;  # Öffnet Ports 8384 (Web UI) und 22000 (Sync)
+    dataDir = "/home/mauschel/Documents"; # Standardverzeichnis für Syncthing-Daten
+    configDir = "/home/mauschel/.config/syncthing"; # Konfigurationsverzeichnis
+    openDefaultPorts = true; # Öffnet Ports 8384 (Web UI) und 22000 (Sync)
     settings = {
       gui = {
         # Web-Interface auf localhost:8384
@@ -195,8 +202,8 @@ in
         insecureSkipHostcheck = false;
       };
       options = {
-        urAccepted = -1;  # Keine Nutzungsstatistiken senden
-        relaysEnabled = true;  # Relay-Server für NAT-Traversal nutzen
+        urAccepted = -1; # Keine Nutzungsstatistiken senden
+        relaysEnabled = true; # Relay-Server für NAT-Traversal nutzen
       };
     };
   };
@@ -229,8 +236,16 @@ in
           icon = "${pkgs.vscode}/share/pixmaps/vscode.png";
           startupNotify = true;
           startupWMClass = "Code";
-          categories = [ "Utility" "TextEditor" "Development" "IDE" ];
-          mimeTypes = [ "text/plain" "inode/directory" ];
+          categories = [
+            "Utility"
+            "TextEditor"
+            "Development"
+            "IDE"
+          ];
+          mimeTypes = [
+            "text/plain"
+            "inode/directory"
+          ];
           keywords = [ "vscode" ];
         })
       ];
@@ -241,27 +256,18 @@ in
     terminator
     # Blender mit X11/XWayland statt nativem Wayland (bessere Stabilität)
     (pkgs.symlinkJoin {
-      name = "blender-x11";
-      paths = [
-        (pkgs.writeShellScriptBin "blender" ''
-          export WAYLAND_DISPLAY=
-          export XDG_SESSION_TYPE=x11
-          exec ${pkgs.blender}/bin/blender "$@"
-        '')
-        (pkgs.makeDesktopItem {
-          name = "blender";
-          desktopName = "Blender";
-          comment = "Free and Open Source 3D Creation Suite";
-          genericName = "3D Modeler";
-          exec = "blender %f";
-          icon = "blender";
-          startupNotify = true;
-          startupWMClass = "Blender";
-          categories = [ "Graphics" "3DGraphics" ];
-          mimeTypes = [ "application/x-blender" ];
-          keywords = [ "blender" "3d" "modeling" ];
-        })
-      ];
+      name = "blender";
+      paths = [ pkgs.blender ];
+      postBuild = ''
+                rm $out/bin/blender
+                cat > $out/bin/blender << 'EOF'
+        #!/bin/sh
+        export WAYLAND_DISPLAY=
+        export XDG_SESSION_TYPE=x11
+        exec ${pkgs.blender}/bin/blender "$@"
+        EOF
+                chmod +x $out/bin/blender
+      '';
     })
     inkscape
     krita
@@ -271,7 +277,7 @@ in
     obsidian
     persepolis
     uget-integrator
-    androidSdk.androidsdk  # Android SDK mit ADB (adb devices etc.)
+    androidSdk.androidsdk # Android SDK mit ADB (adb devices etc.)
     mplayer
     tor-browser
     openvpn

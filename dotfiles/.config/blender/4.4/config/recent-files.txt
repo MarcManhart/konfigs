@@ -1,3 +1,11 @@
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Items/Snacks/Snacks.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Modkits/MK-Urban/MK-Urban.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Modkits/MK-Urban/mk-urban.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Modkits/mk-urban.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Modkits/mk-urban.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Items/FoodItems.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Moebel/SpaetiEinrichtung.blend
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Moebel/SpaetiEinrichtung.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levels/Level_01_DerAnfang/Level_01_DerAnfang.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Animations/Basic_Movement/BasicMovements.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Animations/Basic_Movement/Basic_Movements.blend
