@@ -1030,7 +1030,6 @@
         - networkmanager-dmenu-git
         - gnome-shell-extension-blur-my-shell
         - gtk-engine-murrine
-        - pcsx2
         - ttf-ms-fonts
         - gnome-shell-extension-gsconnect
       changed_when: false
