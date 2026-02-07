@@ -831,12 +831,39 @@
         enabled: true
         state: started
 
-    - name: Docker Auto-Prune konfigurieren (wöchentlich)
-      cron:
-        name: "Docker weekly prune"
-        job: "docker system prune --all --force"
-        special_time: weekly
-        user: root
+    - name: Docker Auto-Prune Timer erstellen
+      copy:
+        dest: /etc/systemd/system/docker-prune.timer
+        content: |
+          [Unit]
+          Description=Weekly Docker System Prune
+
+          [Timer]
+          OnCalendar=weekly
+          Persistent=true
+
+          [Install]
+          WantedBy=timers.target
+
+    - name: Docker Auto-Prune Service erstellen
+      copy:
+        dest: /etc/systemd/system/docker-prune.service
+        content: |
+          [Unit]
+          Description=Docker System Prune
+          Requires=docker.service
+          After=docker.service
+
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/bin/docker system prune --all --force
+
+    - name: Docker Auto-Prune Timer aktivieren
+      systemd:
+        name: docker-prune.timer
+        enabled: true
+        state: started
+        daemon_reload: true
 
     - name: CUPS aktivieren
       systemd:
