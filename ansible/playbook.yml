@@ -3,7 +3,7 @@
 # Entspricht dem NixOS-Profil: base + desktop + hyprland + gnome + container + gaming + i2p + mauschel + home-manager
 #
 # Unterstützt: Arch/CachyOS, Debian/Ubuntu/Pop!_OS, Fedora
-# Ausführen mit: ansible-playbook -i inventory flottebunte.yml --ask-become-pass
+# Ausführen mit: ansible-playbook -i inventory playbook.yml --ask-become-pass --limit <host>
 #
 # Voraussetzung: Das konfigs-Repo muss unter ~/konfigs ausgecheckt sein.
 
@@ -343,16 +343,13 @@
       - net.lutris.Lutris
       - com.usebottles.bottles
       - com.usebruno.Bruno
-      - io.github.AusweisApp.AusweisApp
       - com.github.tchx84.Flatseal
       - net.davidotek.pupgui2          # ProtonUp-Qt
       - org.libretro.RetroArch
       - net.pcsx2.PCSX2
       - com.discordapp.Discord
       - org.godotengine.GodotSharp     # Godot Mono
-      - io.github.penpot.PenpotDesktop
       - org.libreoffice.LibreOffice
-      - com.persepolis.Persepolis
       - com.github.ADBeveridge.Raider  # Tor Browser
 
     # ══════════════════════════════════════════════════════════════
