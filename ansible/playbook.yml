@@ -30,7 +30,6 @@
       - wget
       - jq
       - tree
-      - python3
       - zip
       - unzip
       - zsh
@@ -69,9 +68,10 @@
     # ══════════════════════════════════════════════════════════════
     base_packages:
       Archlinux:
+        - python
         - git-lfs
         - nodejs
-        - p7zip
+        - 7zip
         - openssh
         - networkmanager
         - firewalld
@@ -110,11 +110,10 @@
         - dotnet-sdk
         - sassc
         - gnome-themes-extra
-        - gtk-engine-murrine
         - hyprland
         - hyprpaper
         - network-manager-applet
-        - rofi-wayland
+        - rofi
         - polkit-gnome
         - xdg-desktop-portal-hyprland
         - xdg-desktop-portal-gtk
@@ -137,7 +136,6 @@
         - goverlay
         - wine-staging
         - winetricks
-        - pcsx2
         - mupen64plus
         - retroarch
         - retroarch-assets-xmb
@@ -167,13 +165,12 @@
         - ttf-jetbrains-mono-nerd
         - ttf-hack-nerd
         - thermald
-        - ttf-ms-fonts
         # GNOME Extensions
         - gnome-shell-extension-appindicator
         - gnome-shell-extension-dash-to-dock
-        - gnome-shell-extension-gsconnect
 
       Debian:
+        - python3
         - git-lfs
         - nodejs
         - p7zip-full
@@ -255,6 +252,7 @@
         - gnome-shell-extension-gsconnect
 
       RedHat:
+        - python3
         - git-lfs
         - nodejs
         - p7zip
@@ -971,10 +969,10 @@
     # ══════════════════════════════════════════════════════════════
     # AUR-Pakete (nur Arch/CachyOS)
     # ══════════════════════════════════════════════════════════════
-    - name: AUR-Pakete installieren (via yay)
+    - name: AUR-Pakete installieren (via paru)
       become: true
       become_user: "{{ user }}"
-      command: "yay -S --noconfirm --needed {{ item }}"
+      command: "paru -S --noconfirm --needed {{ item }}"
       loop:
         - asusctl
         - supergfxctl
@@ -986,6 +984,10 @@
         - networkmanager-dmenu-git
         - gnome-shell-extension-blur-my-shell
         - gnome-shell-extension-mock-tray
+        - gtk-engine-murrine
+        - pcsx2
+        - ttf-ms-fonts
+        - gnome-shell-extension-gsconnect
       changed_when: false
       when: ansible_os_family == "Archlinux"
 
