@@ -577,6 +577,13 @@
     # ══════════════════════════════════════════════════════════════
     # Cursor-Theme (home.nix)
     # ══════════════════════════════════════════════════════════════
+    - name: Cursor-Theme Verzeichnis anlegen
+      become: true
+      become_user: "{{ user }}"
+      file:
+        path: "{{ user_home }}/.icons/default"
+        state: directory
+
     - name: Adwaita Cursor-Theme setzen
       become: true
       become_user: "{{ user }}"
