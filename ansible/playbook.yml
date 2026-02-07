@@ -1007,6 +1007,14 @@
     # ══════════════════════════════════════════════════════════════
     # AUR-Pakete (nur Arch/CachyOS)
     # ══════════════════════════════════════════════════════════════
+    - name: Temporäre NOPASSWD-Regel für paru anlegen
+      copy:
+        dest: /etc/sudoers.d/99-paru-temp
+        content: "{{ user }} ALL=(ALL) NOPASSWD: /usr/bin/pacman"
+        mode: '0440'
+        validate: 'visudo -cf %s'
+      when: ansible_os_family == "Archlinux"
+
     - name: AUR-Pakete installieren (via paru)
       become: true
       become_user: "{{ user }}"
@@ -1021,12 +1029,17 @@
         - bun-bin
         - networkmanager-dmenu-git
         - gnome-shell-extension-blur-my-shell
-        - gnome-shell-extension-mock-tray
         - gtk-engine-murrine
         - pcsx2
         - ttf-ms-fonts
         - gnome-shell-extension-gsconnect
       changed_when: false
+      when: ansible_os_family == "Archlinux"
+
+    - name: Temporäre NOPASSWD-Regel entfernen
+      file:
+        path: /etc/sudoers.d/99-paru-temp
+        state: absent
       when: ansible_os_family == "Archlinux"
 
     - name: asusctl Services aktivieren
