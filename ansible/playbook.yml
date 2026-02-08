@@ -164,6 +164,7 @@
         - ttf-firacode-nerd
         - ttf-jetbrains-mono-nerd
         - ttf-hack-nerd
+        - ttf-sourcecodepro-nerd
         - thermald
         # GNOME Extensions
         - gnome-shell-extensions
