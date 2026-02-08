@@ -1007,6 +1007,31 @@
           @users hard memlock unlimited
 
     # ══════════════════════════════════════════════════════════════
+    # ASUS ROG Zephyrus G16 (GU605C) Fixes
+    # ══════════════════════════════════════════════════════════════
+    - name: Limine Drop-in für Display-Backlight erstellen (GU605C)
+      copy:
+        dest: /etc/limine-entry-tool.d/asus-gu605c-backlight.conf
+        content: |
+          KERNEL_CMDLINE[default]+="i915.enable_dpcd_backlight=1 nvidia.NVreg_EnableBacklighthandler=0 nvidia.NVreg_RegistryDwords=EnableBrightnessControl=0"
+      when: ansible_os_family == "Archlinux"
+      notify: limine-update
+
+    - name: HandleLidSwitch auf suspend setzen (Sleep-Fix)
+      lineinfile:
+        path: /etc/systemd/logind.conf
+        regexp: "^#?HandleLidSwitch="
+        line: "HandleLidSwitch=suspend"
+      notify: restart-logind
+
+    - name: HandleLidSwitchDocked auf suspend setzen (Sleep-Fix)
+      lineinfile:
+        path: /etc/systemd/logind.conf
+        regexp: "^#?HandleLidSwitchDocked="
+        line: "HandleLidSwitchDocked=suspend"
+      notify: restart-logind
+
+    # ══════════════════════════════════════════════════════════════
     # AUR-Pakete (nur Arch/CachyOS)
     # ══════════════════════════════════════════════════════════════
     - name: Temporäre NOPASSWD-Regel für paru anlegen
@@ -1068,3 +1093,11 @@
 
     - name: reload-udev
       command: udevadm control --reload-rules && udevadm trigger
+
+    - name: limine-update
+      command: limine-update
+
+    - name: restart-logind
+      systemd:
+        name: systemd-logind
+        state: restarted
