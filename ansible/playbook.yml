@@ -70,7 +70,6 @@
       Archlinux:
         - python
         - git-lfs
-        - nodejs
         - 7zip
         - openssh
         - networkmanager
@@ -524,19 +523,48 @@
         creates: "{{ user_home }}/.oh-my-zsh"
 
     # ══════════════════════════════════════════════════════════════
-    # AI CLI Tools (Claude Code, OpenAI Codex)
+    # Node.js via nvm + AI CLI Tools
     # ══════════════════════════════════════════════════════════════
-    - name: Claude Code installieren (npm)
-      npm:
-        name: "@anthropic-ai/claude-code"
-        global: true
-        state: present
+    - name: nvm installieren
+      become: true
+      become_user: "{{ user }}"
+      shell: |
+        if [ ! -d "{{ user_home }}/.nvm" ]; then
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+        fi
+      args:
+        creates: "{{ user_home }}/.nvm/nvm.sh"
 
-    - name: OpenAI Codex CLI installieren (npm)
-      npm:
-        name: "@openai/codex"
-        global: true
-        state: present
+    - name: Node.js LTS installieren (via nvm)
+      become: true
+      become_user: "{{ user }}"
+      shell: |
+        export NVM_DIR="{{ user_home }}/.nvm"
+        . "$NVM_DIR/nvm.sh"
+        nvm install --lts
+        nvm alias default lts/*
+      args:
+        executable: /bin/bash
+
+    - name: Claude Code installieren (npm via nvm)
+      become: true
+      become_user: "{{ user }}"
+      shell: |
+        export NVM_DIR="{{ user_home }}/.nvm"
+        . "$NVM_DIR/nvm.sh"
+        npm install -g @anthropic-ai/claude-code
+      args:
+        executable: /bin/bash
+
+    - name: OpenAI Codex CLI installieren (npm via nvm)
+      become: true
+      become_user: "{{ user }}"
+      shell: |
+        export NVM_DIR="{{ user_home }}/.nvm"
+        . "$NVM_DIR/nvm.sh"
+        npm install -g @openai/codex
+      args:
+        executable: /bin/bash
 
     # ══════════════════════════════════════════════════════════════
     # SSH-Härtung (base.nix)
