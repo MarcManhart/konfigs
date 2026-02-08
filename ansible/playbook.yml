@@ -166,6 +166,7 @@
         - ttf-hack-nerd
         - ttf-sourcecodepro-nerd
         - thermald
+        - godot-mono
         # GNOME Extensions
         - gnome-shell-extensions
         - gnome-shell-extension-appindicator
@@ -340,7 +341,7 @@
       - com.onepassword.OnePassword
       - com.spotify.Client
       - nz.mega.MEGAsync
-      - com.slack.Slack
+
       - org.localsend.localsend_app
       - net.lutris.Lutris
       - com.usebottles.bottles
@@ -350,7 +351,7 @@
       - org.libretro.RetroArch
       - net.pcsx2.PCSX2
       - com.discordapp.Discord
-      - org.godotengine.GodotSharp     # Godot Mono
+      #- org.godotengine.GodotSharp     # Godot Mono - via Paket godot-mono (4.6) auf Arch
       - org.libreoffice.LibreOffice
       - com.github.ADBeveridge.Raider  # Tor Browser
 
@@ -523,6 +524,21 @@
         creates: "{{ user_home }}/.oh-my-zsh"
 
     # ══════════════════════════════════════════════════════════════
+    # AI CLI Tools (Claude Code, OpenAI Codex)
+    # ══════════════════════════════════════════════════════════════
+    - name: Claude Code installieren (npm)
+      npm:
+        name: "@anthropic-ai/claude-code"
+        global: true
+        state: present
+
+    - name: OpenAI Codex CLI installieren (npm)
+      npm:
+        name: "@openai/codex"
+        global: true
+        state: present
+
+    # ══════════════════════════════════════════════════════════════
     # SSH-Härtung (base.nix)
     # ══════════════════════════════════════════════════════════════
     - name: SSH PasswordAuthentication deaktivieren
@@ -638,7 +654,7 @@
       become_user: "{{ user }}"
       community.general.dconf:
         key: "/org/gnome/shell/favorite-apps"
-        value: "['brave-browser.desktop', 'firefox.desktop', 'thunderbird.desktop', 'slack.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'org.gnome.tweaks.desktop', 'obsidian.desktop', 'spotify.desktop', 'discord.desktop', 'pureref.desktop', 'org.godotengine.Godot4.4-mono.desktop', 'virt-manager.desktop', 'blender_blender.desktop', 'terminator.desktop', 'bruno.desktop', 'code.desktop', '1password.desktop']"
+        value: "['brave-browser.desktop', 'thunderbird.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'org.gnome.tweaks.desktop', 'md.obsidian.Obsidian.desktop', 'com.spotify.Client.desktop', 'com.discordapp.Discord.desktop', 'pureref.desktop', 'org.godotengine.Godot-mono.desktop', 'virt-manager.desktop', 'blender_blender.desktop', 'terminator.desktop', 'com.usebruno.Bruno.desktop', 'com.visualstudio.code.desktop', '1password.desktop']"
 
     - name: GNOME Fenster-Buttons (minimize, maximize, close)
       become: true
