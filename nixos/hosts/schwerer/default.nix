@@ -64,7 +64,6 @@ in
   # Cooler Control
   programs.coolercontrol = {
     enable = true;
-    nvidiaSupport = true;
   };
 
   # coolercontrold braucht Zugriff auf X11/XWayland für nvidia-settings

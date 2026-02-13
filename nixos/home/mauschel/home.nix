@@ -19,7 +19,7 @@
 let
   dot = "/home/mauschel/konfigs/dotfiles";
   styles = "/home/mauschel/konfigs/resources/styling";
-  blenderVersion = "4.4";
+  blenderVersion = "5.0";
 in
 {
   home.username = "mauschel";

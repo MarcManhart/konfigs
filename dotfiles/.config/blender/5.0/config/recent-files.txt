@@ -1,3 +1,4 @@
+/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/Wicht.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Items/Snacks/Snacks.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Modkits/MK-Urban/MK-Urban.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Modkits/MK-Urban/mk-urban.blend
@@ -12,5 +13,4 @@
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Animations/Basic_Movement/Basic_Movements.blend1
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/wicht.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wachmann/Wachmann.blend
-/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/Wicht.blend
 /run/media/mauschel/Daten2/MEGA/Leben/Wohnen/Wohnung_Riverbank/elbstieg2_3d/elbstieg2_3d.blend

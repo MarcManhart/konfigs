@@ -288,6 +288,7 @@ in
       exec env QT_QPA_PLATFORM=xcb ${pkgs.copyq}/bin/copyq "$@"
     '')
     conky
+    img2pdf
   ];
 
   # GNOME hat seinen eigenen Portal-Backend
