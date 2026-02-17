@@ -172,6 +172,7 @@ in
     # Automatische Treiber-Erkennung für gängige Drucker
     drivers = with pkgs; [
       gutenprint # Viele Drucker (Canon, Epson, HP, etc.)
+      cnijfilter2 # Canon PIXMA Inkjet-Drucker (TS, TR, G, etc.)
       hplip # HP Drucker (inkl. Scanner-Support)
       brlaser # Brother Laser-Drucker
     ];
@@ -186,6 +187,12 @@ in
     enable = true;
     nssmdns4 = true; # .local Hostnamen auflösen (IPv4)
     openFirewall = true; # mDNS Port 5353 öffnen
+  };
+
+  # Scanner-Support (SANE) für Canon TS5300 All-in-One
+  hardware.sane = {
+    enable = true;
+    extraBackends = [ pkgs.sane-airscan ]; # eSCL/AirScan für Netzwerk-Scanner
   };
 
   # Syncthing - Datei-Synchronisation
