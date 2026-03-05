@@ -18,9 +18,6 @@
     gnomeExtensions.user-themes
     gnomeExtensions.mock-tray
     gnomeExtensions.gsconnect
-
-    # NetworkManager OpenVPN Support für GNOME
-    networkmanager-openvpn
   ];
 
   # GSConnect benötigt diese Ports für die Gerätekommunikation
