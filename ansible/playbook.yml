@@ -68,6 +68,7 @@
     # ══════════════════════════════════════════════════════════════
     base_packages:
       Archlinux:
+        - code
         - python
         - git-lfs
         - 7zip
