@@ -44,71 +44,41 @@
     packages:
       # Basis
       - python
-      - git
       - git-lfs
-      - vim
       - neovim
       - curl
-      - wget
       - jq
       - tree
       - zip
-      - unzip
       - 7zip
       - htop
-      - ripgrep
       - direnv
       - zsh
       - starship
       - lazygit
       # System
-      - openssh
-      - networkmanager
       - firewalld
-      - avahi
-      - nss-mdns
       - thermald
       - brightnessctl
       - ddcutil
-      - alsa-utils
-      # Audio/Video
-      - pipewire
-      - pipewire-alsa
-      - pipewire-pulse
-      - wireplumber
-      - ffmpeg
-      - gstreamer
-      - gst-plugins-base
-      - gst-plugins-good
-      - gst-plugins-bad
-      - gst-plugins-ugly
-      - gst-libav
       # Drucker
       - cups
       - cups-filters
       - gutenprint
       - hplip
       # Bluetooth
-      - bluez
-      - bluez-utils
       - blueman
       # Virtualisierung & Container
       - libvirt
       - virt-manager
       - qemu-desktop
-      - dnsmasq
       - docker
       - docker-compose
       - dive
       # Nvidia
       - nvidia-open
-      - nvidia-utils
-      - lib32-nvidia-utils
-      - nvidia-settings
       # Vulkan
       - vulkan-tools
-      - vulkan-icd-loader
-      - lib32-vulkan-icd-loader
       - vulkan-validation-layers
       - mesa-demos
       - libva-utils
@@ -126,14 +96,10 @@
       - swappy
       - wdisplays
       - xdg-desktop-portal-hyprland
-      - xdg-desktop-portal-gtk
       - network-manager-applet
       - polkit-gnome
       # GNOME
       - gnome
-      - gnome-tweaks
-      - gdm
-      - networkmanager-openvpn
       - gnome-shell-extensions
       - gnome-shell-extension-appindicator
       - gnome-shell-extension-dash-to-dock
@@ -147,9 +113,7 @@
       - ttf-hack-nerd
       - ttf-sourcecodepro-nerd
       # Browser & Internet
-      - firefox
       - chromium
-      - openvpn
       - tor
       - torbrowser-launcher
       - syncthing
