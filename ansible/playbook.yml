@@ -220,6 +220,7 @@
       - gtk-engine-murrine
       - ttf-ms-fonts
       - gnome-shell-extension-gsconnect
+      - megasync
 
     # ══════════════════════════════════════════════════════════════
     # Flatpak-Apps
@@ -230,7 +231,6 @@
       - md.obsidian.Obsidian
       - org.onlyoffice.desktopeditors
       - com.spotify.Client
-      - nz.mega.MEGAsync
       - org.localsend.localsend_app
       - net.lutris.Lutris
       - com.usebottles.bottles
@@ -535,7 +535,7 @@
       become_user: "{{ user }}"
       community.general.dconf:
         key: "/org/gnome/shell/favorite-apps"
-        value: "['brave-browser.desktop', 'thunderbird.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'org.gnome.tweaks.desktop', 'md.obsidian.Obsidian.desktop', 'com.spotify.Client.desktop', 'com.discordapp.Discord.desktop', 'pureref.desktop', 'org.godotengine.Godot-mono.desktop', 'virt-manager.desktop', 'blender_blender.desktop', 'terminator.desktop', 'com.usebruno.Bruno.desktop', 'com.visualstudio.code.desktop', '1password.desktop']"
+        value: "['com.brave.Browser.desktop', 'thunderbird.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'org.gnome.tweaks.desktop', 'md.obsidian.Obsidian.desktop', 'com.spotify.Client.desktop', 'com.discordapp.Discord.desktop', 'pureref.desktop', 'org.godotengine.GodotSharp.desktop', 'virt-manager.desktop', 'blender_blender.desktop', 'terminator.desktop', 'com.usebruno.Bruno.desktop', 'com.visualstudio.code.desktop', '1password.desktop']"
 
     - name: GNOME Fenster-Buttons
       become: true
@@ -620,6 +620,55 @@
         - { key: "/org/gnome/shell/extensions/dash-to-dock/hide-delay",              value: "0.2" }
         - { key: "/org/gnome/shell/extensions/dash-to-dock/show-delay",              value: "0.1" }
         - { key: "/org/gnome/shell/extensions/dash-to-dock/pressure-threshold",      value: "100.0" }
+
+    - name: GNOME Default-Anwendungen setzen (gsettings)
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop:
+        - { key: "/org/gnome/system/default-applications/web",      value: "'com.brave.Browser.desktop'" }
+        - { key: "/org/gnome/system/default-applications/mail",     value: "'thunderbird.desktop'" }
+        - { key: "/org/gnome/system/default-applications/calendar", value: "'thunderbird.desktop'" }
+
+    - name: GNOME Default-Anwendungen setzen (mimeapps.list)
+      become: true
+      become_user: "{{ user }}"
+      community.general.ini_file:
+        path: "{{ user_home }}/.config/mimeapps.list"
+        section: "Default Applications"
+        option: "{{ item.mime }}"
+        value: "{{ item.app }}"
+        no_extra_spaces: true
+        create: true
+      loop:
+        # Browser
+        - { mime: "x-scheme-handler/http",   app: "com.brave.Browser.desktop" }
+        - { mime: "x-scheme-handler/https",  app: "com.brave.Browser.desktop" }
+        - { mime: "text/html",               app: "com.brave.Browser.desktop" }
+        - { mime: "application/xhtml+xml",   app: "com.brave.Browser.desktop" }
+        # E-Mail & Kalender (Thunderbird)
+        - { mime: "x-scheme-handler/mailto", app: "thunderbird.desktop" }
+        - { mime: "message/rfc822",          app: "thunderbird.desktop" }
+        - { mime: "text/calendar",           app: "thunderbird.desktop" }
+        - { mime: "x-scheme-handler/webcal", app: "thunderbird.desktop" }
+        # Musik (VLC)
+        - { mime: "audio/mpeg",              app: "vlc.desktop" }
+        - { mime: "audio/ogg",               app: "vlc.desktop" }
+        - { mime: "audio/flac",              app: "vlc.desktop" }
+        - { mime: "audio/wav",               app: "vlc.desktop" }
+        - { mime: "audio/mp4",               app: "vlc.desktop" }
+        - { mime: "audio/aac",               app: "vlc.desktop" }
+        - { mime: "audio/x-m4a",             app: "vlc.desktop" }
+        # Video (VLC)
+        - { mime: "video/mp4",               app: "vlc.desktop" }
+        - { mime: "video/x-matroska",        app: "vlc.desktop" }
+        - { mime: "video/avi",               app: "vlc.desktop" }
+        - { mime: "video/mpeg",              app: "vlc.desktop" }
+        - { mime: "video/quicktime",         app: "vlc.desktop" }
+        - { mime: "video/webm",              app: "vlc.desktop" }
+        - { mime: "video/x-msvideo",         app: "vlc.desktop" }
 
     # ══════════════════════════════════════════════════════════════
     # Systemd User-Services
