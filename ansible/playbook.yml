@@ -36,7 +36,8 @@
     konfigs_dir: "{{ user_home }}/konfigs"
     dot: "{{ konfigs_dir }}/dotfiles"
     styles: "{{ konfigs_dir }}/resources/styling"
-    blender_version: "4.4"
+    blender_version: "5.0"
+    godot_version: "4.6"
 
     # ══════════════════════════════════════════════════════════════
     # Pakete (pacman)
@@ -206,6 +207,7 @@
       - com.discordapp.Discord
       - org.libreoffice.LibreOffice
       - com.github.ADBeveridge.Raider  # Tor Browser
+      - org.godotengine.GodotSharp
 
     # ══════════════════════════════════════════════════════════════
     # Dotfiles Symlinks
@@ -228,7 +230,7 @@
       - { src: ".config/copyq/copyq_tabs.ini",             dest: ".config/copyq/copyq_tabs.ini" }
       - { src: ".claude/settings.json",                    dest: ".claude/settings.json" }
       - { src: ".config/kritarc",                          dest: ".config/kritarc" }
-      - { src: ".config/godot/editor_settings-4.4.tres",   dest: ".config/godot/editor_settings-4.4.tres" }
+      - { src: ".config/godot/editor_settings-{{ godot_version }}.tres", dest: ".config/godot/editor_settings-{{ godot_version }}.tres" }
 
     blender_dotfile_links:
       - { src: ".config/blender/{{ blender_version }}/config", dest: ".config/blender/{{ blender_version }}/config" }
@@ -900,7 +902,7 @@
       copy:
         dest: /etc/limine-entry-tool.d/asus-gu605c-backlight.conf
         content: |
-          KERNEL_CMDLINE[default]+="i915.enable_dpcd_backlight=1 nvidia.NVreg_EnableBacklighthandler=0 nvidia.NVreg_RegistryDwords=EnableBrightnessControl=0"
+          KERNEL_CMDLINE[default]+="i915.enable_dpcd_backlight=3 nvidia.NVreg_EnableBacklighthandler=0 nvidia.NVreg_RegistryDwords=EnableBrightnessControl=0"
       notify: limine-update
 
     - name: HandleLidSwitch auf suspend setzen
