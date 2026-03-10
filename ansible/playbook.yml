@@ -237,17 +237,17 @@
       - { src: ".config/blender/{{ blender_version }}/config", dest: ".config/blender/{{ blender_version }}/config" }
 
     styling_links:
-      - src: "Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark"
-        dest: ".themes/Gruvbox-Dark"
-      - src: "Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/assets"
+      - src: "Themes/Gnome/Gruvbox-Dark-BL-LB/Gruvbox-Dark"
+        dest: ".themes/Gnome/Gruvbox-Dark"
+      - src: "Themes/Gnome/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/assets"
         dest: ".config/gtk-4.0/assets"
-      - src: "Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/gtk.css"
+      - src: "Themes/Gnome/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/gtk.css"
         dest: ".config/gtk-4.0/gtk.css"
-      - src: "Themes/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/gtk-dark.css"
+      - src: "Themes/Gnome/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/gtk-dark.css"
         dest: ".config/gtk-4.0/gtk-dark.css"
 
     blender_extra_links:
-      - src: "{{ styles }}/Themes/Blender/theme-gruvbox-dark-v1.5.0/Gruvbox_Dark.xml"
+      - src: "{{ styles }}/Themes/Blender/theme-gruvbox-dark-v1.6.0/Gruvbox_Dark.xml"
         dest: ".config/blender/{{ blender_version }}/scripts/presets/interface_theme/Gruvbox_Dark.xml"
       - src: "{{ konfigs_dir }}/resources/blender_extensions/quick_mesh_rename.py"
         dest: ".config/blender/{{ blender_version }}/scripts/addons/quick_mesh_rename.py"
