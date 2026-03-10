@@ -238,7 +238,7 @@
 
     styling_links:
       - src: "Themes/Gnome/Gruvbox-Dark-BL-LB/Gruvbox-Dark"
-        dest: ".themes/Gnome/Gruvbox-Dark"
+        dest: ".themes/Gruvbox-Dark"
       - src: "Themes/Gnome/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/assets"
         dest: ".config/gtk-4.0/assets"
       - src: "Themes/Gnome/Gruvbox-Dark-BL-LB/Gruvbox-Dark/gtk-4.0/gtk.css"
