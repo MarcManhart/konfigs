@@ -155,6 +155,7 @@
       - go
       - pnpm
       - dotnet-sdk
+      - aspnet-runtime        # Benötigt von csharpier (dotnet tool)
       - kitty
       # Hardware
       - solaar
@@ -385,6 +386,16 @@
         npm install -g @openai/codex
       args:
         executable: /bin/bash
+
+    # ══════════════════════════════════════════════════════════════
+    # dotnet Tools
+    # ══════════════════════════════════════════════════════════════
+    - name: CSharpier installieren (dotnet tool)
+      become: true
+      become_user: "{{ user }}"
+      command: dotnet tool install -g csharpier
+      args:
+        creates: "{{ user_home }}/.dotnet/tools/csharpier"
 
     # ══════════════════════════════════════════════════════════════
     # SSH-Härtung
