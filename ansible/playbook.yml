@@ -135,6 +135,7 @@
       - nvtop
       - conky
       - cava
+      - audacity
       # Gaming
       - steam
       - mangohud
@@ -415,6 +416,15 @@
         state: link
         force: true
       loop: "{{ dotfile_links }}"
+
+    - name: Blender-Dotfile-Verzeichnisse entfernen (falls nicht leer)
+      become: true
+      become_user: "{{ user }}"
+      file:
+        path: "{{ user_home }}/{{ item.dest }}"
+        state: absent
+      loop: "{{ blender_dotfile_links }}"
+      when: item.dest is defined
 
     - name: Blender-Dotfiles symlinken
       become: true

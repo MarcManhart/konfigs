@@ -1,5 +1,6 @@
 [Bookmarks]
 [Recent]
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/GameObjects/Interactables/Einkaufskorb/
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Moebel/
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Items/
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Modkits/
@@ -9,4 +10,3 @@
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wachmann/
 /run/media/mauschel/Daten2/MEGA/res/Blender/Keymaps/
-/run/media/mauschel/Daten2/MEGA/Leben/Wohnen/Wohnung_Riverbank/elbstieg2_3d/Models/
