@@ -126,6 +126,7 @@
       - terminator
       # Grafik & Medien
       - blender
+      - cuda
       - inkscape
       - krita
       - scribus
@@ -183,6 +184,7 @@
       - pureref
       - bun-bin
       - networkmanager-openvpn
+      - nordvpn-bin
       - networkmanager-dmenu-git
       - gnome-shell-extension-blur-my-shell
       - gtk-engine-murrine
