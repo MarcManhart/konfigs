@@ -182,6 +182,7 @@
       - lazydocker
       - pureref
       - bun-bin
+      - networkmanager-openvpn
       - networkmanager-dmenu-git
       - gnome-shell-extension-blur-my-shell
       - gtk-engine-murrine
@@ -194,7 +195,6 @@
     # ══════════════════════════════════════════════════════════════
     flatpak_apps:
       - com.brave.Browser
-      - com.visualstudio.code
       - md.obsidian.Obsidian
       - org.onlyoffice.desktopeditors
       - com.spotify.Client
@@ -209,7 +209,6 @@
       - com.discordapp.Discord
       - org.libreoffice.LibreOffice
       - com.github.ADBeveridge.Raider  # Tor Browser
-      - org.godotengine.GodotSharp
 
     # ══════════════════════════════════════════════════════════════
     # Dotfiles Symlinks
@@ -923,7 +922,7 @@
       copy:
         dest: /etc/limine-entry-tool.d/asus-gu605c-backlight.conf
         content: |
-          KERNEL_CMDLINE[default]+="i915.enable_dpcd_backlight=3 nvidia.NVreg_EnableBacklighthandler=0 nvidia.NVreg_RegistryDwords=EnableBrightnessControl=0"
+          KERNEL_CMDLINE[default]+="acpi_backlight=native i915.enable_dpcd_backlight=3 nvidia.NVreg_EnableBacklighthandler=0 nvidia.NVreg_RegistryDwords=EnableBrightnessControl=0"
       notify: limine-update
 
     - name: HandleLidSwitch auf suspend setzen

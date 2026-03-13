@@ -1,12 +1,12 @@
 [Bookmarks]
 [Recent]
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Fiete/
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Maedchen/
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wachmann/
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Blockouts/
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Modkits/MK-Urban/
 /home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/GameObjects/Interactables/Einkaufskorb/
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Moebel/
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Items/
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Modkits/
 /home/mauschel/Downloads/
-/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Levels/Level_01_DerAnfang/
-/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Animations/Basic_Movement/
-/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/
-/run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wachmann/
-/run/media/mauschel/Daten2/MEGA/res/Blender/Keymaps/

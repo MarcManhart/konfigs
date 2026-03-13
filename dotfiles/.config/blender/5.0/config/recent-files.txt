@@ -1,3 +1,9 @@
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/Wicht.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Fiete/Fiete.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Maedchen/Maedchen.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wachmann/Wachmann.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Blockouts/Blockout.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Modkits/MK-Urban/MK-Urban.blend
 /home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/GameObjects/Interactables/Einkaufskorb/Einkaufskorb.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/Wicht.blend
 /run/media/mauschel/Daten2/MEGA/Projekte/Fiona-Projektakte/Art/Items/Snacks/Snacks.blend

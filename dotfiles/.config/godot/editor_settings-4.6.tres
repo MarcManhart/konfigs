@@ -47,7 +47,6 @@ text_editor/behavior/files/auto_reload_scripts_on_external_change = false
 text_editor/external/use_external_editor = true
 editors/3d_gizmos/gizmo_settings/bone_axis_length = 0.1
 editors/animation/default_animation_step = 0.033333335
-network/tls/editor_tls_certificates = ""
 interface/touchscreen/increase_scrollbar_touch_area = false
 editors/grid_map/palette_min_width = 230
 export/android/debug_keystore = "/home/mauschel/.local/share/godot/keystores/debug.keystore"
