@@ -191,6 +191,7 @@
       - ttf-ms-fonts
       - gnome-shell-extension-gsconnect
       - megasync
+      - localsend
 
     # ══════════════════════════════════════════════════════════════
     # Flatpak-Apps
@@ -200,7 +201,6 @@
       - md.obsidian.Obsidian
       - org.onlyoffice.desktopeditors
       - com.spotify.Client
-      - org.localsend.localsend_app
       - net.lutris.Lutris
       - com.usebottles.bottles
       - com.usebruno.Bruno
@@ -750,6 +750,13 @@
         enabled: true
         state: started
 
+    - name: UFW deaktivieren (Konflikt mit firewalld)
+      systemd:
+        name: ufw
+        enabled: false
+        state: stopped
+      ignore_errors: true
+
     - name: Firewall aktivieren
       systemd:
         name: firewalld
@@ -954,7 +961,7 @@
       command: firewall-cmd --reload
 
     - name: reload-udev
-      command: udevadm control --reload-rules && udevadm trigger
+      shell: udevadm control --reload-rules && udevadm trigger
 
     - name: limine-update
       command: limine-update

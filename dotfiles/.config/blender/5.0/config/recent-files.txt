@@ -1,5 +1,5 @@
-/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Fiete/Fiete.blend
 /home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/Wicht.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Fiete/Fiete.blend
 /home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Maedchen/Maedchen.blend
 /home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wachmann/Wachmann.blend
 /home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Blockouts/Blockout.blend
