@@ -1,3 +1,8 @@
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/GameObjects/Items/Snacks/Snacks.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Natur/Busch.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Maps/map-01/map-01.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Levelaufbau/Moebel/SpaetiEinrichtung.blend
+/home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/GameObjects/Interactables/EigenesAuto/EigenesAuto.blend
 /home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Wicht/Wicht.blend
 /home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Fiete/Fiete.blend
 /home/mauschel/MEGA/Projekte/Fiona-Projektakte/Art/Characters/Maedchen/Maedchen.blend

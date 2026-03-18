@@ -1,5 +1,12 @@
 F Reaction
 F Getroffen
    MK-Urban-Textureatlas
-Generate ▸ Mirror
 F mixamo.com
+Generate ▸ Mirror
+ 0 Waldboden
+ 0 Sandboden
+ F Sandboden
+ F Waldboden
+   SpaetiEinrichtung
+   Kiefer
+Texture ▸ Image Texture

@@ -125,7 +125,6 @@
       - copyq
       - terminator
       # Grafik & Medien
-      - blender
       - cuda
       - inkscape
       - krita
@@ -192,6 +191,7 @@
       - gnome-shell-extension-gsconnect
       - megasync
       - localsend
+      - blender-git
 
     # ══════════════════════════════════════════════════════════════
     # Flatpak-Apps
@@ -265,6 +265,11 @@
     # ══════════════════════════════════════════════════════════════
     # Pakete installieren
     # ══════════════════════════════════════════════════════════════
+    - name: CachyOS-Keyring aktualisieren
+      pacman:
+        name: cachyos-keyring
+        state: latest
+
     - name: Pakete installieren
       pacman:
         name: "{{ packages }}"
@@ -411,6 +416,9 @@
     # ══════════════════════════════════════════════════════════════
     # Dotfiles Symlinks
     # ══════════════════════════════════════════════════════════════
+
+    # Alle Zielverzeichnisse vorab anlegen (dirname von item.dest = übergeordneter Ordner).
+    # Alle vier Listen werden hier zusammengefasst, damit kein eigener Task pro Gruppe nötig ist.
     - name: Dotfile-Verzeichnisse anlegen
       become: true
       become_user: "{{ user }}"
@@ -419,6 +427,7 @@
         state: directory
       loop: "{{ dotfile_links + blender_dotfile_links + styling_links + blender_extra_links }}"
 
+    # Normale Dotfiles: src ist relativ zu konfigs/dotfiles ({{ dot }}).
     - name: Dotfiles symlinken
       become: true
       become_user: "{{ user }}"
@@ -429,6 +438,9 @@
         force: true
       loop: "{{ dotfile_links }}"
 
+    # Blender legt .config/blender/<version>/config/ beim ersten Start als echtes Verzeichnis an.
+    # Ansible kann einen Symlink nicht über ein vorhandenes (ggf. nicht-leeres) Verzeichnis legen,
+    # selbst mit force: true — daher wird es vorher explizit entfernt.
     - name: Blender-Dotfile-Verzeichnisse entfernen (falls nicht leer)
       become: true
       become_user: "{{ user }}"
@@ -436,8 +448,9 @@
         path: "{{ user_home }}/{{ item.dest }}"
         state: absent
       loop: "{{ blender_dotfile_links }}"
-      when: item.dest is defined
 
+    # Blender-Dotfiles: src ebenfalls relativ zu {{ dot }}, wie dotfile_links.
+    # Eigener Task, weil der Delete-Schritt oben nur für diese Gruppe gelten soll.
     - name: Blender-Dotfiles symlinken
       become: true
       become_user: "{{ user }}"
@@ -448,6 +461,7 @@
         force: true
       loop: "{{ blender_dotfile_links }}"
 
+    # Theme-Dateien: src ist relativ zu konfigs/resources/styling ({{ styles }}).
     - name: Styling/Theme-Dateien symlinken
       become: true
       become_user: "{{ user }}"
@@ -458,6 +472,7 @@
         force: true
       loop: "{{ styling_links }}"
 
+    # Blender Theme + Addon: src enthält bereits den vollständigen absoluten Pfad (kein Prefix nötig).
     - name: Blender Theme + Addon symlinken
       become: true
       become_user: "{{ user }}"
