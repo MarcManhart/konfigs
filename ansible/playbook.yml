@@ -36,7 +36,7 @@
     konfigs_dir: "{{ user_home }}/konfigs"
     dot: "{{ konfigs_dir }}/dotfiles"
     styles: "{{ konfigs_dir }}/resources/styling"
-    blender_version: "5.0"
+    blender_version: "5.1"
     godot_version: "4.6"
 
     # ══════════════════════════════════════════════════════════════
@@ -136,6 +136,7 @@
       - conky
       - cava
       - audacity
+      # blender kommt via blender-bin (AUR) — nicht hier eintragen (Konflikt)
       # Gaming
       - steam
       - mangohud
@@ -191,7 +192,7 @@
       - gnome-shell-extension-gsconnect
       - megasync
       - localsend
-      - blender-git
+      - blender-bin
 
     # ══════════════════════════════════════════════════════════════
     # Flatpak-Apps
@@ -298,6 +299,13 @@
         name: code
         state: absent
       ignore_errors: true
+
+    # blender-bin bringt x-blender.xml mit — pacman hinterlässt diese Datei manchmal
+    # beim Deinstallieren, was zu einem Dateikonflikt bei der Installation führt.
+    - name: verwaiste blender MIME-Datei entfernen (Konflikt mit blender-bin)
+      file:
+        path: /usr/share/mime/application/x-blender.xml
+        state: absent
 
     - name: AUR-Pakete installieren (via paru)
       become: true
